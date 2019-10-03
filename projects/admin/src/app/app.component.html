@@ -1,0 +1,36 @@
+<!--
+ SONAR UI
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" routerLink="">SONAR <span class="text-secondary">administration</span></a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="">Link</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container my-5">
+    <router-outlet>
+        <h1>SONAR administration app</h1>
+    </router-outlet>
+</div>

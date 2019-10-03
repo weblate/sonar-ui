@@ -1,0 +1,19 @@
+$fa-font-path: "~font-awesome/fonts";
+$font-family-base: "Roboto Condensed", sans-serif;
+$primary: #205078 !default;
+$secondary: rgb(246, 130, 17) !default;
+
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~font-awesome/scss/font-awesome.scss";
+@import "~ngx-toastr/toastr-bs4-alert";
+
+/* roboto-condensed-regular - latin */
+@font-face {
+  font-family: "Roboto Condensed";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto Condensed"), local("RobotoCondensed-Regular"),
+    url("./assets/fonts/roboto-condensed-v17-latin-regular.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */ url("./assets/fonts/roboto-condensed-v17-latin-regular.woff")
+      format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
