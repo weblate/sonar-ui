@@ -15,28 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [
-  {
-    path: 'global/search',
-    loadChildren: () => import('./record-wrapper.module').then(m => m.RecordWrapperModule),
-    data: {
-      showSearchInput: true,
-      adminMode: false,
-      linkPrefix: '/global/search',
-      types: [
-        {
-          key: 'documents',
-          label: 'Documents'
-        }
-      ]
-    }
-  }
-];
+import { RecordModule } from '@rero/ng-core';
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RecordModule
+  ],
 })
-export class AppRoutingModule { }
+export class RecordWrapperModule { }
