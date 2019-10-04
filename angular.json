@@ -26,7 +26,8 @@
             "styles": [
               "projects/admin/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "preserveSymlinks": true
           },
           "configurations": {
             "production": {
@@ -151,7 +152,7 @@
                 }
               ],
               "optimization": false,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,

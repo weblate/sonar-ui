@@ -1,0 +1,29 @@
+<h1 class="mb-4">{{ record.metadata.last_name }} {{ record.metadata.first_name }}</h1>
+<dl>
+    <dt>{{ "Roles" | translate }}</dt>
+    <dd>{{ record.metadata.roles | join }}</dd>
+
+    <dt>{{ "Email address" | translate }}</dt>
+    <dd>{{ record.metadata.email | default:"Undefined"|translate }}</dd>
+
+    <div *ngIf="record.metadata.institution">
+        <dt>{{ "Organization" | translate }}</dt>
+        <dd>{{ record.metadata.institution.$ref }}</dd>
+    </div>
+
+    <dt>{{ "Birthdate" | translate }}</dt>
+    <dd>{{ record.metadata.birth_date | date | default:"Undefined"|translate }}</dd>
+
+    <dt>{{ "Phone" | translate }}</dt>
+    <dd>{{ record.metadata.phone | default:"Undefined"|translate }}</dd>
+
+    <dt>{{ "Address" | translate }}</dt>
+    <dd>
+        <p class="m-0">
+            {{ record.metadata.street }}
+        </p>
+        <p class="m-0">
+            {{ record.metadata.postal_code }} {{ record.metadata.city }}
+        </p>
+    </dd>
+</dl>

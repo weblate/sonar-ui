@@ -17,7 +17,51 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+import { RecordSearchComponent, DetailComponent as RecordDetailComponent, EditorComponent } from '@rero/ng-core';
+import { DocumentComponent } from './record/document/document.component';
+import { InstitutionComponent } from './record/institution/institution.component';
+import { UserComponent } from './record/user/user.component';
+import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
+import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
+import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
+
+
+const routes: Routes = [
+  {
+    path: 'records',
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent },
+      { path: ':type/edit/:pid', component: EditorComponent },
+      { path: ':type/new', component: EditorComponent }
+    ],
+    data: {
+      showSearchInput: true,
+      adminMode: true,
+      linkPrefix: '/records',
+      types: [
+        {
+          key: 'documents',
+          label: 'Documents',
+          component: DocumentComponent,
+          detailComponent: DocumentDetailComponent
+        },
+        {
+          key: 'institutions',
+          label: 'Organizations',
+          component: InstitutionComponent,
+          detailComponent: InstitutionDetailComponent
+        },
+        {
+          key: 'patrons',
+          label: 'Users',
+          component: UserComponent,
+          detailComponent: UserDetailComponent
+        }
+      ]
+    }
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

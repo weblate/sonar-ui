@@ -15,12 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
+
+import { RecordSearchComponent, DetailComponent as RecordDetailComponent } from '@rero/ng-core';
 
 const routes: Routes = [
   {
     path: 'global/search',
-    loadChildren: () => import('./record-wrapper.module').then(m => m.RecordWrapperModule),
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent }
+    ],
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -36,7 +41,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

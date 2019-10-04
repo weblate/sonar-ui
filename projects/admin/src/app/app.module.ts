@@ -16,20 +16,39 @@
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
-import { RecordModule, CoreModule, CoreConfigService } from '@rero/ng-core';
+import { RecordModule, CoreModule, CoreConfigService, SharedModule } from '@rero/ng-core';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppConfigService } from './app-config.service';
+import { InstitutionComponent } from './record/institution/institution.component';
+import { DocumentComponent } from './record/document/document.component';
+import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
+import { UserComponent } from './record/user/user.component';
+import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
+import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
+import { JoinPipe } from './join.pipe';
+import { LanguageValuePipe } from './language-value.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    InstitutionComponent,
+    DocumentComponent,
+    UserComponent,
+    DocumentDetailComponent,
+    InstitutionDetailComponent,
+    UserDetailComponent,
+    JoinPipe,
+    LanguageValuePipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
+    SharedModule,
     CoreModule,
     RecordModule
   ],
