@@ -58,6 +58,14 @@ import { LanguageValuePipe } from './language-value.pipe';
       useClass: AppConfigService
     }
   ],
+  entryComponents: [
+    DocumentComponent,
+    InstitutionComponent,
+    UserComponent,
+    DocumentDetailComponent,
+    InstitutionDetailComponent,
+    UserDetailComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

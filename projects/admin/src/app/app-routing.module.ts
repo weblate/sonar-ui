@@ -53,7 +53,7 @@ const routes: Routes = [
           detailComponent: InstitutionDetailComponent
         },
         {
-          key: 'patrons',
+          key: 'users',
           label: 'Users',
           component: UserComponent,
           detailComponent: UserDetailComponent
