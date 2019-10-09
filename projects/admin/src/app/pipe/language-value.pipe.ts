@@ -18,6 +18,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
+/**
+ * Return the value of source array, corresponding of given language.
+ */
 @Pipe({
   name: 'languageValue'
 })

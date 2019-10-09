@@ -1,0 +1,55 @@
+<!--
+ SONAR UI
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ng-container *ngIf="record">
+  <h4 *ngIf="record.metadata.metadata; else defaultTitle">{{ record.metadata.metadata.title }}</h4>
+  <ng-template #defaultTitle>
+    <h4>{{ 'Deposit #' }}{{ record.metadata.pid }}</h4>
+  </ng-template>
+  <div class="my-2" [ngSwitch]="record.metadata.status">
+    <span class="badge badge-info" *ngSwitchCase="'in progress'">{{
+      record.metadata.status | translate
+    }}</span>
+    <span class="badge badge-warning" *ngSwitchCase="'to validate'">{{
+      record.metadata.status | translate
+    }}</span>
+    <span class="badge badge-success" *ngSwitchCase="'validated'">{{
+      record.metadata.status | translate
+    }}</span>
+  </div>
+
+  <div class="my-2" *ngIf="record.metadata.metadata && record.metadata.metadata.abstracts">
+    {{ record.metadata.metadata.abstracts[0] }}
+  </div>
+
+  <div class="my-2 small">
+    <p class="m-0">
+      <i>{{ 'Created at' | translate }}: {{ record.created | dateTranslate: 'medium' }}</i>
+    </p>
+    <p class="m-0">
+      <i>{{ 'Updated at' | translate }}: {{ record.updated | dateTranslate: 'medium' }}</i>
+    </p>
+  </div>
+
+  <div *ngIf="record.metadata.status === 'in progress'">
+    <a
+      href
+      class="btn btn-primary btn-small"
+      [routerLink]="['/deposit', record.metadata.pid, 'create']"
+      >{{ 'Continue process' | translate }}</a
+    >
+  </div>
+</ng-container>

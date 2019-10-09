@@ -35,7 +35,7 @@ export class UserService {
    * Load logged user in backend
    */
   loadLoggedUser(resolve: boolean = true) {
-    const observable = this.http.get<any>(`${this.apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`).pipe(
+    return this.http.get<any>(`${this.apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`).pipe(
       map((user) => {
         if (user.metadata) {
           this.user = user.metadata;
@@ -45,7 +45,47 @@ export class UserService {
         return null;
       })
     );
+  }
 
-    return observable;
+  /**
+   * Return $ref endpoint for current logged user.
+   */
+  getUserRefEndpoint() {
+    return this.apiService.getRefEndpoint('users', this.user.pid);
+  }
+
+  /**
+   * Check if user has specified role(s).
+   * @param roles String or array of roles to check against user
+   */
+  hasRole(roles: string | Array<string>) {
+    if (typeof roles === 'string') {
+      roles = [roles];
+    }
+
+    for (const role of roles) {
+      for (const userRole of this.user.roles) {
+        if (role === userRole) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+
+  /**
+   * Check if user reference is corresonding to logged user id.
+   * @param reference User JSON endpoint reference
+   */
+  checkUserReference(reference: string) {
+    const result = /[0-9]+$/.exec(reference);
+
+    if (result === null) {
+      return false;
+    }
+
+    return this.user.pid === result[0];
   }
 }

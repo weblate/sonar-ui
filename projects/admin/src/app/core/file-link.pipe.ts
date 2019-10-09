@@ -16,20 +16,15 @@
  */
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { ApiService } from '@rero/ng-core';
+
 @Pipe({
-  name: 'join'
+  name: 'fileLink'
 })
-export class JoinPipe implements PipeTransform {
+export class FileLinkPipe implements PipeTransform {
+  constructor(private apiService: ApiService) {}
 
-  transform(value: string[], ...args: any[]): string {
-    if (!value) {
-      return '';
-    }
-
-    if (!args[0]) {
-      args[0] = ', ';
-    }
-    return value.join(args[0]);
+  transform(value: any): string {
+    return `${this.apiService.endpointPrefix}/files/${value.bucket}/${value.key}`;
   }
-
 }

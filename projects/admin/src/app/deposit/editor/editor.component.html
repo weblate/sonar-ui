@@ -1,0 +1,139 @@
+<!--
+ SONAR UI
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ng-container *ngIf="deposit">
+  <admin-deposit-step
+    [currentStep]="currentStep"
+    [maxStep]="maxStep"
+    [linkPrefix]="linkPrefix"
+    [steps]="steps"
+    (cancel)="cancelDeposit()"
+  >
+  </admin-deposit-step>
+</ng-container>
+
+<ng-container *ngIf="deposit">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="row mb-5">
+      <div class="col-sm-8"></div>
+      <div class="col-sm-4 text-left text-sm-right">
+        <div class="row">
+          <div class="col">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              <i class="fa fa-floppy-o mr-2"></i>
+              {{ 'Save' | translate }}
+            </button>
+          </div>
+          <div class="col" *ngIf="isFinished()">
+            <button type="button" class="btn btn-primary btn-block btn-lg" (click)="publish()">
+              <i class="fa fa-check mr-2"></i>
+              <span *ngIf="isAdminUser; else submitLabel">
+                {{ 'Publish' | translate }}
+              </span>
+              <ng-template #submitLabel>{{ 'Submit' | translate }}</ng-template>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-8">
+        <formly-form [form]="form" [model]="model" [fields]="fields"></formly-form>
+        <div class="form-group row" *ngIf="currentStep === 'metadata'">
+          <label class="col-sm-4">{{ 'ID' | translate }}</label>
+          <div class="col-sm-8"><i class="fa fa-lock mr-2"></i> {{ deposit.pid }}</div>
+        </div>
+        <ng-container *ngIf="currentStep === 'diffusion'">
+          <div class="form-group row">
+            <label class="col-sm-4">{{ 'Created date' | translate }}</label>
+            <div class="col-sm-8">
+              <i class="fa fa-lock mr-2"></i> {{ createdAt | dateTranslate: 'medium' }}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">{{ 'Modified date' | translate }}</label>
+            <div class="col-sm-8">
+              <i class="fa fa-lock mr-2"></i> {{ updatedAt | dateTranslate: 'medium' }}
+            </div>
+          </div>
+
+          <h2 class="mt-5">{{ 'Preview' | translate }}</h2>
+          <p class="m-0">
+            <strong>{{ deposit.metadata.title }}</strong>
+          </p>
+          <p class="m-0 mb-2">{{ deposit.metadata.publication_date.value }}</p>
+          <dl class="row">
+            <ng-container *ngIf="deposit.metadata.abstracts && deposit.metadata.abstracts.length">
+              <dt class="col-sm-3">{{ 'Abstracts' | translate }}</dt>
+              <dd class="col-sm-9">
+                <p
+                  class="m-0"
+                  *ngFor="let abstract of deposit.metadata.abstracts"
+                  [innerHtml]="abstract | nl2br"
+                ></p>
+              </dd>
+            </ng-container>
+
+            <dt class="col-sm-3">{{ 'Authors' | translate }}</dt>
+            <dd class="col-sm-9">
+              <p class="m-0" *ngFor="let author of deposit.contributors">
+                {{ author.name }}
+                <i class="text-muted" *ngIf="author.affiliation">({{ author.affiliation }})</i>
+                <small class="pl-1">{{ author.orcid }}</small>
+              </p>
+            </dd>
+            <ng-container *ngIf="deposit.metadata.journal && deposit.metadata.journal.length">
+              <dt class="col-sm-3">{{ 'Journal' | translate }}</dt>
+              <dd class="col-sm-9">{{ journal }}</dd>
+            </ng-container>
+
+            <dt class="col-sm-3">{{ 'Document type' | translate }}</dt>
+            <dd class="col-sm-9">{{ deposit.metadata.document_type | translate }}</dd>
+
+            <dt class="col-sm-3">{{ 'Languages' | translate }}</dt>
+            <dd class="col-sm-9">{{ deposit.metadata.languages | join: ', ' }}</dd>
+
+            <ng-container *ngIf="deposit.projects && deposit.projects.length > 0">
+              <dt class="col-sm-3">{{ 'Projects' | translate }}</dt>
+              <dd class="col-sm-9">
+                <p class="m-0" *ngFor="let project of deposit.projects">
+                  {{ project.name }}
+                  <small class="pl-1">{{ project.funding_organisation }}</small>
+                </p>
+              </dd>
+            </ng-container>
+          </dl>
+        </ng-container>
+      </div>
+      <div class="col-sm-4 text-left text-sm-right">
+        <h4>{{ 'Main file' | translate }}</h4>
+        <a [href]="mainFile | fileLink" target="_blank">
+          <i class="fa fa-file-pdf-o"></i> {{ mainFile.key }} ({{ mainFile.size | filesize }})
+        </a>
+        <div class="mt-5" *ngIf="additionalFiles && additionalFiles.length > 0">
+          <h4>{{ 'Additional files' | translate }}</h4>
+          <p *ngFor="let file of additionalFiles">
+            <ng-container>
+              <a [href]="file | fileLink" target="_blank">
+                <i class="fa fa-file-pdf-o"></i> {{ file.key }} ({{ file.size | filesize }})
+              </a>
+            </ng-container>
+          </p>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-container>

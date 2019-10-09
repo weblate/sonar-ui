@@ -16,8 +16,9 @@
  */
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { of, Observable } from 'rxjs';
 
-import { RecordSearchComponent, DetailComponent as RecordDetailComponent, EditorComponent } from '@rero/ng-core';
+import { ActionStatus } from '@rero/ng-core';
 
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
@@ -26,6 +27,38 @@ import { DetailComponent as DocumentDetailComponent } from './record/document/de
 import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { UploadComponent } from './deposit/upload/upload.component';
+import { EditorComponent as DepositEditorComponent } from './deposit/editor/editor.component';
+import { ConfirmationComponent } from './deposit/confirmation/confirmation.component';
+import { BriefViewComponent } from './deposit/brief-view/brief-view.component';
+
+const canReadDeposit = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
+
+const canDeleteDeposit = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
+
+const canUpdateDeposit = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
+
+const canAddDeposit = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
 
 
 const routes: Routes = [
@@ -58,9 +91,35 @@ const routes: Routes = [
           label: 'Users',
           component: UserComponent,
           detailComponent: UserDetailComponent
+        },
+        {
+          key: 'deposits',
+          label: 'Deposits',
+          component: BriefViewComponent,
+          canRead: canReadDeposit,
+          canUpdate: canUpdateDeposit,
+          canDelete: canDeleteDeposit,
+          canAdd: canAddDeposit
         }
       ]
     }
+  },
+  {
+    path: 'deposit/:id',
+    children: [
+      {
+        path: 'create',
+        component: UploadComponent
+      },
+      {
+        path: 'confirmation',
+        component: ConfirmationComponent
+      },
+      {
+        path: ':step',
+        component: DepositEditorComponent
+      }
+    ]
   }
 ];
 

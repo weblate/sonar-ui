@@ -1,0 +1,74 @@
+<!--
+ SONAR UI
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="row mb-3 mb-sm-5">
+  <div class="col-12 col-sm-1 text-left text-sm-center mb-2 mb-sm-0">
+    <a href class="text-dark" (click)="doCancel($event)">
+      <span class="step d-inline-block rounded-circle bg-warning p-2 text-center mr-3 mr-sm-0">
+        <i class="fa fa-remove fa-lg"></i>
+      </span>
+      <span class="d-sm-block mt-sm-2">{{ 'Cancel' | translate }}</span>
+    </a>
+  </div>
+  <div class="col-sm-2"></div>
+  <div class="col-12 col-sm-9">
+    <div class="row justify-content-end">
+      <div
+        class="col-12 col-sm-2 text-left text-sm-center mb-2 mb-sm-0"
+        *ngFor="let step of steps; let i = index"
+      >
+        <a
+          href
+          class="text-dark"
+          [routerLink]="[linkPrefix, step]"
+          *ngIf="i <= maxStepIndex; else noLink"
+          [ngClass]="{ 'text-light': i <= currentStepIndex }"
+        >
+          <ng-container
+            *ngTemplateOutlet="
+              stepBadge;
+              context: { step: step, i: i, currentStepIndex: currentStepIndex }
+            "
+          ></ng-container>
+        </a>
+        <ng-template #noLink>
+          <ng-container
+            *ngTemplateOutlet="
+              stepBadge;
+              context: { step: step, i: i, currentStepIndex: currentStepIndex }
+            "
+          ></ng-container>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #stepBadge let-step="step" let-i="i" let-current="currentStepIndex">
+  <span
+    class="step rounded-circle p-2 text-light text-center mr-3 mr-sm-0 d-inline-block"
+    [ngClass]="{
+      'bg-primary text-light': i <= current,
+      'bg-light': i > current
+    }"
+  >
+    <i class="fa fa-check fa-lg" *ngIf="i < current; else number"></i>
+    <ng-template #number>
+      <strong>{{ i + 1 }}</strong>
+    </ng-template>
+  </span>
+  <span class="d-sm-block mt-sm-2">{{ step | translate | ucfirst }}</span>
+</ng-template>

@@ -28,7 +28,11 @@
                 <div class="collapse navbar-collapse" [collapse]="isCollapsed">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="/records/documents">Records</a>
+                            <a class="nav-link" routerLink="/records/documents">{{ "Records" | translate }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/deposit/0/create">{{ "Deposit a publication" | translate }}
+                            </a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
