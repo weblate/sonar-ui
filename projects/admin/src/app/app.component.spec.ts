@@ -16,13 +16,24 @@
  */
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
+
+import { SharedModule, CoreModule } from '@rero/ng-core';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        HttpClientModule,
+        CollapseModule.forRoot(),
+        NgxSpinnerModule,
+        SharedModule,
+        CoreModule
       ],
       declarations: [
         AppComponent

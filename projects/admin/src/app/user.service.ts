@@ -15,20 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
-import { CoreConfigService } from '@rero/ng-core';
-
-import { environment } from '../environments/environment';
+import { ApiService } from '@rero/ng-core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AppConfigService extends CoreConfigService {
-  constructor() {
-    super();
-    this.production = environment.production;
-    this.apiBaseUrl = environment.apiBaseUrl;
-    this.$refPrefix = environment.$refPrefix;
-    this.languages = environment.languages;
+export class UserService {
+  user: any;
+
+  constructor(
+    private apiService: ApiService,
+    private http: HttpClient
+  ) { }
+
+  /**
+   * Load logged user in backend
+   */
+  loadLoggedUser(resolve: boolean = true) {
+    const observable = this.http.get<any>(`${this.apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`).pipe(
+      map((user) => {
+        if (user.metadata) {
+          this.user = user.metadata;
+          return this.user;
+        }
+
+        return null;
+      })
+    );
+
+    return observable;
   }
 }

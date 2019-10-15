@@ -14,17 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input } from '@angular/core';
-
-import { ResultItem } from '@rero/ng-core';
+import { Component } from '@angular/core';
 
 @Component({
-  templateUrl: './user.component.html'
+  selector: 'admin-dashboard',
+  templateUrl: './dashboard.component.html'
 })
-export class UserComponent implements ResultItem {
-  @Input()
-  record: any;
-
-  @Input()
-  type: string;
-}
+export class DashboardComponent { }

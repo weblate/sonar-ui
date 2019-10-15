@@ -18,15 +18,21 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { RecordSearchComponent, DetailComponent as RecordDetailComponent, EditorComponent } from '@rero/ng-core';
+
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
 import { UserComponent } from './record/user/user.component';
 import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
 import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
+  {
+    path: '',
+    component: DashboardComponent
+  },
   {
     path: 'records',
     children: [

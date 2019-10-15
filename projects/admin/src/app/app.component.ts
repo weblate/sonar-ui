@@ -16,8 +16,32 @@
  */
 import { Component } from '@angular/core';
 
+import { NgxSpinnerService } from 'ngx-spinner';
+
+import { UserService } from './user.service';
+
 @Component({
   selector: 'admin-root',
   templateUrl: './app.component.html'
 })
-export class AppComponent { }
+export class AppComponent {
+  user: any;
+  ready = false;
+  isCollapsed = true;
+
+  constructor(
+    private spinner: NgxSpinnerService,
+    private userService: UserService
+  ) {
+    this.spinner.show();
+
+    this.userService.loadLoggedUser().subscribe((user) => {
+      if (user) {
+        this.user = user;
+      }
+
+      this.spinner.hide();
+      this.ready = true;
+    });
+  }
+}

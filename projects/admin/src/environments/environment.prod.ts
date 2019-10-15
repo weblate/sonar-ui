@@ -16,7 +16,7 @@
  */
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://sonar.test.rero.ch',
+  apiBaseUrl: '',
   $refPrefix: 'https://sonar.ch',
   languages: ['fr', 'de', 'it', 'en']
 };

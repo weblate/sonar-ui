@@ -17,8 +17,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { RecordModule, CoreModule, CoreConfigService, SharedModule } from '@rero/ng-core';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,8 +32,9 @@ import { DetailComponent as DocumentDetailComponent } from './record/document/de
 import { UserComponent } from './record/user/user.component';
 import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
-import { JoinPipe } from './join.pipe';
-import { LanguageValuePipe } from './language-value.pipe';
+import { JoinPipe } from './pipe/join.pipe';
+import { LanguageValuePipe } from './pipe/language-value.pipe';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -42,12 +46,16 @@ import { LanguageValuePipe } from './language-value.pipe';
     InstitutionDetailComponent,
     UserDetailComponent,
     JoinPipe,
-    LanguageValuePipe
+    LanguageValuePipe,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    CollapseModule.forRoot(),
+    NgxSpinnerModule,
     SharedModule,
     CoreModule,
     RecordModule

@@ -14,17 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import { ResultItem } from '@rero/ng-core';
-
-@Component({
-  templateUrl: './user.component.html'
+@Pipe({
+  name: 'join'
 })
-export class UserComponent implements ResultItem {
-  @Input()
-  record: any;
+export class JoinPipe implements PipeTransform {
 
-  @Input()
-  type: string;
+  transform(value: string[], ...args: any[]): string {
+    if (!value) {
+      return '';
+    }
+
+    if (!args[0]) {
+      args[0] = ', ';
+    }
+    return value.join(args[0]);
+  }
+
 }
