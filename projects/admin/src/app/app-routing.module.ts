@@ -35,12 +35,7 @@ const routes: Routes = [
   },
   {
     path: 'records',
-    children: [
-      { path: ':type', component: RecordSearchComponent },
-      { path: ':type/detail/:pid', component: RecordDetailComponent },
-      { path: ':type/edit/:pid', component: EditorComponent },
-      { path: ':type/new', component: EditorComponent }
-    ],
+    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
       adminMode: true,

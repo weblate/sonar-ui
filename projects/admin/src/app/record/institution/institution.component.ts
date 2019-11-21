@@ -21,9 +21,7 @@ import { ResultItem } from '@rero/ng-core';
   templateUrl: './institution.component.html'
 })
 export class InstitutionComponent implements ResultItem {
-  @Input()
   record: any;
-
-  @Input()
   type: string;
+  detailUrl: { link: string, external: boolean };
 }

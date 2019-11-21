@@ -22,9 +22,7 @@ import { ResultItem } from '@rero/ng-core';
   templateUrl: './document.component.html'
 })
 export class DocumentComponent implements ResultItem {
-  @Input()
   record: any;
-
-  @Input()
   type: string;
+  detailUrl: { link: string, external: boolean };
 }

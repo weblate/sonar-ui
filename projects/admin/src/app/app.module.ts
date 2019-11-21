@@ -19,7 +19,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RecordModule, CoreModule, CoreConfigService, SharedModule } from '@rero/ng-core';
+import { RecordModule, CoreConfigService } from '@rero/ng-core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 
@@ -56,8 +56,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HttpClientModule,
     CollapseModule.forRoot(),
     NgxSpinnerModule,
-    SharedModule,
-    CoreModule,
     RecordModule
   ],
   providers: [

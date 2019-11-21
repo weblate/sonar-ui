@@ -18,7 +18,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 
-import { SharedModule, CoreModule } from '@rero/ng-core';
+import { RecordModule } from '@rero/ng-core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 
@@ -32,8 +32,7 @@ describe('AppComponent', () => {
         HttpClientModule,
         CollapseModule.forRoot(),
         NgxSpinnerModule,
-        SharedModule,
-        CoreModule
+        RecordModule,
       ],
       declarations: [
         AppComponent
