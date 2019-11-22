@@ -19,9 +19,10 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RecordModule, CoreConfigService } from '@rero/ng-core';
+import { RecordModule, CoreConfigService, TranslateLoader } from '@rero/ng-core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -56,6 +57,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HttpClientModule,
     CollapseModule.forRoot(),
     NgxSpinnerModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: BaseTranslateLoader,
+        useClass: TranslateLoader
+      }
+    }),
     RecordModule
   ],
   providers: [
