@@ -57,6 +57,9 @@ export class EditorComponent implements OnInit {
   /** Form fields for current type */
   fields: any;
 
+  /** Current view mode */
+  view = 'form';
+
   /**
    * Return link prefix
    */
@@ -274,7 +277,7 @@ export class EditorComponent implements OnInit {
             this.deposit.metadata = {};
           }
 
-          const currentTitle = this.deposit.metadata.title || `Deposit #${this.deposit.pid}`;
+          const currentTitle = this.deposit.metadata.title || this.translateService.instant('Deposit #ID', { id: this.deposit.pid });
 
           if (this.mainFile.pdf_metadata.title) {
             this.deposit.metadata.title = this.mainFile.pdf_metadata.title;

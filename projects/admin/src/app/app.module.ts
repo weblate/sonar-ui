@@ -53,6 +53,7 @@ import { FormlyHorizontalWrapperComponent } from './form/horizontal-wrapper.comp
 import { ConfirmationComponent } from './deposit/confirmation/confirmation.component';
 import { BriefViewComponent } from './deposit/brief-view/brief-view.component';
 import { FileLinkPipe } from './core/file-link.pipe';
+import { HighlightJsonPipe } from './core/highlight-json.pipe';
 
 export function minElementError(err: any, field: FormlyFieldConfig) {
   return `This field must contain at least ${field.templateOptions.minItems} element.`;
@@ -79,7 +80,8 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     FormlyHorizontalWrapperComponent,
     ConfirmationComponent,
     BriefViewComponent,
-    FileLinkPipe
+    FileLinkPipe,
+    HighlightJsonPipe
   ],
   imports: [
     BrowserModule,

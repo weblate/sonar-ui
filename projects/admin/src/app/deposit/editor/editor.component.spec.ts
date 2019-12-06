@@ -31,6 +31,7 @@ import { JoinPipe } from '../../core/join.pipe';
 import { FileLinkPipe } from '../../core/file-link.pipe';
 import { FileSizePipe } from '../../core/filesize.pipe';
 import { StepComponent } from '../../core/step/step.component';
+import { HighlightJsonPipe } from '../../core/highlight-json.pipe';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -47,7 +48,14 @@ describe('EditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EditorComponent, StepComponent, JoinPipe, FileLinkPipe, FileSizePipe],
+      declarations: [
+        EditorComponent,
+        StepComponent,
+        JoinPipe,
+        FileLinkPipe,
+        FileSizePipe,
+        HighlightJsonPipe
+      ],
       imports: [
         BrowserAnimationsModule,
         ReactiveFormsModule,

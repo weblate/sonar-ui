@@ -4,3 +4,27 @@ $secondary: rgb(246, 130, 17) !default;
 
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~ngx-toastr/toastr-bs4-alert";
+
+pre {
+  white-space: pre-wrap;
+}
+
+.string {
+  color: $success;
+}
+
+.number {
+  color: $secondary;
+}
+
+.boolean {
+  color: $primary;
+}
+
+.null {
+  color: $warning;
+}
+
+.key {
+  color: $danger;
+}
