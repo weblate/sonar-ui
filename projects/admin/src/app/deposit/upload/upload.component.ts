@@ -14,11 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  AfterContentChecked,
+  OnDestroy
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { of, Observable, from, forkJoin } from 'rxjs';
-import { map, switchMap, delay, concatMap, tap, mergeMap, reduce } from 'rxjs/operators';
+import { map, switchMap, delay, concatMap, tap, mergeMap, reduce, takeWhile } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -32,7 +38,7 @@ import { DepositService } from '../deposit.service';
   selector: 'admin-upload',
   templateUrl: './upload.component.html'
 })
-export class UploadComponent implements OnInit, AfterContentChecked {
+export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
   /**
    * Files list, an item can be a file to upload or an uploaded file.
    */
@@ -45,6 +51,9 @@ export class UploadComponent implements OnInit, AfterContentChecked {
 
   /** Form for handling files metdata */
   filesForm: FormArray = null;
+
+  /** Flag activated when component is destroyed. Is used to unsubscribe to observables with takeWhile operator. */
+  destroyed = false;
 
   /**
    * Return link prefix
@@ -114,6 +123,10 @@ export class UploadComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked() {
     this.cd.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   /**
@@ -338,30 +351,7 @@ export class UploadComponent implements OnInit, AfterContentChecked {
     this.filesForm = this.fb.array([]);
 
     this.files.forEach(file => {
-      this.filesForm.push(
-        this.fb.group({
-          label: [file.label, Validators.required],
-          embargo: [file.embargo],
-          embargoDate: [file.embargoDate],
-          expect: [file.expect],
-          id: file.version_id
-        })
-      );
-    });
-
-    this.filesForm.controls.forEach(control => {
-      control.get('embargo').valueChanges.subscribe(values => {
-        const embargeDateControl = control.get('embargoDate');
-        if (values === true) {
-          embargeDateControl.setValidators([Validators.required]);
-        } else {
-          embargeDateControl.setValidators(null);
-          embargeDateControl.markAsPristine();
-          embargeDateControl.markAsUntouched();
-        }
-
-        embargeDateControl.updateValueAndValidity();
-      });
+      this.addFormField(file);
     });
   }
 
@@ -370,14 +360,37 @@ export class UploadComponent implements OnInit, AfterContentChecked {
    * @param file File data
    */
   private addFormField(file: any) {
-    this.filesForm.push(
-      this.fb.group({
-        label: [file.label, Validators.required],
-        embargo: [file.embargo],
-        embargoDate: [file.embargoDate],
-        expect: [file.expect],
-        id: file.version_id
-      })
-    );
+    const control = this.fb.group({
+      label: [file.label, Validators.required],
+      embargo: [file.embargo],
+      embargoDate: [file.embargoDate, this.embargoDateValidator],
+      expect: [file.expect],
+      id: file.version_id
+    });
+    this.filesForm.push(control);
+    control
+      .get('embargo')
+      .valueChanges.pipe(takeWhile(() => this.destroyed === false))
+      .subscribe((values: any) => {
+        if (values === false) {
+          control.get('embargoDate').setValue('');
+        }
+        control.get('embargoDate').updateValueAndValidity();
+      });
+  }
+
+  /**
+   * Conditional validator for embargo date.
+   * @param formControl Form control to add a validator
+   */
+  private embargoDateValidator(formControl: AbstractControl) {
+    if (!formControl.parent) {
+      return null;
+    }
+
+    if (formControl.parent.get('embargo').value) {
+      return Validators.required(formControl);
+    }
+    return null;
   }
 }

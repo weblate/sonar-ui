@@ -28,7 +28,33 @@
 <ng-container *ngIf="deposit">
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="row mb-5">
-      <div class="col-sm-8"></div>
+      <div class="col-sm-8">
+        <div class="btn-group" dropdown>
+          <button
+            id="import-button"
+            dropdownToggle
+            type="button"
+            class="btn btn-primary dropdown-toggle"
+            aria-controls="dropdown-import"
+          >
+            <i class="fa fa-mail-forward mr-2"></i> {{ 'Import metadata' | translate }}
+            <span class="caret"></span>
+          </button>
+          <ul
+            id="dropdown-import"
+            *dropdownMenu
+            class="dropdown-menu"
+            role="menu"
+            aria-labelledby="button-basic"
+          >
+            <li role="menuitem">
+              <a class="dropdown-item" href (click)="$event.preventDefault(); extractPdfMetadata()">{{
+                'Analyze uploaded PDF' | translate
+              }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="col-sm-4 text-left text-sm-right">
         <div class="row">
           <div class="col">

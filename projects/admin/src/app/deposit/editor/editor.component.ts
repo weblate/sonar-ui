@@ -17,7 +17,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, first } from 'rxjs/operators';
 import { combineLatest, of } from 'rxjs';
 
 import { DialogService } from '@rero/ng-core';
@@ -229,6 +229,7 @@ export class EditorComponent implements OnInit {
         }
       })
       .pipe(
+        first(),
         switchMap((confirm: boolean) => {
           if (confirm === true) {
             this.deposit.status = this.getStatusByUser();
@@ -241,6 +242,75 @@ export class EditorComponent implements OnInit {
       .subscribe((result: any) => {
         if (result !== null) {
           this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
+        }
+      });
+  }
+
+  /**
+   * Extract metadata from PDF and populate deposit.
+   */
+  extractPdfMetadata() {
+    this.dialogService
+      .show({
+        ignoreBackdropClick: true,
+        initialState: {
+          title: this.translateService.instant('Confirmation'),
+          body: this.translateService.instant(
+            'Do you really want to extract metadata from PDF and overwrite current data ?'
+          ),
+          confirmButton: true,
+          confirmTitleButton: this.translateService.instant('OK'),
+          cancelTitleButton: this.translateService.instant('Cancel')
+        }
+      })
+      .pipe(
+        first(),
+        switchMap((result: boolean) => {
+          if (result === false) {
+            return of(false);
+          }
+
+          if (!this.deposit.metadata) {
+            this.deposit.metadata = {};
+          }
+
+          const currentTitle = this.deposit.metadata.title || `Deposit #${this.deposit.pid}`;
+
+          if (this.mainFile.pdf_metadata.title) {
+            this.deposit.metadata.title = this.mainFile.pdf_metadata.title;
+          } else {
+            this.deposit.metadata.title = currentTitle;
+          }
+
+          if (this.mainFile.pdf_metadata.languages) {
+            this.deposit.metadata.languages = this.mainFile.pdf_metadata.languages;
+          }
+
+          if (this.mainFile.pdf_metadata.journal) {
+            this.deposit.metadata.journal = this.mainFile.pdf_metadata.journal;
+          }
+
+          if (this.mainFile.pdf_metadata.abstract) {
+            this.deposit.metadata.abstracts = [this.mainFile.pdf_metadata.abstract];
+          }
+
+          if (this.mainFile.pdf_metadata.authors) {
+            this.deposit.contributors = this.mainFile.pdf_metadata.authors;
+          }
+
+          return this.depositService.update(this.deposit.pid, this.deposit);
+        }),
+        switchMap((result: any) => {
+          if (result === false) {
+            return of(false);
+          }
+          return this.depositService.getJsonSchema('deposits');
+        })
+      )
+      .subscribe((result: any) => {
+        if (result !== false) {
+          this.createForm(result);
+          this.toastr.success(this.translateService.instant('Data imported successfully'));
         }
       });
   }
