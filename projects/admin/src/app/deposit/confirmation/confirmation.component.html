@@ -16,54 +16,11 @@
 -->
 <ng-container *ngIf="deposit$ | async as deposit">
   <h1>{{ 'Confirmation' | translate }}</h1>
+  <p>{{ 'Thank you for depositing a publication!' | translate }}</p>
   <div class="alert alert-warning" *ngIf="deposit.status === 'to validate'">
     {{ 'This deposit will be reviewed and published shortly.' | translate }}
   </div>
   <div class="alert alert-success" *ngIf="deposit.status === 'validated'">
     {{ 'This deposit will be published shortly.' | translate }}
   </div>
-
-  <h2 class="mt-5">{{ 'Summary' | translate }}</h2>
-  <p class="m-0">
-    <strong>{{ deposit.metadata.title }}</strong>
-  </p>
-
-  <dl class="row">
-    <ng-container *ngIf="deposit.metadata.abstracts && deposit.metadata.abstracts.length">
-      <dt class="col-sm-3">{{ 'Abstracts' | translate }}</dt>
-      <dd class="col-sm-9">
-        <p class="m-0" *ngFor="let abstract of deposit.metadata.abstracts">
-          {{ abstract }}
-        </p>
-      </dd>
-    </ng-container>
-
-    <dt class="col-sm-3">{{ 'Authors' | translate }}</dt>
-    <dd class="col-sm-9">
-      <p class="m-0" *ngFor="let author of deposit.contributors">
-        {{ author.name }}
-        <i class="text-muted" *ngIf="author.affiliation">({{ author.affiliation }})</i>
-        <small class="pl-1">{{ author.orcid }}</small>
-      </p>
-    </dd>
-    <ng-container *ngIf="deposit.metadata.journal && deposit.metadata.journal.length">
-      <dt class="col-sm-3">{{ 'Journal' | translate }}</dt>
-    </ng-container>
-
-    <dt class="col-sm-3">{{ 'Document type' | translate }}</dt>
-    <dd class="col-sm-9">{{ deposit.metadata.document_type | translate }}</dd>
-
-    <dt class="col-sm-3">{{ 'Languages' | translate }}</dt>
-    <dd class="col-sm-9">{{ deposit.metadata.languages | join: ', ' }}</dd>
-
-    <ng-container *ngIf="deposit.projects">
-      <dt class="col-sm-3">{{ 'Projects' | translate }}</dt>
-      <dd class="col-sm-9">
-        <p class="m-0" *ngFor="let project of deposit.projects">
-          {{ project.name }}
-          <small class="pl-1">{{ project.funding_organisation }}</small>
-        </p>
-      </dd>
-    </ng-container>
-  </dl>
 </ng-container>

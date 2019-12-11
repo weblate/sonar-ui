@@ -17,8 +17,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { switchMap, tap, first } from 'rxjs/operators';
-import { combineLatest, of } from 'rxjs';
+import { switchMap, tap, first, delay } from 'rxjs/operators';
+import { combineLatest, of, EMPTY } from 'rxjs';
 
 import { DialogService } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
@@ -216,8 +216,8 @@ export class EditorComponent implements OnInit {
   }
 
   /**
-   * Publish a deposit. In facts only changes the status of the deposit.
-   * TODO: Trigger an email to inform moderators when a standard user want to publish a deposit.
+   * Publish a deposit after user confirmation. If user is a standard user, this will send an email
+   * to moderators to validate the deposit.
    */
   publish() {
     this.dialogService
@@ -235,17 +235,15 @@ export class EditorComponent implements OnInit {
         first(),
         switchMap((confirm: boolean) => {
           if (confirm === true) {
-            this.deposit.status = this.getStatusByUser();
-            return this.depositService.update(this.deposit.pid, this.deposit);
+            return this.depositService.publish(this.deposit.pid);
           }
 
-          return of(null);
-        })
+          return EMPTY;
+        }),
+        delay(1000)
       )
-      .subscribe((result: any) => {
-        if (result !== null) {
-          this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
-        }
+      .subscribe(() => {
+        this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
       });
   }
 
@@ -358,15 +356,6 @@ export class EditorComponent implements OnInit {
   private getFormFields(fieldGroup: Array<any>, step: string): Array<any> {
     const fields = fieldGroup.filter(item => item.key === step);
     return [fields[0]];
-  }
-
-  /**
-   * Get status of deposit depending on logged user roles.
-   */
-  private getStatusByUser() {
-    return this.userUservice.hasRole(['superadmin', 'admin', 'moderator'])
-      ? 'validated'
-      : 'to validate';
   }
 
   /**

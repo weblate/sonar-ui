@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of, Observable, from, concat } from 'rxjs';
+import { of, Observable, from, concat, throwError } from 'rxjs';
 import {
   catchError,
   map,
@@ -47,6 +47,10 @@ export class DepositService {
     private dialogService: DialogService
   ) {}
 
+  get depositEndPoint(): string {
+    return `${this.apiService.getEndpointByType('deposits', true)}`;
+  }
+
   /**
    * Get the deposit corresponding to given ID.
    * @param id - string ID of deposit
@@ -54,7 +58,10 @@ export class DepositService {
   get(id: string): Observable<any> {
     return this.httpClient.get(`${this.apiService.getEndpointByType('deposits', true)}/${id}`).pipe(
       tap(result => {
-        if (this.userService.checkUserReference(result.metadata.user.ref) === false) {
+        if (
+          this.userService.hasRole(['moderator', 'admin', 'superadmin']) === false &&
+          this.userService.checkUserReference(result.metadata.user.$ref) === false
+        ) {
           throw new Error('Logged user is not owning this deposit');
         }
       })
@@ -67,7 +74,7 @@ export class DepositService {
   create(): Observable<any> {
     return this.httpClient.post(`${this.apiService.getEndpointByType('deposits', true)}/`, {
       user: {
-        ref: this.userService.getUserRefEndpoint()
+        $ref: this.userService.getUserRefEndpoint()
       },
       step: 'metadata',
       status: 'in progress'
@@ -157,6 +164,16 @@ export class DepositService {
     }
 
     return observable$;
+  }
+
+  /**
+   * Publish a deposit
+   * @param id Deposit ID to publish
+   */
+  publish(id: string): Observable<any> {
+    return this.httpClient
+      .post(`${this.depositEndPoint}/${id}/publish`, null)
+      .pipe(catchError(err => this.handleError(err)));
   }
 
   /**
@@ -275,5 +292,14 @@ export class DepositService {
 
       schema.properties = orderedProperties;
     }
+  }
+
+  /**
+   * Error handling during api call process.
+   * @param error - HttpErrorResponse
+   */
+  private handleError(error: HttpErrorResponse) {
+    this.toastrService.error(error.error.message);
+    return throwError('Something bad happened; please try again later.');
   }
 }
