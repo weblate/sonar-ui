@@ -29,27 +29,73 @@
     <span class="badge badge-success" *ngSwitchCase="'validated'">{{
       record.metadata.status | translate
     }}</span>
+    <span class="badge badge-danger" *ngSwitchCase="'rejected'">{{
+      record.metadata.status | translate
+    }}</span>
   </div>
 
-  <div class="my-2" *ngIf="record.metadata.metadata && record.metadata.metadata.abstracts">
-    {{ record.metadata.metadata.abstracts[0] }}
+  <div
+    class="my-2 text-justify"
+    *ngIf="record.metadata.metadata && record.metadata.metadata.abstracts"
+  >
+    {{ record.metadata.metadata.abstracts[0] | truncateText: 50 }}
   </div>
 
-  <div class="my-2 small">
-    <p class="m-0">
-      <i>{{ 'Created at' | translate }}: {{ record.created | dateTranslate: 'medium' }}</i>
-    </p>
-    <p class="m-0">
-      <i>{{ 'Updated at' | translate }}: {{ record.updated | dateTranslate: 'medium' }}</i>
-    </p>
+  <p>
+    <span class="badge badge-primary">{{ 'ID' | translate }}: #{{ record.metadata.pid }}</span>
+    <span class="badge badge-primary ml-1">
+      {{ 'Created by' | translate }}: {{ record.metadata.user.first_name }}
+      {{ record.metadata.user.last_name }}
+    </span>
+    <span class="badge badge-primary ml-1">
+      {{ 'Created at' | translate }}: {{ record.created | dateTranslate: 'medium' }}
+    </span>
+    <span class="badge badge-primary ml-1">
+      {{ 'Updated at' | translate }}: {{ record.updated | dateTranslate: 'medium' }}
+    </span>
+  </p>
+
+  <div class="my-2" *ngIf="user.is_moderator && record.metadata.logs">
+    <button type="button" class="btn btn-secondary btn-sm" (click)="toggleHistory(record)">
+      {{ 'History' | translate }}
+    </button>
+    <ng-container *ngIf="record.showHistory">
+      <table class="table table-bordered table-sm mt-3">
+        <thead>
+          <tr>
+            <th>{{ 'Action' | translate }}</th>
+            <th>{{ 'Date' | translate }}</th>
+            <th>{{ 'User' | translate }}</th>
+            <th>{{ 'Comment' | translate }}</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let log of record.metadata.logs">
+          <td>{{ log.action | ucfirst | translate }}</td>
+          <td>{{ log.date | dateTranslate: 'medium' }}</td>
+          <td>{{ log.user.first_name }} {{ log.user.last_name }}</td>
+          <td [innerHtml]="log.comment | nl2br"></td>
+        </tr>
+      </table>
+    </ng-container>
   </div>
 
-  <div *ngIf="record.metadata.status === 'in progress'">
+  <div *ngIf="canContinueProcess()">
     <a
       href
       class="btn btn-primary btn-small"
       [routerLink]="['/deposit', record.metadata.pid, 'create']"
-      >{{ 'Continue process' | translate }}</a
     >
+      {{ 'Continue process' | translate }}
+    </a>
+  </div>
+
+  <div *ngIf="canReview()">
+    <a
+      href
+      class="btn btn-primary btn-small"
+      [routerLink]="['/deposit', record.metadata.pid, 'metadata']"
+    >
+      {{ 'Review deposit' | translate }}
+    </a>
   </div>
 </ng-container>

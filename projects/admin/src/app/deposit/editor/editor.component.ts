@@ -156,7 +156,7 @@ export class EditorComponent implements OnInit {
         result => {
           this.deposit = result[1].metadata;
 
-          if (this.deposit.status === 'to validate' || this.deposit.status === 'validated') {
+          if (this.depositService.canAccessDeposit(this.deposit) === false) {
             this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
           }
 
@@ -198,6 +198,7 @@ export class EditorComponent implements OnInit {
    */
   isFinished(): boolean {
     return (
+      this.deposit.status === 'in progress' &&
       this.currentStep === this.steps[this.steps.length - 1] &&
       this.deposit.step === this.steps[this.steps.length - 1]
     );

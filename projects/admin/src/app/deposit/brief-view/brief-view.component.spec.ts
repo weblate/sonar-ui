@@ -16,6 +16,7 @@
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 import { TranslateLoader, RecordModule } from '@rero/ng-core';
 import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
@@ -32,6 +33,7 @@ describe('BriefViewComponent', () => {
       imports: [
         RouterTestingModule,
         RecordModule,
+        HttpClientModule,
         TranslateModule.forRoot({
           loader: {
             provide: BaseTranslateLoader,

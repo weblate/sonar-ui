@@ -23,6 +23,8 @@
     (cancel)="cancelDeposit()"
   >
   </admin-deposit-step>
+
+  <admin-deposit-review [deposit]="deposit"></admin-deposit-review>
 </ng-container>
 
 <ng-container *ngIf="deposit">

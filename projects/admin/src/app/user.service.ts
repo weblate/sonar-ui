@@ -26,25 +26,24 @@ import { ApiService } from '@rero/ng-core';
 export class UserService {
   user: any;
 
-  constructor(
-    private apiService: ApiService,
-    private http: HttpClient
-  ) { }
+  constructor(private apiService: ApiService, private http: HttpClient) {}
 
   /**
    * Load logged user in backend
    */
   loadLoggedUser(resolve: boolean = true) {
-    return this.http.get<any>(`${this.apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`).pipe(
-      map((user) => {
-        if (user.metadata) {
-          this.user = user.metadata;
-          return this.user;
-        }
+    return this.http
+      .get<any>(`${this.apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`)
+      .pipe(
+        map(user => {
+          if (user.metadata) {
+            this.user = user.metadata;
+            return this.user;
+          }
 
-        return null;
-      })
-    );
+          return null;
+        })
+      );
   }
 
   /**
@@ -74,7 +73,6 @@ export class UserService {
     return false;
   }
 
-
   /**
    * Check if user reference is corresonding to logged user id.
    * @param reference User JSON endpoint reference
@@ -86,6 +84,14 @@ export class UserService {
       return false;
     }
 
-    return this.user.pid === result[0];
+    return this.checkUserPid(result[0]);
+  }
+
+  /**
+   * Check if given PID is the same as logged user.
+   * @param pid User PID to check against logged user
+   */
+  checkUserPid(pid: string): boolean {
+    return this.user.pid === pid;
   }
 }

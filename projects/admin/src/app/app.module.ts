@@ -54,6 +54,7 @@ import { ConfirmationComponent } from './deposit/confirmation/confirmation.compo
 import { BriefViewComponent } from './deposit/brief-view/brief-view.component';
 import { FileLinkPipe } from './core/file-link.pipe';
 import { HighlightJsonPipe } from './core/highlight-json.pipe';
+import { ReviewComponent } from './deposit/review/review.component';
 
 export function minElementError(err: any, field: FormlyFieldConfig) {
   return `This field must contain at least ${field.templateOptions.minItems} element.`;
@@ -81,7 +82,8 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     ConfirmationComponent,
     BriefViewComponent,
     FileLinkPipe,
-    HighlightJsonPipe
+    HighlightJsonPipe,
+    ReviewComponent
   ],
   imports: [
     BrowserModule,

@@ -17,59 +17,37 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 
-import { RecordModule, TranslateLoader } from '@rero/ng-core';
-import { NgxDropzoneModule } from 'ngx-dropzone';
-import { TabsModule } from 'ngx-bootstrap';
+import { TranslateLoader, RecordModule } from '@rero/ng-core';
 import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 
-import { UploadComponent } from './upload.component';
-import { FileSizePipe } from '../../core/filesize.pipe';
-import { StepComponent } from '../../core/step/step.component';
-import { ReviewComponent } from '../review/review.component';
+import { ReviewComponent } from './review.component';
 
-describe('UploadComponent', () => {
-  let component: UploadComponent;
-  let fixture: ComponentFixture<UploadComponent>;
-
-  const route = {
-    params: of({
-      id: '0'
-    })
-  };
+describe('ReviewComponent', () => {
+  let component: ReviewComponent;
+  let fixture: ComponentFixture<ReviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UploadComponent, StepComponent, ReviewComponent, FileSizePipe],
+      declarations: [ReviewComponent],
       imports: [
-        RecordModule,
-        ReactiveFormsModule,
-        NgxDropzoneModule,
-        TabsModule.forRoot(),
         HttpClientModule,
-        RouterTestingModule,
         TranslateModule.forRoot({
           loader: {
             provide: BaseTranslateLoader,
             useClass: TranslateLoader
           }
-        })
-      ],
-      providers: [{ provide: ActivatedRoute, useValue: route }]
+        }),
+        RecordModule,
+        RouterTestingModule
+      ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UploadComponent);
+    fixture = TestBed.createComponent(ReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

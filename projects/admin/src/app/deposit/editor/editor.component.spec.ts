@@ -32,6 +32,7 @@ import { FileLinkPipe } from '../../core/file-link.pipe';
 import { FileSizePipe } from '../../core/filesize.pipe';
 import { StepComponent } from '../../core/step/step.component';
 import { HighlightJsonPipe } from '../../core/highlight-json.pipe';
+import { ReviewComponent } from '../review/review.component';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -51,6 +52,7 @@ describe('EditorComponent', () => {
       declarations: [
         EditorComponent,
         StepComponent,
+        ReviewComponent,
         JoinPipe,
         FileLinkPipe,
         FileSizePipe,

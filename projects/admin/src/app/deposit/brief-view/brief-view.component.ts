@@ -16,6 +16,8 @@
  */
 import { Component } from '@angular/core';
 
+import { UserService } from '../../user.service';
+
 @Component({
   selector: 'admin-brief-view',
   templateUrl: './brief-view.component.html'
@@ -23,4 +25,43 @@ import { Component } from '@angular/core';
 export class BriefViewComponent {
   /** Record data */
   record: any;
+
+  constructor(private userService: UserService) {}
+
+  /**
+   * Return current logged user
+   */
+  get user(): any {
+    return this.userService.user;
+  }
+
+  /**
+   * Check if current logged user can continue to fill the deposit.
+   */
+  canContinueProcess(): boolean {
+    if (this.record.metadata.status !== 'in progress') {
+      return false;
+    }
+
+    return this.userService.checkUserPid(this.record.metadata.user.pid);
+  }
+
+  /**
+   * Check if current logged user can review the deposit.
+   */
+  canReview(): boolean {
+    if (this.record.metadata.status !== 'to validate') {
+      return false;
+    }
+
+    return this.user.is_moderator;
+  }
+
+  /**
+   * Toggle visibility of logs for this record.
+   * @param record Current record
+   */
+  toggleHistory(record: any) {
+    record.showHistory = !record.showHistory;
+  }
 }

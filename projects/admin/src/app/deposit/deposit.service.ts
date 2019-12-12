@@ -263,6 +263,40 @@ export class DepositService {
   }
 
   /**
+   * Check if user can access to deposit
+   * @param deposit Deposit to check
+   */
+  canAccessDeposit(deposit: any): boolean {
+    if (
+      deposit.status === 'in progress' &&
+      this.userService.checkUserReference(deposit.user.$ref)
+    ) {
+      return true;
+    }
+
+    if (deposit.status === 'to validate' && this.userService.user.is_moderator) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Review a deposit by calling an API endpoint depending on given action.
+   * @param deposit Deposit to review
+   * @param action Action to send to API
+   */
+  reviewDeposit(deposit: any, action: string, comment: string = null): Observable<any> {
+    return this.httpClient
+      .post(`${this.depositEndPoint}/${deposit.pid}/review`, {
+        action,
+        user: this.userService.user.pid,
+        comment: comment || null
+      })
+      .pipe(catchError(err => this.handleError(err)));
+  }
+
+  /**
    * Order properties for the current entry.
    * @param schema Current entry of the JSON schema on which properties will be ordered
    */

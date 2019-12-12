@@ -101,7 +101,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
               tap(result => {
                 this.deposit = result[0].metadata;
 
-                if (this.deposit.status === 'to validate' || this.deposit.status === 'validated') {
+                if (this.depositService.canAccessDeposit(this.deposit) === false) {
                   this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
                 }
 
