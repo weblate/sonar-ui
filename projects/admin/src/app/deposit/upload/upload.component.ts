@@ -24,7 +24,17 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { of, Observable, from, forkJoin } from 'rxjs';
-import { map, switchMap, delay, concatMap, tap, mergeMap, reduce, takeWhile } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+  delay,
+  concatMap,
+  tap,
+  mergeMap,
+  reduce,
+  takeWhile,
+  first
+} from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -89,6 +99,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
 
     this.route.params
       .pipe(
+        first(),
         tap(() => {
           this.spinner.show();
         }),

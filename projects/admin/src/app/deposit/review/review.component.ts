@@ -86,7 +86,7 @@ export class ReviewComponent {
       .subscribe((deposit: any) => {
         this.toastr.success(this.translateService.instant('Review has been done successfully!'));
         this.router.navigate(['records', 'deposits'], {
-          queryParams: { q: deposit.metadata.title }
+          queryParams: { q: '', pid: deposit.pid }
         });
       });
   }

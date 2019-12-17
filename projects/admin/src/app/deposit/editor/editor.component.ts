@@ -198,7 +198,7 @@ export class EditorComponent implements OnInit {
    */
   isFinished(): boolean {
     return (
-      this.deposit.status === 'in progress' &&
+      (this.deposit.status === 'in progress' || this.deposit.status === 'ask for changes') &&
       this.currentStep === this.steps[this.steps.length - 1] &&
       this.deposit.step === this.steps[this.steps.length - 1]
     );
@@ -276,7 +276,9 @@ export class EditorComponent implements OnInit {
             this.deposit.metadata = {};
           }
 
-          const currentTitle = this.deposit.metadata.title || this.translateService.instant('Deposit #ID', { id: this.deposit.pid });
+          const currentTitle =
+            this.deposit.metadata.title ||
+            this.translateService.instant('Deposit #ID', { id: this.deposit.pid });
 
           if (this.mainFile.pdf_metadata.title) {
             this.deposit.metadata.title = this.mainFile.pdf_metadata.title;

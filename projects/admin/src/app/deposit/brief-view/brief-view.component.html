@@ -14,16 +14,31 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+
+<ng-template #defaultTitle>{{ 'Deposit' | translate }} #{{ record.metadata.pid }}</ng-template>
+
 <ng-container *ngIf="record">
-  <h4 *ngIf="record.metadata.metadata; else defaultTitle">{{ record.metadata.metadata.title }}</h4>
-  <ng-template #defaultTitle>
-    <h4>{{ 'Deposit #' }}{{ record.metadata.pid }}</h4>
-  </ng-template>
+  <div class="float-right"></div>
+  <h4>
+    <ng-container *ngIf="record.metadata.metadata; else defaultTitle">{{
+      record.metadata.metadata.title
+    }}</ng-container>
+    <small *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"></small>
+  </h4>
   <div class="my-2" [ngSwitch]="record.metadata.status">
-    <span class="badge badge-info" *ngSwitchCase="'in progress'">{{
+    <span
+      class="badge badge-dark mr-2"
+      *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"
+      >{{ 'New' | translate }}</span
+    >
+
+    <span class="badge badge-dark" *ngSwitchCase="'in progress'">{{
       record.metadata.status | translate
     }}</span>
-    <span class="badge badge-warning" *ngSwitchCase="'to validate'">{{
+    <span class="badge badge-info" *ngSwitchCase="'to validate'">{{
+      record.metadata.status | translate
+    }}</span>
+    <span class="badge badge-warning" *ngSwitchCase="'ask for changes'">{{
       record.metadata.status | translate
     }}</span>
     <span class="badge badge-success" *ngSwitchCase="'validated'">{{
@@ -42,22 +57,24 @@
   </div>
 
   <p>
-    <span class="badge badge-primary">{{ 'ID' | translate }}: #{{ record.metadata.pid }}</span>
-    <span class="badge badge-primary ml-1">
-      {{ 'Created by' | translate }}: {{ record.metadata.user.first_name }}
-      {{ record.metadata.user.last_name }}
+    <span class="badge badge-light">
+      {{ 'Created by' | translate }}: {{ record.metadata.user.full_name }}
     </span>
-    <span class="badge badge-primary ml-1">
+    <span class="badge badge-light ml-1">
       {{ 'Created at' | translate }}: {{ record.created | dateTranslate: 'medium' }}
     </span>
-    <span class="badge badge-primary ml-1">
+    <span class="badge badge-light ml-1">
       {{ 'Updated at' | translate }}: {{ record.updated | dateTranslate: 'medium' }}
     </span>
   </p>
 
   <div class="my-2" *ngIf="user.is_moderator && record.metadata.logs">
-    <button type="button" class="btn btn-secondary btn-sm" (click)="toggleHistory(record)">
-      {{ 'History' | translate }}
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm text-light"
+      (click)="toggleHistory(record)"
+    >
+      {{ 'History' | translate }} ({{ record.metadata.logs.length }})
     </button>
     <ng-container *ngIf="record.showHistory">
       <table class="table table-bordered table-sm mt-3">
@@ -72,7 +89,7 @@
         <tr *ngFor="let log of record.metadata.logs">
           <td>{{ log.action | ucfirst | translate }}</td>
           <td>{{ log.date | dateTranslate: 'medium' }}</td>
-          <td>{{ log.user.first_name }} {{ log.user.last_name }}</td>
+          <td>{{ log.user.full_name }}</td>
           <td [innerHtml]="log.comment | nl2br"></td>
         </tr>
       </table>

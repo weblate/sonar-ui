@@ -39,7 +39,10 @@ export class BriefViewComponent {
    * Check if current logged user can continue to fill the deposit.
    */
   canContinueProcess(): boolean {
-    if (this.record.metadata.status !== 'in progress') {
+    if (
+      this.record.metadata.status !== 'in progress' &&
+      this.record.metadata.status !== 'ask for changes'
+    ) {
       return false;
     }
 

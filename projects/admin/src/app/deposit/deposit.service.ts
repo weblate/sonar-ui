@@ -268,7 +268,7 @@ export class DepositService {
    */
   canAccessDeposit(deposit: any): boolean {
     if (
-      deposit.status === 'in progress' &&
+      (deposit.status === 'in progress' || deposit.status === 'ask for changes') &&
       this.userService.checkUserReference(deposit.user.$ref)
     ) {
       return true;
