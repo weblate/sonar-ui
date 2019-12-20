@@ -15,11 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'admin-detail',
   templateUrl: './detail.component.html'
 })
 export class DetailComponent {
-  record: any;
+  /** Observable resolving record data */
+  record$: Observable<any>;
 }

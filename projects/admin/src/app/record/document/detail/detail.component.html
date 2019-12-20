@@ -14,59 +14,68 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<h1 class="mb-4">{{ record.metadata.title }}</h1>
-<dl>
+<ng-container *ngIf="record$ | async as record">
+  <h1 class="mb-4">{{ record.metadata.title }}</h1>
+  <dl>
     <div *ngIf="record.metadata.authors">
-        <dt>{{ "Authors" | translate }}</dt>
-        <dd>
-            <span *ngFor="let author of record.metadata.authors; let last = last">
-                {{ author.name }}<span *ngIf="!last">; </span>
-            </span>
-        </dd>
+      <dt>{{ "Authors" | translate }}</dt>
+      <dd>
+        <span *ngFor="let author of record.metadata.authors; let last = last">
+          {{ author.name }}<span *ngIf="!last">; </span>
+        </span>
+      </dd>
     </div>
 
     <div *ngIf="record.metadata.abstracts">
-        <dt>{{ "Abstract" | translate }}</dt>
-        <dd class="text-justify">{{ record.metadata.abstracts | languageValue }}</dd>
+      <dt>{{ "Abstract" | translate }}</dt>
+      <dd class="text-justify">
+        {{ record.metadata.abstracts | languageValue }}
+      </dd>
     </div>
 
     <div *ngIf="record.metadata.institution">
-        <dt>{{ "Organization" | translate }}</dt>
-        <dd>{{ record.metadata.institution.$ref }}</dd>
+      <dt>{{ "Organization" | translate }}</dt>
+      <dd>{{ record.metadata.institution.$ref }}</dd>
     </div>
 
     <div *ngIf="record.metadata.subjects">
-        <dt>{{ "Subjects" | translate }}</dt>
-        <dd>
-            <span *ngFor="let subject of record.metadata.subjects | languageValue; let last = last">
-                {{ subject }}<span *ngIf="!last">; </span>
-            </span>
-        </dd>
+      <dt>{{ "Subjects" | translate }}</dt>
+      <dd>
+        <span
+          *ngFor="
+            let subject of record.metadata.subjects | languageValue;
+            let last = last
+          "
+        >
+          {{ subject }}<span *ngIf="!last">; </span>
+        </span>
+      </dd>
     </div>
 
     <div *ngIf="record.metadata.languages">
-        <dt>{{ "Languages" | translate }}</dt>
-        <dd>
-            <span *ngFor="let language of record.metadata.languages">
-                {{ language.name }}
-            </span>
-        </dd>
+      <dt>{{ "Languages" | translate }}</dt>
+      <dd>
+        <span *ngFor="let language of record.metadata.languages">
+          {{ language.name }}
+        </span>
+      </dd>
     </div>
 
     <div *ngIf="record.metadata.notes">
-        <dt>{{ "Notes" | translate }}</dt>
-        <dd>{{ record.metadata.notes | join }}</dd>
+      <dt>{{ "Notes" | translate }}</dt>
+      <dd>{{ record.metadata.notes | join }}</dd>
     </div>
 
     <div *ngIf="record.metadata.extent">
-        <dt>{{ "Extent" | translate }}</dt>
-        <dd>{{ record.metadata.extent }}</dd>
+      <dt>{{ "Extent" | translate }}</dt>
+      <dd>{{ record.metadata.extent }}</dd>
     </div>
 
     <div *ngIf="record.metadata.identifiers">
-        <div *ngFor="let identifier of record.metadata.identifiers | keyvalue">
-            <dt>{{ identifier.key | uppercase }}</dt>
-            <dd>{{ identifier.value }}</dd>
-        </div>
+      <div *ngFor="let identifier of record.metadata.identifiers | keyvalue">
+        <dt>{{ identifier.key | uppercase }}</dt>
+        <dd>{{ identifier.value }}</dd>
+      </div>
     </div>
-</dl>
+  </dl>
+</ng-container>

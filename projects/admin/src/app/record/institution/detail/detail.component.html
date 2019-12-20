@@ -14,11 +14,13 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<h1 class="mb-4">{{ record.metadata.name }}</h1>
-<dl>
+<ng-container *ngIf="record$ | async as record">
+  <h1 class="mb-4">{{ record.metadata.name }}</h1>
+  <dl>
     <dt>{{ "Name" | translate }}</dt>
     <dd>{{ record.metadata.name }}</dd>
 
     <dt>{{ "PID" | translate }}</dt>
     <dd>{{ record.metadata.pid }}</dd>
-</dl>
+  </dl>
+</ng-container>
