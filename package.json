@@ -1,6 +1,6 @@
 {
   "name": "@rero/sonar-ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "AGPL-3.0-only",
   "author": {
     "name": "RERO",
@@ -21,10 +21,9 @@
   ],
   "homepage": "https://github.com/rero/sonar-ui#readme",
   "scripts": {
-    "serve-admin": "ng serve admin --configuration proxy",
-    "serve-public-search": "ng serve public-search --configuration proxy",
-    "build": "ng build admin --prod && ng build public-search --prod",
-    "deploy": "ng build admin --prod  --deploy-url /static/node_modules/@rero/sonar-ui/dist/admin/ && ng build public-search --prod --deploy-url /static/node_modules/@rero/sonar-ui/dist/public-search/",
+    "serve": "ng serve --configuration proxy",
+    "build": "ng build sonar --prod",
+    "deploy": "ng build sonar --prod  --deploy-url /static/node_modules/@rero/sonar-ui/dist/sonar/",
     "pack": "npm run build && npm pack",
     "test": "ng test",
     "lint": "ng lint",

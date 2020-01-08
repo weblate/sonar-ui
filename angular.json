@@ -3,29 +3,24 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "admin": {
+    "sonar": {
       "projectType": "application",
       "schematics": {},
-      "root": "projects/admin",
-      "sourceRoot": "projects/admin/src",
-      "prefix": "admin",
+      "root": "projects/sonar",
+      "sourceRoot": "projects/sonar/src",
+      "prefix": "sonar",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/admin",
-            "index": "projects/admin/src/index.html",
-            "main": "projects/admin/src/main.ts",
-            "polyfills": "projects/admin/src/polyfills.ts",
-            "tsConfig": "projects/admin/tsconfig.app.json",
+            "outputPath": "dist/sonar",
+            "index": "projects/sonar/src/index.html",
+            "main": "projects/sonar/src/main.ts",
+            "polyfills": "projects/sonar/src/polyfills.ts",
+            "tsConfig": "projects/sonar/tsconfig.app.json",
             "aot": false,
-            "assets": [
-              "projects/admin/src/favicon.ico",
-              "projects/admin/src/assets"
-            ],
-            "styles": [
-              "projects/admin/src/styles.scss"
-            ],
+            "assets": ["projects/sonar/src/favicon.ico", "projects/sonar/src/assets"],
+            "styles": ["projects/sonar/src/styles.scss"],
             "scripts": [],
             "preserveSymlinks": true
           },
@@ -36,8 +31,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "projects/admin/src/environments/environment.ts",
-                  "with": "projects/admin/src/environments/environment.prod.ts"
+                  "replace": "projects/sonar/src/environments/environment.ts",
+                  "with": "projects/sonar/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -62,38 +57,33 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "admin:build"
+            "browserTarget": "sonar:build"
           },
           "configurations": {
             "proxy": {
-              "browserTarget": "admin:build:proxy",
+              "browserTarget": "sonar:build:proxy",
               "proxyConfig": "proxy.conf.json"
             },
             "production": {
-              "browserTarget": "admin:build:production"
+              "browserTarget": "sonar:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "admin:build"
+            "browserTarget": "sonar:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/admin/src/test.ts",
-            "polyfills": "projects/admin/src/polyfills.ts",
-            "tsConfig": "projects/admin/tsconfig.spec.json",
-            "karmaConfig": "projects/admin/karma.conf.js",
-            "assets": [
-              "projects/admin/src/favicon.ico",
-              "projects/admin/src/assets"
-            ],
-            "styles": [
-              "projects/admin/src/styles.scss"
-            ],
+            "main": "projects/sonar/src/test.ts",
+            "polyfills": "projects/sonar/src/polyfills.ts",
+            "tsConfig": "projects/sonar/tsconfig.spec.json",
+            "karmaConfig": "projects/sonar/karma.conf.js",
+            "assets": ["projects/sonar/src/favicon.ico", "projects/sonar/src/assets"],
+            "styles": ["projects/sonar/src/styles.scss"],
             "scripts": []
           }
         },
@@ -101,143 +91,27 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/admin/tsconfig.app.json",
-              "projects/admin/tsconfig.spec.json",
-              "projects/admin/e2e/tsconfig.json"
+              "projects/sonar/tsconfig.app.json",
+              "projects/sonar/tsconfig.spec.json",
+              "projects/sonar/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "projects/admin/e2e/protractor.conf.js",
-            "devServerTarget": "admin:serve"
+            "protractorConfig": "projects/sonar/e2e/protractor.conf.js",
+            "devServerTarget": "sonar:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "admin:serve:production"
-            }
-          }
-        }
-      }
-    },
-    "public-search": {
-      "projectType": "application",
-      "schematics": {},
-      "root": "projects/public-search",
-      "sourceRoot": "projects/public-search/src",
-      "prefix": "public-search",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/public-search",
-            "index": "projects/public-search/src/index.html",
-            "main": "projects/public-search/src/main.ts",
-            "polyfills": "projects/public-search/src/polyfills.ts",
-            "tsConfig": "projects/public-search/tsconfig.app.json",
-            "aot": false,
-            "assets": [
-              "projects/public-search/src/favicon.ico",
-              "projects/public-search/src/assets"
-            ],
-            "styles": [
-              "projects/public-search/src/styles.scss"
-            ],
-            "scripts": [],
-            "preserveSymlinks": true
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "projects/public-search/src/environments/environment.ts",
-                  "with": "projects/public-search/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": false,
-              "outputHashing": "none",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "public-search:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "public-search:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "public-search:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/public-search/src/test.ts",
-            "polyfills": "projects/public-search/src/polyfills.ts",
-            "tsConfig": "projects/public-search/tsconfig.spec.json",
-            "karmaConfig": "projects/public-search/karma.conf.js",
-            "assets": [
-              "projects/public-search/src/favicon.ico",
-              "projects/public-search/src/assets"
-            ],
-            "styles": [
-              "projects/public-search/src/styles.scss"
-            ],
-            "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/public-search/tsconfig.app.json",
-              "projects/public-search/tsconfig.spec.json",
-              "projects/public-search/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/public-search/e2e/protractor.conf.js",
-            "devServerTarget": "public-search:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "public-search:serve:production"
+              "devServerTarget": "sonar:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "admin"
+  "defaultProject": "sonar"
 }
