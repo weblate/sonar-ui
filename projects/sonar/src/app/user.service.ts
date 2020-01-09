@@ -16,9 +16,10 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 import { ApiService } from '@rero/ng-core';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,9 @@ export class UserService {
           }
 
           return null;
+        }),
+        catchError(() => {
+          return of(null);
         })
       );
   }

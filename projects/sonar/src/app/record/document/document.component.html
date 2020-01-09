@@ -14,8 +14,20 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<h4>{{ record.metadata.title }}</h4>
-<p>
-    <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
+<p class="m-0">
+  <i>{{ record.metadata.institution.name }}</i>
 </p>
-<div *ngIf="record.metadata.abstracts">{{ record.metadata.abstracts[0].value | truncateText:30 }}</div>
+<h4 class="my-2">
+  <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">{{
+    record.metadata.title
+  }}</a>
+  <ng-template #routingLink>
+    <a [routerLink]="detailUrl.link">{{ record.metadata.title }}</a>
+  </ng-template>
+</h4>
+<p>
+  <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{
+    author.name
+  }}</span>
+</p>
+<div *ngIf="record.metadata.abstracts">{{ record.metadata.abstracts[0] | truncateText: 30 }}</div>

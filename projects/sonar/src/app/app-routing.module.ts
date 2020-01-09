@@ -18,6 +18,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { of, Observable } from 'rxjs';
 
+import { TranslateService } from '@ngx-translate/core';
 import { ActionStatus } from '@rero/ng-core';
 
 import { DocumentComponent } from './record/document/document.component';
@@ -31,6 +32,8 @@ import { UploadComponent } from './deposit/upload/upload.component';
 import { EditorComponent as DepositEditorComponent } from './deposit/editor/editor.component';
 import { ConfirmationComponent } from './deposit/confirmation/confirmation.component';
 import { BriefViewComponent } from './deposit/brief-view/brief-view.component';
+import { AdminComponent } from './_layout/admin/admin.component';
+import { AggregationFilter } from './record/document/aggregation-filter';
 
 const canReadDeposit = (): Observable<ActionStatus> => {
   return of({
@@ -60,71 +63,118 @@ const canAddDeposit = (): Observable<ActionStatus> => {
   });
 };
 
-
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: AdminComponent,
+    children: [
+      { path: '', component: DashboardComponent },
+      {
+        path: 'records',
+        loadChildren: () =>
+          import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+        data: {
+          showSearchInput: true,
+          adminMode: true,
+          types: [
+            {
+              key: 'documents',
+              label: 'Documents',
+              component: DocumentComponent,
+              detailComponent: DocumentDetailComponent,
+              aggregations: AggregationFilter.filter
+            },
+            {
+              key: 'institutions',
+              label: 'Organizations',
+              component: InstitutionComponent,
+              detailComponent: InstitutionDetailComponent
+            },
+            {
+              key: 'users',
+              label: 'Users',
+              component: UserComponent,
+              detailComponent: UserDetailComponent
+            },
+            {
+              key: 'deposits',
+              label: 'Deposits',
+              component: BriefViewComponent,
+              canRead: canReadDeposit,
+              canUpdate: canUpdateDeposit,
+              canDelete: canDeleteDeposit,
+              canAdd: canAddDeposit
+            }
+          ]
+        }
+      },
+      {
+        path: 'deposit/:id',
+        children: [
+          {
+            path: 'create',
+            component: UploadComponent
+          },
+          {
+            path: 'confirmation',
+            component: ConfirmationComponent
+          },
+          {
+            path: ':step',
+            component: DepositEditorComponent
+          }
+        ]
+      }
+    ]
   },
   {
-    path: 'records',
-    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+    path: 'organization/sonar/search',
+    loadChildren: () =>
+      import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
-      showSearchInput: true,
-      adminMode: true,
-      linkPrefix: '/records',
+      showSearchInput: false,
+      adminMode: false,
+      detailUrl: '/organization/sonar/:type/:pid',
       types: [
         {
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
-          detailComponent: DocumentDetailComponent
-        },
-        {
-          key: 'institutions',
-          label: 'Organizations',
-          component: InstitutionComponent,
-          detailComponent: InstitutionDetailComponent
-        },
-        {
-          key: 'users',
-          label: 'Users',
-          component: UserComponent,
-          detailComponent: UserDetailComponent
-        },
-        {
-          key: 'deposits',
-          label: 'Deposits',
-          component: BriefViewComponent,
-          canRead: canReadDeposit,
-          canUpdate: canUpdateDeposit,
-          canDelete: canDeleteDeposit,
-          canAdd: canAddDeposit
+          aggregations: AggregationFilter.filter
         }
       ]
     }
   },
   {
-    path: 'deposit/:id',
-    children: [
-      {
-        path: 'create',
-        component: UploadComponent
-      },
-      {
-        path: 'confirmation',
-        component: ConfirmationComponent
-      },
-      {
-        path: ':step',
-        component: DepositEditorComponent
-      }
-    ]
-  }
+    path: 'organization/usi/search',
+    loadChildren: () =>
+      import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+    data: {
+      showSearchInput: false,
+      adminMode: false,
+      detailUrl: '/organization/usi/:type/:pid',
+      types: [
+        {
+          key: 'documents',
+          label: 'Documents',
+          component: DocumentComponent,
+          aggregations: AggregationFilter.filter,
+          preFilters: {
+            institution: 'usi'
+          }
+        }
+      ]
+    }
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+  constructor(private translateService: TranslateService) {
+    AggregationFilter.translateService = this.translateService;
+  }
+}

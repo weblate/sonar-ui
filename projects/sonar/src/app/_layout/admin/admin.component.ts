@@ -14,16 +14,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { TranslateService } from '@rero/ng-core';
+import { NgxSpinnerService } from 'ngx-spinner';
+
+import { UserService } from '../../user.service';
 
 @Component({
-  selector: 'sonar-root',
-  templateUrl: './app.component.html'
+  selector: 'sonar-layout-admin',
+  templateUrl: './admin.component.html'
 })
-export class AppComponent {
-  constructor(private translateService: TranslateService) {
-    this.translateService.setLanguage(document.documentElement.lang || 'en');
+export class AdminComponent implements OnInit {
+  user: any;
+  ready = false;
+  isCollapsed = true;
+
+  constructor(private spinner: NgxSpinnerService, private userService: UserService) {
+    this.spinner.show();
+
+    this.userService.loadLoggedUser().subscribe(user => {
+      if (user) {
+        this.user = user;
+      }
+
+      this.spinner.hide();
+      this.ready = true;
+    });
   }
+
+  ngOnInit() {}
 }
