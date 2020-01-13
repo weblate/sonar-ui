@@ -23,7 +23,7 @@
   "scripts": {
     "serve": "ng serve --configuration proxy",
     "build": "ng build sonar --prod",
-    "deploy": "ng build sonar --prod  --deploy-url /static/node_modules/@rero/sonar-ui/dist/sonar/",
+    "deploy": "ng build sonar --prod  --deploy-url /static/sonar-ui/",
     "pack": "npm run build && npm pack",
     "test": "ng test",
     "lint": "ng lint",
