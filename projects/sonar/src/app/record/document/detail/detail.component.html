@@ -15,67 +15,121 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <ng-container *ngIf="record$ | async as record">
-  <h1 class="mb-4">{{ record.metadata.title }}</h1>
-  <dl>
-    <div *ngIf="record.metadata.authors">
-      <dt>{{ "Authors" | translate }}</dt>
-      <dd>
+  <h1>
+    {{ record.metadata.title[0].mainTitle | languageValue }}
+  </h1>
+  <h5 *ngIf="record.metadata.title[0].subtitle" class="text-muted">
+    {{ record.metadata.title[0].subtitle | languageValue }}
+  </h5>
+  <dl class="row mt-4">
+    <ng-container *ngIf="record.metadata.institution">
+      <dt class="col-sm-2" translate>Institution</dt>
+      <dd class="col-sm-10">{{ record.metadata.institution.name | translate }}</dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.authors">
+      <dt class="col-sm-2" translate>Authors</dt>
+      <dd class="col-sm-10">
         <span *ngFor="let author of record.metadata.authors; let last = last">
           {{ author.name }}<span *ngIf="!last">; </span>
         </span>
       </dd>
-    </div>
+    </ng-container>
 
-    <div *ngIf="record.metadata.abstracts">
-      <dt>{{ "Abstract" | translate }}</dt>
-      <dd class="text-justify">
+    <ng-container *ngIf="record.metadata.type">
+      <dt class="col-sm-2" translate>Document type</dt>
+      <dd class="col-sm-10 text-justify">
+        {{ ('type-' + record.metadata.type) | translate }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.copyrightDate">
+      <dt class="col-sm-2" translate>Copyright date</dt>
+      <dd class="col-sm-10 text-justify">
+        {{ record.metadata.copyrightDate | join : ', ' }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.abstracts">
+      <dt class="col-sm-2" translate>Abstract</dt>
+      <dd class="col-sm-10 text-justify">
         {{ record.metadata.abstracts | languageValue }}
       </dd>
-    </div>
+    </ng-container>
 
-    <div *ngIf="record.metadata.institution">
-      <dt>{{ "Organization" | translate }}</dt>
-      <dd>{{ record.metadata.institution.$ref }}</dd>
-    </div>
+    <ng-container *ngIf="record.metadata.extent">
+      <dt class="col-sm-2" translate>Physical description</dt>
+      <dd class="col-sm-10">{{ record.metadata.extent }}</dd>
+    </ng-container>
 
-    <div *ngIf="record.metadata.subjects">
-      <dt>{{ "Subjects" | translate }}</dt>
-      <dd>
-        <span
-          *ngFor="
+    <ng-container *ngIf="record.metadata.additionalMaterials">
+      <dt class="col-sm-2" translate>Additional Materials</dt>
+      <dd class="col-sm-10">{{ record.metadata.additionalMaterials }}</dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.series">
+      <dt class="col-sm-2" translate>Series</dt>
+      <dd class="col-sm-10">
+        <span *ngFor="
+            let serie of record.metadata.series;
+            let last = last
+          ">
+          {{ serie.name }}, {{ serie.number }}<span *ngIf="!last">; </span>
+        </span>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.is_part_of">
+      <dt class="col-sm-2" translate>Is part of</dt>
+      <dd class="col-sm-10">{{ record.metadata.is_part_of }}</dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.subjects">
+      <dt class="col-sm-2" translate>Subjects</dt>
+      <dd class="col-sm-10">
+        <span *ngFor="
             let subject of record.metadata.subjects | languageValue;
             let last = last
-          "
-        >
+          ">
           {{ subject }}<span *ngIf="!last">; </span>
         </span>
       </dd>
-    </div>
+    </ng-container>
 
-    <div *ngIf="record.metadata.languages">
-      <dt>{{ "Languages" | translate }}</dt>
-      <dd>
-        <span *ngFor="let language of record.metadata.languages">
-          {{ language.name }}
+    <ng-container *ngIf="record.metadata.notes">
+      <dt class="col-sm-2" translate>Notes</dt>
+      <dd class="col-sm-10">
+        <p class="m-0" *ngFor="let note of record.metadata.notes">{{ note }}</p>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.identifiedBy">
+      <dt class="col-sm-2" translate>Identifier</dt>
+      <dd class="col-sm-10">
+        <p class="m-0" *ngFor="let identifier of record.metadata.identifiedBy">
+          {{ identifier.value }}
+          <small class="badge badge-secondary text-uppercase text-light">{{ identifier.type | translate }}</small>
+        </p>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.language">
+      <dt class="col-sm-2" translate>Languages</dt>
+      <dd class="col-sm-10">
+        <span *ngFor="let language of record.metadata.language">
+          {{ ('lang-' + language.value) | translate }}
         </span>
       </dd>
-    </div>
-
-    <div *ngIf="record.metadata.notes">
-      <dt>{{ "Notes" | translate }}</dt>
-      <dd>{{ record.metadata.notes | join }}</dd>
-    </div>
-
-    <div *ngIf="record.metadata.extent">
-      <dt>{{ "Extent" | translate }}</dt>
-      <dd>{{ record.metadata.extent }}</dd>
-    </div>
-
-    <div *ngIf="record.metadata.identifiers">
-      <div *ngFor="let identifier of record.metadata.identifiers | keyvalue">
-        <dt>{{ identifier.key | uppercase }}</dt>
-        <dd>{{ identifier.value }}</dd>
-      </div>
-    </div>
+    </ng-container>
   </dl>
+
+  <ng-container *ngIf="record.metadata._files">
+    <hr class="mt-4">
+    <h5 translate>Files</h5>
+    <ul>
+      <li *ngFor="let file of record.metadata._files">
+        {{ file.key }} <span class="badge badge-secondary text-light">{{ file.type | translate }}</span>
+      </li>
+    </ul>
+  </ng-container>
 </ng-container>
