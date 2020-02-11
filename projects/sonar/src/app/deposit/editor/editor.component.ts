@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '@rero/ng-core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, EMPTY, of } from 'rxjs';
 import { delay, first, switchMap, tap } from 'rxjs/operators';
@@ -142,7 +143,8 @@ export class EditorComponent implements OnInit {
     private formlyJsonschema: FormlyJsonschema,
     private translateService: TranslateService,
     private dialogService: DialogService,
-    private userUservice: UserService
+    private userUservice: UserService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -278,6 +280,15 @@ export class EditorComponent implements OnInit {
             return of(false);
           }
 
+          this.spinner.show();
+
+          return this.depositService.extractPDFMetadata(this.deposit);
+        }),
+        switchMap((result: any) => {
+          if (result === false) {
+            return of(false);
+          }
+
           if (!this.deposit.metadata) {
             this.deposit.metadata = {};
           }
@@ -286,38 +297,34 @@ export class EditorComponent implements OnInit {
             this.deposit.metadata.title ||
             this.translateService.instant('Deposit #ID', { id: this.deposit.pid });
 
-          if (this.mainFile.pdf_metadata.title) {
-            this.deposit.metadata.title = this.mainFile.pdf_metadata.title;
+          if (result.title) {
+            this.deposit.metadata.title = result.title;
           } else {
             this.deposit.metadata.title = currentTitle;
           }
 
-          if (this.mainFile.pdf_metadata.languages) {
-            this.deposit.metadata.languages = this.mainFile.pdf_metadata.languages;
+          if (result.languages) {
+            this.deposit.metadata.languages = result.languages;
           }
 
-          if (this.mainFile.pdf_metadata.journal) {
-            this.deposit.metadata.journal = this.mainFile.pdf_metadata.journal;
+          if (result.journal) {
+            this.deposit.metadata.journal = result.journal;
           }
 
-          if (this.mainFile.pdf_metadata.abstract) {
-            this.deposit.metadata.abstracts = [this.mainFile.pdf_metadata.abstract];
+          if (result.abstract) {
+            this.deposit.metadata.abstracts = [result.abstract];
           }
 
-          if (this.mainFile.pdf_metadata.authors) {
-            this.deposit.contributors = this.mainFile.pdf_metadata.authors;
+          if (result.authors) {
+            this.deposit.contributors = result.authors;
           }
 
-          return this.depositService.update(this.deposit.pid, this.deposit);
-        }),
-        switchMap((result: any) => {
-          if (result === false) {
-            return of(false);
-          }
           return this.depositService.getJsonSchema('deposits');
         })
       )
       .subscribe((result: any) => {
+        this.spinner.hide();
+
         if (result !== false) {
           this.createForm(result);
           this.toastr.success(this.translateService.instant('Data imported successfully'));

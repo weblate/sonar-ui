@@ -297,6 +297,16 @@ export class DepositService {
   }
 
   /**
+   * Get the extracted metadata from main file.
+   * @param deposit Deposit
+   */
+  extractPDFMetadata(deposit: any): Observable<any> {
+    return this.httpClient
+      .get(`${this.depositEndPoint}/${deposit.pid}/extract-pdf-metadata`)
+      .pipe(catchError(err => this.handleError(err)));
+  }
+
+  /**
    * Order properties for the current entry.
    * @param schema Current entry of the JSON schema on which properties will be ordered
    */
