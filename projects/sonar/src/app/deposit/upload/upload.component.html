@@ -135,7 +135,6 @@
             (change)="onSelect($event, fileTypes.key, fileTypes.limit)"
             [multiple]="fileTypes.limit !== 1"
             [expandable]="true"
-            [accept]="'application/pdf'"
             *ngIf="getFilesByType(fileTypes.key).length < fileTypes.limit || fileTypes.limit === 0"
           >
             <ngx-dropzone-label>

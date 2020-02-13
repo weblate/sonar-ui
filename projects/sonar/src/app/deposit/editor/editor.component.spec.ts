@@ -14,25 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { of } from 'rxjs';
-
-import { RecordModule, TranslateLoader } from '@rero/ng-core';
-import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { FormlyModule } from '@ngx-formly/core';
-
-import { EditorComponent } from './editor.component';
-import { JoinPipe } from '../../core/join.pipe';
+import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { RecordModule, TranslateLoader } from '@rero/ng-core';
+import { ModalModule } from 'ngx-bootstrap';
+import { of } from 'rxjs';
 import { FileLinkPipe } from '../../core/file-link.pipe';
 import { FileSizePipe } from '../../core/filesize.pipe';
-import { StepComponent } from '../../core/step/step.component';
 import { HighlightJsonPipe } from '../../core/highlight-json.pipe';
+import { JoinPipe } from '../../core/join.pipe';
+import { StepComponent } from '../../core/step/step.component';
 import { ReviewComponent } from '../review/review.component';
+import { EditorComponent } from './editor.component';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -70,7 +69,8 @@ describe('EditorComponent', () => {
             useClass: TranslateLoader
           }
         }),
-        FormlyModule
+        FormlyModule,
+        ModalModule.forRoot()
       ],
       providers: [{ provide: ActivatedRoute, useValue: route }]
     }).compileComponents();

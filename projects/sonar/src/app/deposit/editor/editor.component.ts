@@ -59,6 +59,9 @@ export class EditorComponent implements OnInit {
   /** Current view mode */
   view = 'form';
 
+  /** File key to preview */
+  previewFileKey: string;
+
   /**
    * Return link prefix
    */

@@ -25,5 +25,23 @@
     "pathRewrite": {
       "^/api": "https://localhost:5000/logged-user/"
     }
+  },
+  "/deposits/*": {
+    "target": "https://localhost:5000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/deposits/": "https://localhost:5000/deposits/"
+    }
+  },
+  "/static/*": {
+    "target": "https://localhost:5000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/static/": "https://localhost:5000/static/"
+    }
   }
 }

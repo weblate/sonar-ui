@@ -15,13 +15,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <ng-container *ngIf="deposit">
-  <sonar-deposit-step
-    [currentStep]="currentStep"
-    [maxStep]="maxStep"
-    [linkPrefix]="linkPrefix"
-    [steps]="steps"
-    (cancel)="cancelDeposit()"
-  >
+  <sonar-deposit-step [currentStep]="currentStep" [maxStep]="maxStep" [linkPrefix]="linkPrefix" [steps]="steps"
+    (cancel)="cancelDeposit()">
   </sonar-deposit-step>
 
   <sonar-deposit-review [deposit]="deposit"></sonar-deposit-review>
@@ -44,20 +39,10 @@
                 <i class="fa fa-mail-forward mr-2"></i> {{ 'Import metadata' | translate }}
                 <span class="caret"></span>
               </button>
-              <ul
-                id="dropdown-import"
-                *dropdownMenu
-                class="dropdown-menu"
-                role="menu"
-                aria-labelledby="button-basic"
-              >
+              <ul id="dropdown-import" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
                 <li role="menuitem">
-                  <a
-                    class="dropdown-item"
-                    href
-                    (click)="$event.preventDefault(); extractPdfMetadata()"
-                    >{{ 'Analyze uploaded PDF' | translate }}</a
-                  >
+                  <a class="dropdown-item" href
+                    (click)="$event.preventDefault(); extractPdfMetadata()">{{ 'Analyze uploaded PDF' | translate }}</a>
                 </li>
               </ul>
             </div>
@@ -67,12 +52,7 @@
               <i class="fa fa-floppy-o mr-2"></i>
               {{ 'Save' | translate }}
             </button>
-            <button
-              type="button"
-              class="btn btn-primary ml-2"
-              (click)="publish()"
-              *ngIf="isFinished()"
-            >
+            <button type="button" class="btn btn-primary ml-2" (click)="publish()" *ngIf="isFinished()">
               <i class="fa fa-check mr-2"></i>
               <span *ngIf="isAdminUser; else submitLabel">
                 {{ 'Publish' | translate }}
@@ -84,22 +64,16 @@
       </div>
       <div class="col-sm-4 text-center text-sm-right">
         <div class="btn-group" role="group" aria-label="Basic example">
-          <button
-            type="button"
-            class="btn"
-            [ngClass]="{
+          <button type="button" class="btn" [ngClass]="{
               'btn-primary': view === viewItem.key,
               'btn-light': view !== viewItem.key
-            }"
-            *ngFor="
+            }" *ngFor="
               let viewItem of [
                 { key: 'form', icon: 'tasks' },
                 { key: 'preview', icon: 'desktop' },
                 { key: 'json', icon: 'code' }
               ]
-            "
-            (click)="view = viewItem.key"
-          >
+            " (click)="view = viewItem.key">
             <i [class]="'fa fa-' + viewItem.icon"></i>
           </button>
         </div>
@@ -135,9 +109,7 @@
           <pre class="bg-light p-3" [innerHTML]="deposit | json | highlightJson"></pre>
         </ng-container>
 
-        <ng-container
-          *ngIf="deposit.metadata && (currentStep === 'diffusion' || view === 'preview')"
-        >
+        <ng-container *ngIf="deposit.metadata && (currentStep === 'diffusion' || view === 'preview')">
           <h2 class="mb-2">{{ 'Preview' | translate }}</h2>
           <p class="m-0">
             <strong>{{ deposit.metadata.title }}</strong>
@@ -147,11 +119,8 @@
             <ng-container *ngIf="deposit.metadata.abstracts && deposit.metadata.abstracts.length">
               <dt class="col-sm-3">{{ 'Abstracts' | translate }}</dt>
               <dd class="col-sm-9">
-                <p
-                  class="m-0 text-justify"
-                  *ngFor="let abstract of deposit.metadata.abstracts"
-                  [innerHtml]="abstract | nl2br"
-                ></p>
+                <p class="m-0 text-justify" *ngFor="let abstract of deposit.metadata.abstracts"
+                  [innerHtml]="abstract | nl2br"></p>
               </dd>
             </ng-container>
 
@@ -197,20 +166,48 @@
       </div>
       <div class="col-sm-4 text-left text-sm-right" *ngIf="mainFile">
         <h4>{{ 'Main file' | translate }}</h4>
-        <a [href]="mainFile | fileLink" target="_blank">
-          <i class="fa fa-file-pdf-o"></i> {{ mainFile.key }} ({{ mainFile.size | filesize }})
+        {{ mainFile.key }} ({{ mainFile.size | filesize }})
+        <a href="#" class="ml-2" *ngIf="mainFile.mime_type == 'application/pdf'"
+          (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
+          <i class="fa fa-eye"></i>
         </a>
+        <a [href]="mainFile.key | fileLink: 'deposits':deposit.pid:'preview'" target="_blank" class="ml-2">
+          <i class="fa fa-download"></i>
+        </a>
+
         <div class="mt-5" *ngIf="additionalFiles && additionalFiles.length > 0">
           <h4>{{ 'Additional files' | translate }}</h4>
           <p *ngFor="let file of additionalFiles">
-            <ng-container>
-              <a [href]="file | fileLink" target="_blank">
-                <i class="fa fa-file-pdf-o"></i> {{ file.key }} ({{ file.size | filesize }})
-              </a>
-            </ng-container>
+            {{ file.key }} ({{ file.size | filesize }})
+            <a href="#" class="ml-2" (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()">
+              <i class="fa fa-eye"></i>
+            </a>
+            <a [href]="file.key | fileLink: 'deposits':deposit.pid:'preview'" target="_blank" class="ml-2">
+              <i class="fa fa-download"></i>
+            </a>
           </p>
         </div>
       </div>
     </div>
   </form>
 </ng-container>
+
+<!--Preview modal-->
+<div bsModal #previewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{ previewFileKey }}</h4>
+        <button type="button" class="close pull-right" (click)="previewModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <iframe class="preview-iframe" id="preview-iframe" width="100%" height="500"
+          [src]="previewFileKey | fileLink: 'deposits':deposit.pid:'preview'" style="border: none;"
+          *ngIf="deposit && previewFileKey"></iframe>
+      </div>
+    </div>
+  </div>
+</div>

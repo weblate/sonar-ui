@@ -15,16 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Pipe, PipeTransform } from '@angular/core';
-
-import { ApiService } from '@rero/ng-core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Pipe({
   name: 'fileLink'
 })
 export class FileLinkPipe implements PipeTransform {
-  constructor(private apiService: ApiService) {}
+  constructor(public sanitizer: DomSanitizer) { }
 
-  transform(value: any): string {
-    return `${this.apiService.endpointPrefix}/files/${value.bucket}/${value.key}`;
+  /**
+   * Generate the link for a file
+   * @param key File key
+   * @param resourceType Type of the resource
+   * @param resourceId Id of the resource
+   * @param fileType If we want to have "files" or "preview"
+   */
+  transform(key: any, resourceType: string, resourceId: string, fileType = 'files'): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(`${resourceType}/${resourceId}/${fileType}/${key}`);
   }
 }

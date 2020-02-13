@@ -23,7 +23,7 @@ import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { CoreConfigService, RecordModule } from '@rero/ng-core';
-import { BsLocaleService } from 'ngx-bootstrap';
+import { BsLocaleService, ModalModule } from 'ngx-bootstrap';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxDropzoneModule } from 'ngx-dropzone';
@@ -93,6 +93,7 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     HttpClientModule,
     CollapseModule.forRoot(),
     TabsModule.forRoot(),
+    ModalModule.forRoot(),
     NgxSpinnerModule,
     TranslateModule.forRoot({
       loader: {
