@@ -23,4 +23,16 @@ import { Observable } from 'rxjs';
 export class DetailComponent {
   /** Observable resolving record data */
   record$: Observable<any>;
+
+  /** File key to preview */
+  previewFileKey: string;
+
+  /**
+   * Get only files of type "file" (exclude fulltext files).
+   */
+  filterFiles(files: Array<any>): Array<any> {
+    return files.filter((item: any) => {
+      return item.type === 'file';
+    });
+  }
 }

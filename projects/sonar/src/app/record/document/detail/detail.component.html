@@ -124,12 +124,52 @@
   </dl>
 
   <ng-container *ngIf="record.metadata._files">
-    <hr class="mt-4">
-    <h5 translate>Files</h5>
-    <ul>
-      <li *ngFor="let file of record.metadata._files">
-        {{ file.key }} <span class="badge badge-secondary text-light">{{ file.type | translate }}</span>
-      </li>
-    </ul>
+    <h5 class="mt-5" translate>Files</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th translate>File</th>
+          <th translate>Size</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of filterFiles(record.metadata._files)">
+          <td>
+            <span class="badge badge-primary" translate *ngIf="file.order === 1">Fichier principal</span>
+            {{ file.key }}
+          </td>
+          <td>{{ file.size | filesize }}</td>
+          <td class="text-right">
+            <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()"
+              class="btn btn-secondary btn-sm text-light previewLink mr-2"><i class="fa fa-eye"></i>
+              {{ 'Preview' | translate }}</a>
+            <a [href]="file.key | fileLink: 'documents':record.metadata.pid:'files'" target="_blank"
+              class="btn btn-secondary btn-sm text-light"><i class="fa fa-download"></i>
+              {{ 'Download' | translate }}</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </ng-container>
+
+  <!--Preview modal-->
+  <div bsModal #previewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{ previewFileKey }}</h4>
+          <button type="button" class="close pull-right" (click)="previewModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <iframe class="preview-iframe" id="preview-iframe" width="100%" height="500"
+            [src]="previewFileKey | fileLink: 'documents':record.metadata.pid:'preview'" style="border: none;"
+            *ngIf="previewFileKey"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-container>

@@ -35,6 +35,15 @@
       "^/deposits/": "https://localhost:5000/deposits/"
     }
   },
+  "/documents/*": {
+    "target": "https://localhost:5000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/documents/": "https://localhost:5000/documents/"
+    }
+  },
   "/static/*": {
     "target": "https://localhost:5000",
     "secure": false,
