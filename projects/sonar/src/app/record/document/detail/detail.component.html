@@ -128,6 +128,7 @@
     <table class="table">
       <thead>
         <tr>
+          <th translate>Label</th>
           <th translate>File</th>
           <th translate>Size</th>
           <th></th>
@@ -135,10 +136,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let file of filterFiles(record.metadata._files)">
-          <td>
-            <span class="badge badge-primary" translate *ngIf="file.order === 1">Fichier principal</span>
-            {{ file.key }}
-          </td>
+          <td>{{ file.label | default:'-' }}</td>
+          <td>{{ file.key }}</td>
           <td>{{ file.size | filesize }}</td>
           <td class="text-right">
             <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()"
