@@ -15,18 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { switchMap, tap, first, delay } from 'rxjs/operators';
-import { combineLatest, of, EMPTY } from 'rxjs';
-
-import { DialogService } from '@rero/ng-core';
-import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
-
-import { DepositService } from '../deposit.service';
+import { DialogService } from '@rero/ng-core';
+import { ToastrService } from 'ngx-toastr';
+import { combineLatest, EMPTY, of } from 'rxjs';
+import { delay, first, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '../../user.service';
+import { DepositService } from '../deposit.service';
 
 @Component({
   selector: 'sonar-deposit-editor',
@@ -76,11 +74,19 @@ export class EditorComponent implements OnInit {
 
   /** Return main file */
   get mainFile(): any {
+    if (this.deposit._files == null) {
+      return null;
+    }
+
     return this.deposit._files.filter((item: any) => item.category === 'main')[0];
   }
 
   /** Return additional files list */
   get additionalFiles(): Array<any> {
+    if (this.deposit._files == null) {
+      return [];
+    }
+
     return this.deposit._files.filter((item: any) => item.category === 'additional');
   }
 
