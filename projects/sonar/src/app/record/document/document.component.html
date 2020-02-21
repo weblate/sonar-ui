@@ -18,14 +18,9 @@
   <i>{{ record.metadata.institution.name | translate }}</i>
 </p>
 <h4 class="my-2">
-  <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">{{
-    record.metadata.title
-  }}</a>
-  <ng-template #routingLink>
-    <a [routerLink]="detailUrl.link">
-      {{ record.metadata.title[0].mainTitle | languageValue }}
-    </a>
-  </ng-template>
+  <a [routerLink]="detailUrl.link">
+    {{ record.metadata.title[0].mainTitle | languageValue }}
+  </a>
 </h4>
 <h5 *ngIf="record.metadata.title[0].subtitle" class="text-muted">
   {{ record.metadata.title[0].subtitle | languageValue }}
