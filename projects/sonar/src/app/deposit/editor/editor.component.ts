@@ -62,6 +62,9 @@ export class EditorComponent implements OnInit {
   /** File key to preview */
   previewFileKey: string;
 
+  /** Store files associated with deposit */
+  private _files: Array<any> = [];
+
   /**
    * Return link prefix
    */
@@ -78,20 +81,12 @@ export class EditorComponent implements OnInit {
 
   /** Return main file */
   get mainFile(): any {
-    if (this.deposit._files == null) {
-      return null;
-    }
-
-    return this.deposit._files.filter((item: any) => item.category === 'main')[0];
+    return this._files.find((item: any) => item.category === 'main');
   }
 
   /** Return additional files list */
   get additionalFiles(): Array<any> {
-    if (this.deposit._files == null) {
-      return [];
-    }
-
-    return this.deposit._files.filter((item: any) => item.category === 'additional');
+    return this._files.filter((item: any) => item.category === 'additional');
   }
 
   /** Return if current logged user is an admin or a standard user */
@@ -159,7 +154,8 @@ export class EditorComponent implements OnInit {
         switchMap(params => {
           return combineLatest(
             this.depositService.getJsonSchema('deposits'),
-            this.depositService.get(params.id)
+            this.depositService.get(params.id),
+            this.depositService.getFiles(params.id)
           );
         })
       )
@@ -174,6 +170,8 @@ export class EditorComponent implements OnInit {
           this.createdAt = result[1].created;
           this.updatedAt = result[1].updated;
           this.createForm(result[0]);
+
+          this._files = result[2];
         },
         () => {
           this.toastr.error(this.translateService.instant('Deposit not found'));
