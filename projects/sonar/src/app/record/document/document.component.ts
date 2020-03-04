@@ -47,7 +47,7 @@ export class DocumentComponent implements ResultItem, OnInit {
 
     const thumbnails = this.record.metadata._files.filter((file: any) => file.type === 'thumbnail');
 
-    if (!thumbnails) {
+    if (thumbnails.length === 0) {
       return;
     }
 
