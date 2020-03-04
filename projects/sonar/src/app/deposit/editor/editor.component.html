@@ -29,13 +29,8 @@
         <div class="row mb-3 mb-sm-0" *ngIf="view === 'form'">
           <div class="col-6">
             <div class="btn-group" dropdown *ngIf="currentStep === 'metadata' && mainFile">
-              <button
-                id="import-button"
-                dropdownToggle
-                type="button"
-                class="btn btn-primary dropdown-toggle"
-                aria-controls="dropdown-import"
-              >
+              <button id="import-button" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                aria-controls="dropdown-import">
                 <i class="fa fa-mail-forward mr-2"></i> {{ 'Import metadata' | translate }}
                 <span class="caret"></span>
               </button>
@@ -167,11 +162,10 @@
       <div class="col-sm-4 text-left text-sm-right" *ngIf="mainFile">
         <h4>{{ 'Main file' | translate }}</h4>
         {{ mainFile.key }} ({{ mainFile.size | filesize }})
-        <a href="#" class="ml-2" *ngIf="mainFile.mime_type == 'application/pdf'"
-          (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
+        <a href="#" class="ml-2" (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
           <i class="fa fa-eye"></i>
         </a>
-        <a [href]="mainFile.key | fileLink: 'deposits':deposit.pid:'preview'" target="_blank" class="ml-2">
+        <a [href]="mainFile.key | fileLink: 'deposits':deposit.pid:'files'" target="_blank" class="ml-2">
           <i class="fa fa-download"></i>
         </a>
 
@@ -182,7 +176,7 @@
             <a href="#" class="ml-2" (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()">
               <i class="fa fa-eye"></i>
             </a>
-            <a [href]="file.key | fileLink: 'deposits':deposit.pid:'preview'" target="_blank" class="ml-2">
+            <a [href]="file.key | fileLink: 'deposits':deposit.pid:'files'" target="_blank" class="ml-2">
               <i class="fa fa-download"></i>
             </a>
           </p>
