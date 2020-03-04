@@ -247,6 +247,7 @@ export class EditorComponent implements OnInit {
         first(),
         switchMap((confirm: boolean) => {
           if (confirm === true) {
+            this.spinner.show();
             return this.depositService.publish(this.deposit.pid);
           }
 
@@ -255,6 +256,7 @@ export class EditorComponent implements OnInit {
         delay(1000)
       )
       .subscribe(() => {
+        this.spinner.hide();
         this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
       });
   }
