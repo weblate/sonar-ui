@@ -27,12 +27,16 @@
       <dd class="col-sm-10">{{ record.metadata.institution.name | translate }}</dd>
     </ng-container>
 
-    <ng-container *ngIf="record.metadata.authors">
-      <dt class="col-sm-2" translate>Authors</dt>
+    <ng-container *ngIf="record.metadata.contribution">
+      <dt class="col-sm-2" translate>Contributions</dt>
       <dd class="col-sm-10">
-        <span *ngFor="let author of record.metadata.authors; let last = last">
-          {{ author.name }}<span *ngIf="!last">; </span>
-        </span>
+        <ul class="list-unstyled mb-0">
+          <li *ngFor="let contribution of record.metadata.contribution; let last = last">
+            <small class="badge badge-secondary text-uppercase text-light">{{ contribution.agent.type }}</small>
+            {{ contribution.agent.preferred_name }}
+            <small class="badge badge-light text-uppercase">{{ contribution.role }}</small>
+          </li>
+        </ul>
       </dd>
     </ng-container>
 

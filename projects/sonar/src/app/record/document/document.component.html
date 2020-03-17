@@ -47,7 +47,12 @@
       {{ record.metadata.title[0].subtitle | languageValue }}
     </h5>
     <p>
-      <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
+      <ng-container *ngFor="let contributor of record.metadata.contribution">
+        <span class="badge badge-primary mr-1"
+          *ngIf="contributor.agent && contributor.agent.type === 'bf:Person' && contributor.role[0] === 'cre'">
+          {{ contributor.agent.preferred_name }}
+        </span>
+      </ng-container>
     </p>
     <div *ngIf="record.metadata.abstracts">
       {{ record.metadata.abstracts | languageValue | truncateText: 30 }}
