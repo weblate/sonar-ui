@@ -146,13 +146,13 @@ const routes: Routes = [
     }
   },
   {
-    path: 'organization/usi/search',
+    path: 'organization/unisi/search',
     loadChildren: () =>
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: false,
       adminMode: false,
-      detailUrl: '/organization/usi/:type/:pid',
+      detailUrl: '/organization/unisi/:type/:pid',
       types: [
         {
           key: 'documents',
@@ -160,7 +160,7 @@ const routes: Routes = [
           component: DocumentComponent,
           aggregations: AggregationFilter.filter,
           preFilters: {
-            institution: 'usi'
+            institution: 'unisi'
           }
         }
       ]
