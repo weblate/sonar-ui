@@ -15,10 +15,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="row">
-  <div class="col-sm-2">
+  <div class="col-sm-2 text-center">
     <ng-container *ngIf="thumbnail">
       <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">
-        <img [src]="thumbnail" class="img-thumbnail img-fluid"
+        <img [src]="thumbnail" class="img-thumbnail img-fluid p-2"
           [alt]="record.metadata.title[0].mainTitle | languageValue">
       </a>
       <ng-template #routingLink>
@@ -27,6 +27,11 @@
             [alt]="record.metadata.title[0].mainTitle | languageValue">
         </a>
       </ng-template>
+      <p class="my-2" *ngIf="embargoDate">
+        <span class="badge badge-secondary text-light">
+          {{ 'Public access from' | translate }}<br>{{ embargoDate | date:'dd/MM/yyyy' }}
+        </span>
+      </p>
     </ng-container>
   </div>
   <div class="col-sm-10">

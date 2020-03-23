@@ -33,8 +33,35 @@ export class DocumentComponent implements ResultItem, OnInit {
   // Thumbnail file for record
   thumbnail: any;
 
+  // Main file of the document
+  mainFile: any;
+
+  // Embargo date
+  embargoDate: string;
+
+  // Boolean giving the information is the main file is restricted
+  restricted: boolean;
+
+  /**
+   * Component initialization.
+   * - Extracts and stores main file from document files.
+   * - Stores embargo information from main file.
+   * - Load thumbnail for the record.
+   */
   ngOnInit() {
-    this.loadThumbnail();
+    this.mainFile = this.record.metadata._files.find((file: any) => file.type === 'file');
+
+    if (this.mainFile) {
+      if (this.mainFile.restricted.date) {
+        this.embargoDate = this.mainFile.restricted.date;
+      }
+
+      if (this.mainFile.restricted.restricted) {
+        this.restricted = this.mainFile.restricted.restricted;
+      }
+
+      this.loadThumbnail();
+    }
   }
 
   /**
@@ -45,12 +72,17 @@ export class DocumentComponent implements ResultItem, OnInit {
       return;
     }
 
-    const thumbnails = this.record.metadata._files.filter((file: any) => file.type === 'thumbnail');
+    const thumbnail = this.record.metadata._files.find((file: any) => file.type === 'thumbnail');
 
-    if (thumbnails.length === 0) {
+    if (!thumbnail) {
       return;
     }
 
-    this.thumbnail = `/documents/${this.record.metadata.pid}/files/${thumbnails[0].key}`;
+    if (this.restricted === true) {
+      this.thumbnail = '/static/images/restricted.png';
+      return;
+    }
+
+    this.thumbnail = `/documents/${this.record.metadata.pid}/files/${thumbnail.key}`;
   }
 }
