@@ -1,18 +1,6 @@
 {
   "name": "@rero/sonar-ui",
   "version": "0.1.11",
-  "license": "AGPL-3.0-only",
-  "author": {
-    "name": "RERO",
-    "email": "software@rero.ch"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rero/sonar-ui"
-  },
   "description": "User interface for SONAR.",
   "keywords": [
     "rero",
@@ -20,15 +8,27 @@
     "angular"
   ],
   "homepage": "https://github.com/rero/sonar-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rero/sonar-ui"
+  },
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "RERO",
+    "email": "software@rero.ch"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "serve": "ng serve --configuration proxy",
     "build": "ng build sonar --prod",
     "deploy": "ng build sonar --prod  --deploy-url /static/sonar-ui/",
-    "pack": "npm run deploy && npm pack",
-    "test": "ng test",
-    "lint": "ng lint",
     "e2e": "ng e2e",
     "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translate/i18n/en_US.json --fi '  '",
+    "lint": "ng lint",
+    "pack": "npm run deploy && npm pack",
+    "serve": "ng serve --configuration proxy",
+    "test": "ng test",
     "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translate/i18n/{de,en,fr,it}.json --fi '  '"
   },
   "dependencies": {
@@ -41,17 +41,18 @@
     "@angular/platform-browser": "~8.2.9",
     "@angular/platform-browser-dynamic": "~8.2.9",
     "@angular/router": "~8.2.9",
-    "@biesbjerg/ngx-translate-extract": "^4.2.0",
-    "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@cospired/i18n-iso-languages": "^2.0.5",
     "@ngx-formly/bootstrap": "^5.5.10",
     "@ngx-formly/core": "^5.5.10",
     "@ngx-translate/core": "^12.1.1",
     "@rero/ng-core": "0.0.33",
+    "acorn": ">=6.4.1",
     "bootstrap": "^4.3.1",
     "crypto-js": "^3.1.9-1",
     "font-awesome": "^4.7.0",
+    "kind-of": ">=6.0.3",
     "lodash-es": "4.17.14",
+    "minimist": ">=0.2.1",
     "moment": "^2.24.0",
     "ngx-bootstrap": "~5.3.2",
     "ngx-dropzone": "^2.1.1",
@@ -67,9 +68,11 @@
     "@angular/compiler-cli": "~8.2.9",
     "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/language-service": "~8.2.9",
-    "@types/node": "~8.9.4",
+    "@biesbjerg/ngx-translate-extract": "^4.2.0",
+    "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -83,7 +86,7 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "files": [
-    "dist"
-  ]
+  "publishConfig": {
+    "access": "public"
+  }
 }
