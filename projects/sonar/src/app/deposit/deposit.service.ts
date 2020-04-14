@@ -17,7 +17,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ApiService, DialogService } from '@rero/ng-core';
+import { ApiService, DialogService, removeEmptyValues } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
 import { concat, from, Observable, of, throwError } from 'rxjs';
 import { catchError, first, ignoreElements, map, mergeMap, reduce, switchMap, tap } from 'rxjs/operators';
@@ -91,6 +91,9 @@ export class DepositService {
    * @param data Deposit metadata
    */
   update(id: string, data: any): Observable<any> {
+    // Clean up empty values before sending the form.
+    data = removeEmptyValues(data);
+
     return this._httpClient
       .put(`${this._apiService.getEndpointByType('deposits', true)}/${id}`, data)
       .pipe(
@@ -210,7 +213,7 @@ export class DepositService {
           label: data.label || data.key,
           embargo: data.embargo || false,
           embargoDate: data.embargoDate || null,
-          expect: data.expect || false
+          exceptInInstitution: data.exceptInInstitution || false
         }
       )
       .pipe(
@@ -294,7 +297,9 @@ export class DepositService {
     return this._httpClient
       .post(`${this.depositEndPoint}/${deposit.pid}/review`, {
         action,
-        user: this._userService.user.pid,
+        user: {
+          $ref: this._userService.getUserRefEndpoint()
+        },
         comment: comment || null
       })
       .pipe(catchError(err => this._handleError(err)));

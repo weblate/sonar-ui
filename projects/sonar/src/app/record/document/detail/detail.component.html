@@ -23,93 +23,25 @@
   </h5>
   <dl class="row mt-4">
     <ng-container *ngIf="record.metadata.institution">
-      <dt class="col-sm-2" translate>Institution</dt>
-      <dd class="col-sm-10">{{ record.metadata.institution.name | translate }}</dd>
+      <dt class="col-sm-3" translate>Institution</dt>
+      <dd class="col-sm-9">{{ record.metadata.institution.name | translate }}</dd>
     </ng-container>
 
-    <ng-container *ngIf="record.metadata.contribution">
-      <dt class="col-sm-2" translate>Contributions</dt>
-      <dd class="col-sm-10">
-        <ul class="list-unstyled mb-0">
-          <li *ngFor="let contribution of record.metadata.contribution; let last = last">
-            <small class="badge badge-secondary text-uppercase text-light">{{ contribution.agent.type }}</small>
-            {{ contribution.agent.preferred_name }}
-            <small class="badge badge-light text-uppercase">{{ contribution.role }}</small>
-          </li>
-        </ul>
-      </dd>
+    <ng-container *ngIf="record.metadata.documentType">
+      <dt class="col-sm-3" translate>Document type</dt>
+      <dd class="col-sm-9">{{ ('document_type_' + record.metadata.documentType) | translate }}</dd>
     </ng-container>
 
-    <ng-container *ngIf="record.metadata.type">
-      <dt class="col-sm-2" translate>Document type</dt>
-      <dd class="col-sm-10 text-justify">
-        {{ ('type-' + record.metadata.type) | translate }}
-      </dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.copyrightDate">
-      <dt class="col-sm-2" translate>Copyright date</dt>
-      <dd class="col-sm-10 text-justify">
-        {{ record.metadata.copyrightDate | join : ', ' }}
-      </dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.abstracts">
-      <dt class="col-sm-2" translate>Abstract</dt>
-      <dd class="col-sm-10 text-justify">
-        {{ record.metadata.abstracts | languageValue }}
-      </dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.extent">
-      <dt class="col-sm-2" translate>Physical description</dt>
-      <dd class="col-sm-10">{{ record.metadata.extent }}</dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.additionalMaterials">
-      <dt class="col-sm-2" translate>Additional Materials</dt>
-      <dd class="col-sm-10">{{ record.metadata.additionalMaterials }}</dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.series">
-      <dt class="col-sm-2" translate>Series</dt>
-      <dd class="col-sm-10">
-        <span *ngFor="
-            let serie of record.metadata.series;
-            let last = last
-          ">
-          {{ serie.name }}, {{ serie.number }}<span *ngIf="!last">; </span>
-        </span>
-      </dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.is_part_of">
-      <dt class="col-sm-2" translate>Is part of</dt>
-      <dd class="col-sm-10">{{ record.metadata.is_part_of }}</dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.subjects">
-      <dt class="col-sm-2" translate>Subjects</dt>
-      <dd class="col-sm-10">
-        <span *ngFor="
-            let subject of record.metadata.subjects | languageValue;
-            let last = last
-          ">
-          {{ subject }}<span *ngIf="!last">; </span>
-        </span>
-      </dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.notes">
-      <dt class="col-sm-2" translate>Notes</dt>
-      <dd class="col-sm-10">
-        <p class="m-0" *ngFor="let note of record.metadata.notes">{{ note }}</p>
+    <ng-container *ngIf="record.metadata.classification">
+      <dt class="col-sm-3" translate>Classification</dt>
+      <dd class="col-sm-9">
+        {{ ('classification_' + record.metadata.classification[0].classificationPortion) | translate }}
       </dd>
     </ng-container>
 
     <ng-container *ngIf="record.metadata.identifiedBy">
-      <dt class="col-sm-2" translate>Identifier</dt>
-      <dd class="col-sm-10">
+      <dt class="col-sm-3" translate>Identifier</dt>
+      <dd class="col-sm-9">
         <p class="m-0" *ngFor="let identifier of record.metadata.identifiedBy">
           {{ identifier.value }}
           <small class="badge badge-secondary text-uppercase text-light">{{ identifier.type | translate }}</small>
@@ -118,11 +50,61 @@
     </ng-container>
 
     <ng-container *ngIf="record.metadata.language">
-      <dt class="col-sm-2" translate>Languages</dt>
-      <dd class="col-sm-10">
+      <dt class="col-sm-3" translate>Languages</dt>
+      <dd class="col-sm-9">
         <span *ngFor="let language of record.metadata.language">
           {{ ('lang-' + language.value) | translate }}
         </span>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.contribution">
+      <dt class="col-sm-3" translate>Contributions</dt>
+      <dd class="col-sm-9">
+        <ul class="list-unstyled mb-0">
+          <li *ngFor="let contribution of record.metadata.contribution; let last = last">
+            <small class="badge badge-secondary text-uppercase text-light"
+              translate>{{ contribution.agent.type }}</small>
+            <small class="badge badge-secondary text-uppercase text-light ml-1"
+              translate>{{ contribution.role }}</small>
+            {{ contribution.agent.preferred_name }}
+            <i class="text-muted" *ngIf="contribution.affiliation">({{ contribution.affiliation }})</i>
+          </li>
+        </ul>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.type">
+      <dt class="col-sm-3" translate>Document type</dt>
+      <dd class="col-sm-9 text-justify">
+        {{ ('type-' + record.metadata.type) | translate }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.copyrightDate">
+      <dt class="col-sm-3" translate>Copyright date</dt>
+      <dd class="col-sm-9 text-justify">
+        {{ record.metadata.copyrightDate | join : ', ' }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.abstracts">
+      <dt class="col-sm-3" translate>Abstracts</dt>
+      <dd class="col-sm-9">
+        <p class="m-0 text-justify" *ngFor="let abstract of record.metadata.abstracts">
+          <span class="badge badge-secondary text-light mr-2">{{ abstract.language | uppercase }}</span>
+          <span [innerHtml]="abstract.value | nl2br"></span>
+        </p>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.subjects && record.metadata.subjects.length">
+      <dt class="col-sm-3" translate>Subjects</dt>
+      <dd class="col-sm-9">
+        <p class="m-0" *ngFor="let subject of record.metadata.subjects">
+          <span class="badge badge-secondary text-light mr-2">{{ subject.label.language | uppercase }}</span>
+          {{ subject.label.value | join:' ; ' }}
+        </p>
       </dd>
     </ng-container>
   </dl>

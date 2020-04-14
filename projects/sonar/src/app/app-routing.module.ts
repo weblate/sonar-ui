@@ -61,6 +61,13 @@ const canAddDeposit = (): Observable<ActionStatus> => {
   });
 };
 
+const adminModeDisabled = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
+
 const routes: Routes = [
   {
     path: '',
@@ -73,7 +80,6 @@ const routes: Routes = [
           import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
         data: {
           showSearchInput: true,
-          adminMode: true,
           types: [
             {
               key: 'documents',
@@ -131,7 +137,7 @@ const routes: Routes = [
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: false,
-      adminMode: false,
+      adminMode: adminModeDisabled,
       detailUrl: '/organization/sonar/:type/:pid',
       types: [
         {
@@ -149,7 +155,7 @@ const routes: Routes = [
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: false,
-      adminMode: false,
+      adminMode: adminModeDisabled,
       detailUrl: '/organization/unisi/:type/:pid',
       types: [
         {

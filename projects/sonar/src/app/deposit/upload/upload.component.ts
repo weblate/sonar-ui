@@ -357,7 +357,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
       label: [file.label, Validators.required],
       embargo: [file.embargo],
       embargoDate: [file.embargoDate, this._embargoDateValidator],
-      expect: [file.expect],
+      exceptInInstitution: [file.exceptInInstitution],
       id: file.version_id
     });
     this.filesForm.push(control);

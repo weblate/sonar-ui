@@ -49,18 +49,19 @@ export class DocumentComponent implements ResultItem, OnInit {
    * - Load thumbnail for the record.
    */
   ngOnInit() {
-    this.mainFile = this.record.metadata._files.find((file: any) => file.type === 'file');
+    if (this.record.metadata._files) {
+      this.mainFile = this.record.metadata._files.find((file: any) => file.type === 'file');
+      if (this.mainFile) {
+        if (this.mainFile.restricted.date) {
+          this.embargoDate = this.mainFile.restricted.date;
+        }
 
-    if (this.mainFile) {
-      if (this.mainFile.restricted.date) {
-        this.embargoDate = this.mainFile.restricted.date;
+        if (this.mainFile.restricted.restricted) {
+          this.restricted = this.mainFile.restricted.restricted;
+        }
+
+        this._loadThumbnail();
       }
-
-      if (this.mainFile.restricted.restricted) {
-        this.restricted = this.mainFile.restricted.restricted;
-      }
-
-      this._loadThumbnail();
     }
   }
 

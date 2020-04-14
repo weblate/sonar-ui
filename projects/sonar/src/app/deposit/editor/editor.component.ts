@@ -18,8 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
-import { TranslateService } from '@ngx-translate/core';
-import { DialogService } from '@rero/ng-core';
+import { DialogService, TranslateLanguageService, TranslateService } from '@rero/ng-core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, EMPTY, of } from 'rxjs';
@@ -45,7 +44,7 @@ export class EditorComponent implements OnInit {
   currentStep = 'metadata';
 
   /** Deposit steps */
-  steps: string[] = ['create', 'metadata', 'contributors', 'projects', 'diffusion'];
+  steps: string[] = ['create', 'metadata', 'contributors', 'diffusion'];
 
   /** Form for current type */
   form: FormGroup = new FormGroup({});
@@ -68,18 +67,19 @@ export class EditorComponent implements OnInit {
   /**
    * Constructor.
    *
-   * @param _toastr Toast service
-   * @param _depositService Deposit service.
-   * @param _router Router service.
-   * @param _route Route.
+   * @param _toastr Toastr service.
+   * @param _depositService Deposit service
+   * @param _router Router service
+   * @param _route Route
    * @param _formlyJsonschema Formly JSON schema.
    * @param _translateService Translate service.
    * @param _dialogService Dialog service.
    * @param _userUservice User service.
    * @param _spinner Spinner service.
+   * @param _translateLanguageService Translate language service.
    */
   constructor(
-    private _toastr: ToastrService,
+    private _toastrService: ToastrService,
     private _depositService: DepositService,
     private _router: Router,
     private _route: ActivatedRoute,
@@ -87,8 +87,9 @@ export class EditorComponent implements OnInit {
     private _translateService: TranslateService,
     private _dialogService: DialogService,
     private _userUservice: UserService,
-    private _spinner: NgxSpinnerService
-  ) {}
+    private _spinner: NgxSpinnerService,
+    private _translateLanguageService: TranslateLanguageService
+  ) { }
 
   ngOnInit(): void {
     this._route.params
@@ -114,12 +115,12 @@ export class EditorComponent implements OnInit {
 
           this.createdAt = result[1].created;
           this.updatedAt = result[1].updated;
-          this._createForm(result[0]);
+          this.createForm(result[0]);
 
           this._files = result[2];
         },
         () => {
-          this._toastr.error(this._translateService.instant('Deposit not found'));
+          this._toastrService.error(this._translateService.translate('Deposit not found'));
           this._router.navigate(['deposit', '0', 'create']);
         }
       );
@@ -155,28 +156,29 @@ export class EditorComponent implements OnInit {
   }
 
   /**
-   * For displaying journal data in deposit summary
+   * For displaying publication data in deposit summary
    */
-  get journal() {
+  get publication() {
     const journal: Array<string> = [];
-    if (this.deposit.metadata.journal.name) {
-      journal.push(this.deposit.metadata.journal.name);
+
+    if (this.deposit.metadata.publication.publishedIn) {
+      journal.push(this.deposit.metadata.publication.publishedIn);
     }
 
-    if (this.deposit.metadata.journal.volume) {
+    if (this.deposit.metadata.publication.volume) {
       journal.push(
-        this._translateService.instant('vol.') + ' ' + this.deposit.metadata.journal.volume
+        this._translateService.translate('vol.') + ' ' + this.deposit.metadata.publication.volume
       );
     }
 
-    if (this.deposit.metadata.journal.number) {
+    if (this.deposit.metadata.publication.number) {
       journal.push(
-        this._translateService.instant('no.') + ' ' + this.deposit.metadata.journal.number
+        this._translateService.translate('no.') + ' ' + this.deposit.metadata.publication.number
       );
     }
 
-    if (this.deposit.metadata.journal.pages) {
-      journal.push(this._translateService.instant('p.') + ' ' + this.deposit.metadata.journal.pages);
+    if (this.deposit.metadata.publication.pages) {
+      journal.push(this._translateService.translate('p.') + ' ' + this.deposit.metadata.publication.pages);
     }
 
     return journal.join(', ');
@@ -194,10 +196,27 @@ export class EditorComponent implements OnInit {
   }
 
   /**
+   * Check if the preview container must be displayed.
+   * @return true if the preview must be displayed.
+   */
+  get showPreview(): boolean {
+    if (this.view === 'json') {
+      return false;
+    }
+
+    if (this.currentStep !== 'diffusion' && this.view !== 'preview') {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Save current state on database with API call.
    */
   save() {
     if (this.form.valid === false) {
+      this._toastrService.error(this._translateService.translate('The form contains errors'));
       return;
     }
 
@@ -206,7 +225,7 @@ export class EditorComponent implements OnInit {
 
     this._depositService.update(this.deposit.pid, this.deposit).subscribe((result: any) => {
       if (result) {
-        this._toastr.success(this._translateService.instant('Deposit saved'));
+        this._toastrService.success(this._translateService.translate('Deposit saved'));
 
         if (this.currentStep !== this.steps[this.steps.length - 1]) {
           this._router.navigate(['deposit', this.deposit.pid, this.nextStep]);
@@ -247,11 +266,11 @@ export class EditorComponent implements OnInit {
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this._translateService.instant('Confirmation'),
-          body: this._translateService.instant('Do you really want to publish this document ?'),
+          title: this._translateService.translate('Confirmation'),
+          body: this._translateService.translate('Do you really want to publish this document ?'),
           confirmButton: true,
-          confirmTitleButton: this._translateService.instant('OK'),
-          cancelTitleButton: this._translateService.instant('Cancel')
+          confirmTitleButton: this._translateService.translate('OK'),
+          cancelTitleButton: this._translateService.translate('Cancel')
         }
       })
       .pipe(
@@ -280,13 +299,13 @@ export class EditorComponent implements OnInit {
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this._translateService.instant('Confirmation'),
-          body: this._translateService.instant(
+          title: this._translateService.translate('Confirmation'),
+          body: this._translateService.translate(
             'Do you really want to extract metadata from PDF and overwrite current data ?'
           ),
           confirmButton: true,
-          confirmTitleButton: this._translateService.instant('OK'),
-          cancelTitleButton: this._translateService.instant('Cancel')
+          confirmTitleButton: this._translateService.translate('OK'),
+          cancelTitleButton: this._translateService.translate('Cancel')
         }
       })
       .pipe(
@@ -311,7 +330,7 @@ export class EditorComponent implements OnInit {
 
           const currentTitle =
             this.deposit.metadata.title ||
-            this._translateService.instant('Deposit #ID', { id: this.deposit.pid });
+            this._translateService.translate('Deposit #ID', { id: this.deposit.pid });
 
           if (result.title) {
             this.deposit.metadata.title = result.title;
@@ -320,15 +339,15 @@ export class EditorComponent implements OnInit {
           }
 
           if (result.languages) {
-            this.deposit.metadata.languages = result.languages;
+            this.deposit.metadata.language = result.languages[0];
           }
 
-          if (result.journal) {
-            this.deposit.metadata.journal = result.journal;
+          if (result.publication) {
+            this.deposit.metadata.publication = result.publication;
           }
 
           if (result.abstract) {
-            this.deposit.metadata.abstracts = [result.abstract];
+            this.deposit.metadata.abstracts = [{ language: result.languages[0] || 'eng', abstract: result.abstract }];
           }
 
           if (result.authors) {
@@ -342,8 +361,8 @@ export class EditorComponent implements OnInit {
         this._spinner.hide();
 
         if (result !== false) {
-          this._createForm(result);
-          this._toastr.success(this._translateService.instant('Data imported successfully'));
+          this.createForm(result);
+          this._toastrService.success(this._translateService.translate('Data imported successfully'));
         }
       });
   }
@@ -352,9 +371,24 @@ export class EditorComponent implements OnInit {
    * Create form by extracting section corresponding to current step from JSON schema.
    * @param schema JSON schema
    */
-  private _createForm(schema: any) {
+  private createForm(schema: any) {
     const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
-      map: (fieldConfig, fieldSchema) => {
+      map: (fieldConfig: any, fieldSchema) => {
+        // Translate options for document type
+        if (fieldSchema.title === 'Document type') {
+          fieldConfig.templateOptions.options = this._translateService.getSelectOptions(fieldSchema.enum, 'document_type_');
+        }
+
+        // Translate options classification
+        if (fieldSchema.title === 'Classification') {
+          fieldConfig.templateOptions.options = this._translateService.getSelectOptions(fieldSchema.enum, 'classification_');
+        }
+
+        // Translate language code for each language select
+        if (fieldSchema.title === 'Language') {
+          fieldConfig.templateOptions.options = this._translateLanguageService.getSelectOptions(fieldSchema.enum);
+        }
+
         if (fieldSchema.template) {
           fieldConfig.templateOptions = { ...fieldConfig.templateOptions, ...fieldSchema.template };
 
@@ -364,9 +398,6 @@ export class EditorComponent implements OnInit {
           }
         }
 
-        if (fieldConfig.type !== 'array' && fieldConfig.type !== 'object') {
-          fieldConfig.wrappers = ['form-field-horizontal'];
-        }
         return fieldConfig;
       }
     });

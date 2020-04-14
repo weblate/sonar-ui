@@ -19,8 +19,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
-import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { CoreConfigService, RecordModule } from '@rero/ng-core';
 import { BsLocaleService, ModalModule } from 'ngx-bootstrap';
@@ -43,9 +42,6 @@ import { ConfirmationComponent } from './deposit/confirmation/confirmation.compo
 import { EditorComponent } from './deposit/editor/editor.component';
 import { ReviewComponent } from './deposit/review/review.component';
 import { UploadComponent } from './deposit/upload/upload.component';
-import { ArrayTypeComponent } from './form/array-type.component';
-import { FormlyHorizontalWrapperComponent } from './form/horizontal-wrapper.component';
-import { ObjectTypeComponent } from './form/object-type.component';
 import { LanguageValuePipe } from './pipe/language-value.pipe';
 import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
@@ -76,9 +72,6 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     FileSizePipe,
     EditorComponent,
     StepComponent,
-    ObjectTypeComponent,
-    ArrayTypeComponent,
-    FormlyHorizontalWrapperComponent,
     ConfirmationComponent,
     BriefViewComponent,
     FileLinkPipe,
@@ -105,32 +98,6 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     NgxDropzoneModule,
-    FormlyBootstrapModule,
-    FormlyModule.forRoot({
-      wrappers: [{ name: 'form-field-horizontal', component: FormlyHorizontalWrapperComponent }],
-      validationMessages: [
-        { name: 'required', message: 'This field is required' },
-        {
-          name: 'minItems',
-          message: minElementError
-        }
-      ],
-      types: [
-        { name: 'string', extends: 'input' },
-        { name: 'object', component: ObjectTypeComponent },
-        { name: 'array', component: ArrayTypeComponent },
-        { name: 'enum', extends: 'select' },
-        {
-          name: 'integer',
-          extends: 'input',
-          defaultOptions: {
-            templateOptions: {
-              type: 'number'
-            }
-          }
-        }
-      ]
-    }),
     RecordModule
   ],
   providers: [
@@ -151,4 +118,4 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

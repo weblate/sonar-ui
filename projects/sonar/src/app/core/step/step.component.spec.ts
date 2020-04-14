@@ -45,7 +45,7 @@ describe('StepComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StepComponent);
     component = fixture.componentInstance;
-    component.steps = ['create', 'metadata', 'contributors', 'projects', 'diffusion'];
+    component.steps = ['create', 'metadata', 'contributors', 'diffusion'];
     fixture.detectChanges();
   });
 

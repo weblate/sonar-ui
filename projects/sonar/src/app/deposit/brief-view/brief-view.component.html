@@ -52,7 +52,7 @@
     class="my-2 text-justify"
     *ngIf="record.metadata.metadata && record.metadata.metadata.abstracts"
   >
-    {{ record.metadata.metadata.abstracts[0] | truncateText: 50 }}
+    {{ record.metadata.metadata.abstracts[0].abstract | truncateText: 50 }}
   </div>
 
   <p>

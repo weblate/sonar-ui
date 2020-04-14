@@ -18,7 +18,7 @@
   [currentStep]="'create'"
   [maxStep]="maxStep"
   [linkPrefix]="linkPrefix"
-  [steps]="['create', 'metadata', 'contributors', 'projects', 'diffusion']"
+  [steps]="['create', 'metadata', 'contributors', 'diffusion']"
   (cancel)="cancelDeposit()"
 >
 </sonar-deposit-step>
@@ -54,7 +54,7 @@
           <ng-container *ngFor="let file of files; let i = index">
             <div
               class="card mb-2"
-              *ngIf="file.file_type === 'file' && file.category === fileTypes.key"
+              *ngIf="file.type === 'file' && file.category === fileTypes.key"
             >
               <div class="card-body">
                 <div class="row">
@@ -117,7 +117,7 @@
                           <input
                             class="form-check-input"
                             type="checkbox"
-                            formControlName="expect"
+                            formControlName="exceptInInstitution"
                           />
                           <label class="form-check-label" for="defaultCheck1">
                             {{ 'Except within the institution' | translate }}
