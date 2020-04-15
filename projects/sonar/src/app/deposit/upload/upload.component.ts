@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,34 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef,
-  AfterContentChecked,
-  OnDestroy
-} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms';
-import { of, Observable, from, forkJoin } from 'rxjs';
-import {
-  map,
-  switchMap,
-  delay,
-  concatMap,
-  tap,
-  mergeMap,
-  reduce,
-  takeWhile,
-  first
-} from 'rxjs/operators';
-
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { DialogService } from '@rero/ng-core';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-
+import { DialogService } from '@rero/ng-core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { forkJoin, from, Observable, of } from 'rxjs';
+import { concatMap, delay, first, map, mergeMap, reduce, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { DepositService } from '../deposit.service';
 
 @Component({
@@ -65,6 +47,64 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
   /** Flag activated when component is destroyed. Is used to unsubscribe to observables with takeWhile operator. */
   destroyed = false;
 
+  constructor(
+    private _toastr: ToastrService,
+    private _depositService: DepositService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _dialogService: DialogService,
+    private _spinner: NgxSpinnerService,
+    private _translateService: TranslateService,
+    private _fb: FormBuilder,
+    private _cd: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this._spinner.show();
+
+    this._route.params
+      .pipe(
+        first(),
+        tap(() => {
+          this._spinner.show();
+        }),
+        switchMap(params => {
+          if (params.id !== '0') {
+            return forkJoin(
+              this._depositService.get(params.id),
+              this._depositService.getFiles(params.id)
+            ).pipe(
+              tap(result => {
+                this.deposit = result[0].metadata;
+
+                if (this._depositService.canAccessDeposit(this.deposit) === false) {
+                  this._router.navigate(['deposit', this.deposit.pid, 'confirmation']);
+                }
+
+                this.files = result[1];
+              })
+            );
+          } else {
+            this.deposit = null;
+            this.files = [];
+            return of(null);
+          }
+        })
+      )
+      .subscribe(() => {
+        this._spinner.hide();
+        this._initForm();
+      });
+  }
+
+  ngAfterContentChecked() {
+    this._cd.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
   /**
    * Return link prefix
    */
@@ -82,64 +122,6 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
     return 'create';
   }
 
-  constructor(
-    private toastr: ToastrService,
-    private depositService: DepositService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private dialogService: DialogService,
-    private spinner: NgxSpinnerService,
-    private translateService: TranslateService,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {
-    this.spinner.show();
-
-    this.route.params
-      .pipe(
-        first(),
-        tap(() => {
-          this.spinner.show();
-        }),
-        switchMap(params => {
-          if (params.id !== '0') {
-            return forkJoin(
-              this.depositService.get(params.id),
-              this.depositService.getFiles(params.id)
-            ).pipe(
-              tap(result => {
-                this.deposit = result[0].metadata;
-
-                if (this.depositService.canAccessDeposit(this.deposit) === false) {
-                  this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
-                }
-
-                this.files = result[1];
-              })
-            );
-          } else {
-            this.deposit = null;
-            this.files = [];
-            return of(null);
-          }
-        })
-      )
-      .subscribe(() => {
-        this.spinner.hide();
-        this.initForm();
-      });
-  }
-
-  ngAfterContentChecked() {
-    this.cd.detectChanges();
-  }
-
-  ngOnDestroy() {
-    this.destroyed = true;
-  }
-
   /**
    * Get list of file for the given type.
    * @param type - string, type of files
@@ -155,15 +137,15 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    * @param type Type of file
    */
   uploadFiles(files: Array<any>, type: string) {
-    this.spinner.show();
+    this._spinner.show();
 
     // Create a deposit if not existing
-    let createDeposit$: Observable<any> = this.depositService.create().pipe(
+    let createDeposit$: Observable<any> = this._depositService.create().pipe(
       tap(deposit => (this.deposit = deposit.metadata)),
       delay(1000),
       map(() => {
         if (type === 'main') {
-          this.router.navigate(['deposit', this.deposit.pid, 'create']);
+          this._router.navigate(['deposit', this.deposit.pid, 'create']);
         }
       })
     );
@@ -177,23 +159,23 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         switchMap(() => {
           return from(files).pipe(
             concatMap((file: File) => {
-              return this.depositService.uploadFile(this.deposit.pid, file.name, type, file);
+              return this._depositService.uploadFile(this.deposit.pid, file.name, type, file);
             })
           );
         })
       )
       .subscribe({
         next: (file: any) => {
-          this.toastr.success(_('File uploaded successfully') + ': ' + file.key);
+          this._toastr.success(_('File uploaded successfully') + ': ' + file.key);
           this.files.push(file);
-          this.addFormField(file);
+          this._addFormField(file);
         },
         complete: () => {
-          this.spinner.hide();
+          this._spinner.hide();
         },
         error: () => {
-          this.spinner.hide();
-          this.toastr.error(_('An error occurred during file upload process, please try again.'));
+          this._spinner.hide();
+          this._toastr.error(_('An error occurred during file upload process, please try again.'));
         }
       });
   }
@@ -202,11 +184,11 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    * Removes a deposit (after confirmation) and go back to upload homepage.
    */
   cancelDeposit() {
-    this.depositService.deleteDepositWithConfirmation(this.deposit).subscribe((result: any) => {
+    this._depositService.deleteDepositWithConfirmation(this.deposit).subscribe((result: any) => {
       if (result === true) {
         this.files = [];
         this.deposit = null;
-        this.router.navigate(['deposit', '0', 'create']);
+        this._router.navigate(['deposit', '0', 'create']);
       }
     });
   }
@@ -220,13 +202,13 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    */
   onSelect(event: any, type: string, limit: number) {
     if (limit !== 0 && this.getFilesByType(type).length >= limit) {
-      this.toastr.error(_('You cannot add more files, please remove existing files first.'));
+      this._toastr.error(_('You cannot add more files, please remove existing files first.'));
       return;
     }
 
     event.addedFiles.forEach((file: any, index: number) => {
       if (this.getFilesByType(type).filter(item => item.key === file.name).length > 0) {
-        this.toastr.error(
+        this._toastr.error(
           _('File with the same name is already added to the deposit: ' + file.name)
         );
         event.addedFiles.splice(index, 1);
@@ -248,7 +230,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
   removeFile(event: Event, file: any) {
     event.preventDefault();
 
-    this.dialogService
+    this._dialogService
       .show({
         ignoreBackdropClick: true,
         initialState: {
@@ -262,7 +244,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
       .pipe(
         switchMap((confirm: boolean) => {
           if (confirm === true) {
-            return this.depositService
+            return this._depositService
               .removeFile(this.deposit.pid, file.key, file.version_id)
               .pipe(map(() => true));
           }
@@ -273,8 +255,8 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         if (removed === true) {
           const index = this.files.indexOf(file);
           this.files.splice(this.files.indexOf(file), 1);
-          this.toastr.success(
-            this.translateService.instant(`File ${file.key} removed successfully.`)
+          this._toastr.success(
+            this._translateService.instant(`File ${file.key} removed successfully.`)
           );
           this.filesForm.removeAt(index);
         }
@@ -289,19 +271,19 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
     event.preventDefault();
 
     if (this.deposit) {
-      this.router.navigate(['deposit', this.deposit.pid, 'metadata']);
+      this._router.navigate(['deposit', this.deposit.pid, 'metadata']);
       return;
     }
 
-    this.depositService
+    this._depositService
       .create()
       .pipe(
-        tap(() => this.spinner.show()),
+        tap(() => this._spinner.show()),
         delay(1000)
       )
       .subscribe((deposit: any) => {
-        this.spinner.hide();
-        this.router.navigate(['deposit', deposit.id, 'metadata']);
+        this._spinner.hide();
+        this._router.navigate(['deposit', deposit.id, 'metadata']);
       });
   }
 
@@ -332,18 +314,18 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
       from(filesToUpdate)
         .pipe(
           mergeMap((file: any) => {
-            return this.depositService.updateFile(this.deposit.pid, file);
+            return this._depositService.updateFile(this.deposit.pid, file);
           }),
           reduce(() => true)
         )
         .subscribe(() => {
-          this.toastr.success(
-            this.translateService.instant('The files have been updated successfully.')
+          this._toastr.success(
+            this._translateService.instant('The files have been updated successfully.')
           );
-          this.router.navigate(['deposit', this.deposit.pid, 'metadata']);
+          this._router.navigate(['deposit', this.deposit.pid, 'metadata']);
         });
     } else {
-      this.router.navigate(['deposit', this.deposit.pid, 'metadata']);
+      this._router.navigate(['deposit', this.deposit.pid, 'metadata']);
     }
   }
 
@@ -358,11 +340,11 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
   /**
    * Create form for managing files
    */
-  private initForm() {
-    this.filesForm = this.fb.array([]);
+  private _initForm() {
+    this.filesForm = this._fb.array([]);
 
     this.files.forEach(file => {
-      this.addFormField(file);
+      this._addFormField(file);
     });
   }
 
@@ -370,11 +352,11 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    * Add a new entry in the form.
    * @param file File data
    */
-  private addFormField(file: any) {
-    const control = this.fb.group({
+  private _addFormField(file: any) {
+    const control = this._fb.group({
       label: [file.label, Validators.required],
       embargo: [file.embargo],
-      embargoDate: [file.embargoDate, this.embargoDateValidator],
+      embargoDate: [file.embargoDate, this._embargoDateValidator],
       expect: [file.expect],
       id: file.version_id
     });
@@ -394,7 +376,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    * Conditional validator for embargo date.
    * @param formControl Form control to add a validator
    */
-  private embargoDateValidator(formControl: AbstractControl) {
+  private _embargoDateValidator(formControl: AbstractControl) {
     if (!formControl.parent) {
       return null;
     }

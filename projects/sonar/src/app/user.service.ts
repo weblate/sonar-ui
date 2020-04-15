@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
-
+import { Injectable } from '@angular/core';
 import { ApiService } from '@rero/ng-core';
 import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,14 +26,20 @@ import { of } from 'rxjs';
 export class UserService {
   user: any;
 
-  constructor(private apiService: ApiService, private http: HttpClient) {}
+  /**
+   * Constructor.
+   *
+   * @param _apiService API service.
+   * @param _http HTTP client.
+   */
+  constructor(private _apiService: ApiService, private _http: HttpClient) { }
 
   /**
    * Load logged user in backend
    */
   loadLoggedUser(resolve: boolean = true) {
-    return this.http
-      .get<any>(`${this.apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`)
+    return this._http
+      .get<any>(`${this._apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`)
       .pipe(
         map(user => {
           if (user.metadata) {
@@ -54,7 +59,7 @@ export class UserService {
    * Return $ref endpoint for current logged user.
    */
   getUserRefEndpoint() {
-    return this.apiService.getRefEndpoint('users', this.user.pid);
+    return this._apiService.getRefEndpoint('users', this.user.pid);
   }
 
   /**

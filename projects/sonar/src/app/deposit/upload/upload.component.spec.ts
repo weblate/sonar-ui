@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,22 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
-import { NgxDropzoneModule } from 'ngx-dropzone';
 import { TabsModule } from 'ngx-bootstrap';
-import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
-
-import { UploadComponent } from './upload.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { of } from 'rxjs';
 import { FileSizePipe } from '../../core/filesize.pipe';
 import { StepComponent } from '../../core/step/step.component';
 import { ReviewComponent } from '../review/review.component';
+import { UploadComponent } from './upload.component';
 
 describe('UploadComponent', () => {
   let component: UploadComponent;

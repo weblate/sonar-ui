@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,12 +16,10 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
-
-import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
-
+import { ToastrService } from 'ngx-toastr';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { DepositService } from '../deposit.service';
 
 @Component({
@@ -31,23 +29,37 @@ import { DepositService } from '../deposit.service';
 export class ConfirmationComponent implements OnInit {
   deposit$: Observable<any> = null;
 
+  /**
+   * Constructor.
+   *
+   * @param _route Route.
+   * @param _toastr Toastr service.
+   * @param _depositService Deposit servce.
+   * @param _router Router service.
+   * @param _translateService Translate service.
+   */
   constructor(
-    private route: ActivatedRoute,
-    private toastr: ToastrService,
-    private depositService: DepositService,
-    private router: Router,
-    private translateService: TranslateService
-  ) {}
+    private _route: ActivatedRoute,
+    private _toastr: ToastrService,
+    private _depositService: DepositService,
+    private _router: Router,
+    private _translateService: TranslateService
+  ) { }
 
+  /**
+   * Component initialization
+   *
+   * Gets the deposit data.
+   */
   ngOnInit() {
-    this.deposit$ = this.route.params.pipe(
+    this.deposit$ = this._route.params.pipe(
       switchMap(params => {
-        return this.depositService.get(params.id);
+        return this._depositService.get(params.id);
       }),
       map(result => result.metadata),
       catchError(() => {
-        this.toastr.error(this.translateService.instant('Deposit not found'));
-        this.router.navigate(['deposit', '0', 'create']);
+        this._toastr.error(this._translateService.instant('Deposit not found'));
+        this._router.navigate(['deposit', '0', 'create']);
         return of(null);
       })
     );

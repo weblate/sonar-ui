@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,14 +60,14 @@ export class DocumentComponent implements ResultItem, OnInit {
         this.restricted = this.mainFile.restricted.restricted;
       }
 
-      this.loadThumbnail();
+      this._loadThumbnail();
     }
   }
 
   /**
    * Load the thumbnail for record
    */
-  private loadThumbnail() {
+  private _loadThumbnail() {
     if (!this.record.metadata._files) {
       return;
     }

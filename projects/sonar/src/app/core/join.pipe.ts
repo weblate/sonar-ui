@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,13 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'join'
 })
 export class JoinPipe implements PipeTransform {
+  /**
+   * Join an array by the given separator.
+   *
+   * @param value Values to join.
+   * @param args List of arguments.
+   * @return Joined string.
+   */
   transform(value: string[], ...args: any[]): string {
     if (!value) {
       return '';

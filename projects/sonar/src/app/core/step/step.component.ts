@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'sonar-deposit-step',
@@ -23,33 +23,24 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 })
 export class StepComponent implements OnInit {
   /** Current step of the process */
-  @Input() currentStep: string = null;
+  @Input()
+  currentStep: string = null;
 
   /** Current max step, no link available for next steps. */
-  @Input() maxStep: string = null;
+  @Input()
+  maxStep: string = null;
 
   /** Array of step for deposit process */
-  @Input() steps: string[] = [];
+  @Input()
+  steps: string[] = [];
 
   /** Link prefix for building routes */
-  @Input() linkPrefix = '';
+  @Input()
+  linkPrefix = '';
 
   /** Event emitted when a deposit is deleted. */
-  @Output() cancel: EventEmitter<any> = new EventEmitter();
-
-  /**
-   * Return index corresponding to the step parameter.
-   */
-  get maxStepIndex(): number {
-    return this.steps.findIndex(element => element === this.maxStep);
-  }
-
-  /**
-   * Return index corresponding to the step parameter.
-   */
-  get currentStepIndex(): number {
-    return this.steps.findIndex(element => element === this.currentStep);
-  }
+  @Output()
+  cancel: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
     if (this.steps.length === 0) {
@@ -66,7 +57,26 @@ export class StepComponent implements OnInit {
   }
 
   /**
+   * Return index corresponding to the step parameter.
+   *
+   * @return Max step index
+   */
+  get maxStepIndex(): number {
+    return this.steps.findIndex(element => element === this.maxStep);
+  }
+
+  /**
+   * Return index corresponding to the step parameter.
+   *
+   * @return Current step index
+   */
+  get currentStepIndex(): number {
+    return this.steps.findIndex(element => element === this.currentStep);
+  }
+
+  /**
    * Trigger a cancel on parent.
+   *
    * @param event DOM event click
    */
   doCancel(event: Event) {

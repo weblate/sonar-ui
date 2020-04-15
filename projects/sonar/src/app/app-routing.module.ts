@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,25 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { of, Observable } from 'rxjs';
-
+import { RouterModule, Routes } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ActionStatus } from '@rero/ng-core';
-
-import { DocumentComponent } from './record/document/document.component';
-import { InstitutionComponent } from './record/institution/institution.component';
-import { UserComponent } from './record/user/user.component';
-import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
-import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
-import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
+import { Observable, of } from 'rxjs';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UploadComponent } from './deposit/upload/upload.component';
-import { EditorComponent as DepositEditorComponent } from './deposit/editor/editor.component';
-import { ConfirmationComponent } from './deposit/confirmation/confirmation.component';
 import { BriefViewComponent } from './deposit/brief-view/brief-view.component';
-import { AdminComponent } from './_layout/admin/admin.component';
+import { ConfirmationComponent } from './deposit/confirmation/confirmation.component';
+import { EditorComponent as DepositEditorComponent } from './deposit/editor/editor.component';
+import { UploadComponent } from './deposit/upload/upload.component';
 import { AggregationFilter } from './record/document/aggregation-filter';
+import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
+import { DocumentComponent } from './record/document/document.component';
+import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
+import { InstitutionComponent } from './record/institution/institution.component';
+import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
+import { UserComponent } from './record/user/user.component';
+import { AdminComponent } from './_layout/admin/admin.component';
 
 const canReadDeposit = (): Observable<ActionStatus> => {
   return of({
@@ -174,7 +172,12 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {
-  constructor(private translateService: TranslateService) {
-    AggregationFilter.translateService = this.translateService;
+  /**
+   * Constructor.
+   *
+   * @param _translateService Translate service.
+   */
+  constructor(private _translateService: TranslateService) {
+    AggregationFilter.translateService = this._translateService;
   }
 }

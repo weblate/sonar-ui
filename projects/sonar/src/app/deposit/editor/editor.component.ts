@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,6 +66,66 @@ export class EditorComponent implements OnInit {
   private _files: Array<any> = [];
 
   /**
+   * Constructor.
+   *
+   * @param _toastr Toast service
+   * @param _depositService Deposit service.
+   * @param _router Router service.
+   * @param _route Route.
+   * @param _formlyJsonschema Formly JSON schema.
+   * @param _translateService Translate service.
+   * @param _dialogService Dialog service.
+   * @param _userUservice User service.
+   * @param _spinner Spinner service.
+   */
+  constructor(
+    private _toastr: ToastrService,
+    private _depositService: DepositService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _formlyJsonschema: FormlyJsonschema,
+    private _translateService: TranslateService,
+    private _dialogService: DialogService,
+    private _userUservice: UserService,
+    private _spinner: NgxSpinnerService
+  ) {}
+
+  ngOnInit(): void {
+    this._route.params
+      .pipe(
+        tap(params => {
+          this.currentStep = params.step;
+        }),
+        switchMap(params => {
+          return combineLatest(
+            this._depositService.getJsonSchema('deposits'),
+            this._depositService.get(params.id),
+            this._depositService.getFiles(params.id)
+          );
+        })
+      )
+      .subscribe(
+        result => {
+          this.deposit = result[1].metadata;
+
+          if (this._depositService.canAccessDeposit(this.deposit) === false) {
+            this._router.navigate(['deposit', this.deposit.pid, 'confirmation']);
+          }
+
+          this.createdAt = result[1].created;
+          this.updatedAt = result[1].updated;
+          this._createForm(result[0]);
+
+          this._files = result[2];
+        },
+        () => {
+          this._toastr.error(this._translateService.instant('Deposit not found'));
+          this._router.navigate(['deposit', '0', 'create']);
+        }
+      );
+  }
+
+  /**
    * Return link prefix
    */
   get linkPrefix() {
@@ -91,7 +151,7 @@ export class EditorComponent implements OnInit {
 
   /** Return if current logged user is an admin or a standard user */
   get isAdminUser(): boolean {
-    return this.userUservice.hasRole(['superadmin', 'admin', 'moderator']);
+    return this._userUservice.hasRole(['superadmin', 'admin', 'moderator']);
   }
 
   /**
@@ -105,18 +165,18 @@ export class EditorComponent implements OnInit {
 
     if (this.deposit.metadata.journal.volume) {
       journal.push(
-        this.translateService.instant('vol.') + ' ' + this.deposit.metadata.journal.volume
+        this._translateService.instant('vol.') + ' ' + this.deposit.metadata.journal.volume
       );
     }
 
     if (this.deposit.metadata.journal.number) {
       journal.push(
-        this.translateService.instant('no.') + ' ' + this.deposit.metadata.journal.number
+        this._translateService.instant('no.') + ' ' + this.deposit.metadata.journal.number
       );
     }
 
     if (this.deposit.metadata.journal.pages) {
-      journal.push(this.translateService.instant('p.') + ' ' + this.deposit.metadata.journal.pages);
+      journal.push(this._translateService.instant('p.') + ' ' + this.deposit.metadata.journal.pages);
     }
 
     return journal.join(', ');
@@ -133,53 +193,6 @@ export class EditorComponent implements OnInit {
     return this.steps[currentIndex + 1];
   }
 
-  constructor(
-    private toastr: ToastrService,
-    private depositService: DepositService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private formlyJsonschema: FormlyJsonschema,
-    private translateService: TranslateService,
-    private dialogService: DialogService,
-    private userUservice: UserService,
-    private spinner: NgxSpinnerService
-  ) {}
-
-  ngOnInit(): void {
-    this.route.params
-      .pipe(
-        tap(params => {
-          this.currentStep = params.step;
-        }),
-        switchMap(params => {
-          return combineLatest(
-            this.depositService.getJsonSchema('deposits'),
-            this.depositService.get(params.id),
-            this.depositService.getFiles(params.id)
-          );
-        })
-      )
-      .subscribe(
-        result => {
-          this.deposit = result[1].metadata;
-
-          if (this.depositService.canAccessDeposit(this.deposit) === false) {
-            this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
-          }
-
-          this.createdAt = result[1].created;
-          this.updatedAt = result[1].updated;
-          this.createForm(result[0]);
-
-          this._files = result[2];
-        },
-        () => {
-          this.toastr.error(this.translateService.instant('Deposit not found'));
-          this.router.navigate(['deposit', '0', 'create']);
-        }
-      );
-  }
-
   /**
    * Save current state on database with API call.
    */
@@ -188,15 +201,15 @@ export class EditorComponent implements OnInit {
       return;
     }
 
-    this.upgradeStep();
+    this._upgradeStep();
     this.deposit[this.currentStep] = this.model[this.currentStep];
 
-    this.depositService.update(this.deposit.pid, this.deposit).subscribe((result: any) => {
+    this._depositService.update(this.deposit.pid, this.deposit).subscribe((result: any) => {
       if (result) {
-        this.toastr.success(this.translateService.instant('Deposit saved'));
+        this._toastr.success(this._translateService.instant('Deposit saved'));
 
         if (this.currentStep !== this.steps[this.steps.length - 1]) {
-          this.router.navigate(['deposit', this.deposit.pid, this.nextStep]);
+          this._router.navigate(['deposit', this.deposit.pid, this.nextStep]);
         }
       }
     });
@@ -217,10 +230,10 @@ export class EditorComponent implements OnInit {
    * Removes a deposit (after confirmation) and go back to upload homepage.
    */
   cancelDeposit() {
-    this.depositService.deleteDepositWithConfirmation(this.deposit).subscribe((result: any) => {
+    this._depositService.deleteDepositWithConfirmation(this.deposit).subscribe((result: any) => {
       if (result === true) {
         this.deposit = null;
-        this.router.navigate(['deposit', '0', 'create']);
+        this._router.navigate(['deposit', '0', 'create']);
       }
     });
   }
@@ -230,23 +243,23 @@ export class EditorComponent implements OnInit {
    * to moderators to validate the deposit.
    */
   publish() {
-    this.dialogService
+    this._dialogService
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this.translateService.instant('Confirmation'),
-          body: this.translateService.instant('Do you really want to publish this document ?'),
+          title: this._translateService.instant('Confirmation'),
+          body: this._translateService.instant('Do you really want to publish this document ?'),
           confirmButton: true,
-          confirmTitleButton: this.translateService.instant('OK'),
-          cancelTitleButton: this.translateService.instant('Cancel')
+          confirmTitleButton: this._translateService.instant('OK'),
+          cancelTitleButton: this._translateService.instant('Cancel')
         }
       })
       .pipe(
         first(),
         switchMap((confirm: boolean) => {
           if (confirm === true) {
-            this.spinner.show();
-            return this.depositService.publish(this.deposit.pid);
+            this._spinner.show();
+            return this._depositService.publish(this.deposit.pid);
           }
 
           return EMPTY;
@@ -254,8 +267,8 @@ export class EditorComponent implements OnInit {
         delay(1000)
       )
       .subscribe(() => {
-        this.spinner.hide();
-        this.router.navigate(['deposit', this.deposit.pid, 'confirmation']);
+        this._spinner.hide();
+        this._router.navigate(['deposit', this.deposit.pid, 'confirmation']);
       });
   }
 
@@ -263,17 +276,17 @@ export class EditorComponent implements OnInit {
    * Extract metadata from PDF and populate deposit.
    */
   extractPdfMetadata() {
-    this.dialogService
+    this._dialogService
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this.translateService.instant('Confirmation'),
-          body: this.translateService.instant(
+          title: this._translateService.instant('Confirmation'),
+          body: this._translateService.instant(
             'Do you really want to extract metadata from PDF and overwrite current data ?'
           ),
           confirmButton: true,
-          confirmTitleButton: this.translateService.instant('OK'),
-          cancelTitleButton: this.translateService.instant('Cancel')
+          confirmTitleButton: this._translateService.instant('OK'),
+          cancelTitleButton: this._translateService.instant('Cancel')
         }
       })
       .pipe(
@@ -283,9 +296,9 @@ export class EditorComponent implements OnInit {
             return of(false);
           }
 
-          this.spinner.show();
+          this._spinner.show();
 
-          return this.depositService.extractPDFMetadata(this.deposit);
+          return this._depositService.extractPDFMetadata(this.deposit);
         }),
         switchMap((result: any) => {
           if (result === false) {
@@ -298,7 +311,7 @@ export class EditorComponent implements OnInit {
 
           const currentTitle =
             this.deposit.metadata.title ||
-            this.translateService.instant('Deposit #ID', { id: this.deposit.pid });
+            this._translateService.instant('Deposit #ID', { id: this.deposit.pid });
 
           if (result.title) {
             this.deposit.metadata.title = result.title;
@@ -322,15 +335,15 @@ export class EditorComponent implements OnInit {
             this.deposit.contributors = result.authors;
           }
 
-          return this.depositService.getJsonSchema('deposits');
+          return this._depositService.getJsonSchema('deposits');
         })
       )
       .subscribe((result: any) => {
-        this.spinner.hide();
+        this._spinner.hide();
 
         if (result !== false) {
-          this.createForm(result);
-          this.toastr.success(this.translateService.instant('Data imported successfully'));
+          this._createForm(result);
+          this._toastr.success(this._translateService.instant('Data imported successfully'));
         }
       });
   }
@@ -339,8 +352,8 @@ export class EditorComponent implements OnInit {
    * Create form by extracting section corresponding to current step from JSON schema.
    * @param schema JSON schema
    */
-  private createForm(schema: any) {
-    const depositFields = this.formlyJsonschema.toFieldConfig(schema, {
+  private _createForm(schema: any) {
+    const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
       map: (fieldConfig, fieldSchema) => {
         if (fieldSchema.template) {
           fieldConfig.templateOptions = { ...fieldConfig.templateOptions, ...fieldSchema.template };
@@ -364,7 +377,7 @@ export class EditorComponent implements OnInit {
     if (this.deposit[this.currentStep]) {
       this.model[this.currentStep] = this.deposit[this.currentStep];
     }
-    this.fields = this.getFormFields(depositFields.fieldGroup, this.currentStep);
+    this.fields = this._getFormFields(depositFields.fieldGroup, this.currentStep);
   }
 
   /**
@@ -372,7 +385,7 @@ export class EditorComponent implements OnInit {
    * @param fieldGroup Array of fields extracted from JSON schema
    * @param step Current step
    */
-  private getFormFields(fieldGroup: Array<any>, step: string): Array<any> {
+  private _getFormFields(fieldGroup: Array<any>, step: string): Array<any> {
     const fields = fieldGroup.filter(item => item.key === step);
     return [fields[0]];
   }
@@ -380,7 +393,7 @@ export class EditorComponent implements OnInit {
   /**
    * Upgrade step of the deposit only if current step is greater than deposit step.
    */
-  private upgradeStep() {
+  private _upgradeStep() {
     const depositIndex = this.steps.findIndex(step => step === this.deposit.step);
     const nextIndex = this.steps.findIndex(step => step === this.nextStep);
 

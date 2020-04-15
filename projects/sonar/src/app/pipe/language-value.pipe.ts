@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Pipe, PipeTransform } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
 
 /**
@@ -25,8 +24,12 @@ import { TranslateService } from '@ngx-translate/core';
   name: 'languageValue'
 })
 export class LanguageValuePipe implements PipeTransform {
-
-  constructor(private translateService: TranslateService) { }
+  /**
+   * Constructor.
+   *
+   * @param _translateService Translate service.
+   */
+  constructor(private _translateService: TranslateService) { }
 
   transform(value: any[], ...args: any[]): string {
     if (!value || value.length === 0) {
@@ -48,7 +51,7 @@ export class LanguageValuePipe implements PipeTransform {
       it: 'ita'
     };
 
-    const currentLang = this.translateService.currentLang;
+    const currentLang = this._translateService.currentLang;
 
     if (!languageMap[currentLang]) {
       return value[0][args[0]];

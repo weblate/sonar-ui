@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,33 +14,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
-
+import { Component } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 import { UserService } from '../../user.service';
 
 @Component({
   selector: 'sonar-layout-admin',
   templateUrl: './admin.component.html'
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent {
+  // Logged user
   user: any;
+
+  // Application is ready?
   ready = false;
+
+  // Navigation is collapsed?
   isCollapsed = true;
 
-  constructor(private spinner: NgxSpinnerService, private userService: UserService) {
-    this.spinner.show();
+  /**
+   * Constructor.
+   *
+   * @param _spinner Spinner service.
+   * @param _userService User service.
+   */
+  constructor(private _spinner: NgxSpinnerService, private _userService: UserService) {
+    this._spinner.show();
 
-    this.userService.loadLoggedUser().subscribe(user => {
+    this._userService.loadLoggedUser().subscribe(user => {
       if (user) {
         this.user = user;
       }
 
-      this.spinner.hide();
+      this._spinner.hide();
       this.ready = true;
     });
   }
-
-  ngOnInit() {}
 }

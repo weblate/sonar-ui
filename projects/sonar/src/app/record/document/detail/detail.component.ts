@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,8 @@ export class DetailComponent {
 
   /**
    * Get only files of type "file" (exclude fulltext files).
+   *
+   * @return List of item filtered.
    */
   filterFiles(files: Array<any>): Array<any> {
     return files.filter((item: any) => {

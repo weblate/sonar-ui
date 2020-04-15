@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,18 +17,28 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
+/**
+ * Generate a file link.
+ */
 @Pipe({
   name: 'fileLink'
 })
 export class FileLinkPipe implements PipeTransform {
+  /**
+   * Constructor.
+   *
+   * @param sanitizer DOM Sanitizer.
+   */
   constructor(public sanitizer: DomSanitizer) { }
 
   /**
    * Generate the link for a file
+   *
    * @param key File key
    * @param resourceType Type of the resource
    * @param resourceId Id of the resource
    * @param fileType If we want to have "files" or "preview"
+   * @return Generated URL.
    */
   transform(key: any, resourceType: string, resourceId: string, fileType = 'files'): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(`${resourceType}/${resourceId}/${fileType}/${key}`);

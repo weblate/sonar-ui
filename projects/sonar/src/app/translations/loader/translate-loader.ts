@@ -1,6 +1,6 @@
 /*
- * RERO ILS UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Injectable } from '@angular/core';
 import { TranslateLoader as NgCoreTranslateLoader } from '@rero/ng-core';
 import { AppConfigService } from '../../app-config.service';
@@ -29,23 +28,24 @@ export class TranslateLoader extends NgCoreTranslateLoader {
   /**
    * Store translations in available languages.
    */
-  private applicationTranslations: object = { fr, de, en, it };
+  private _applicationTranslations: object = { fr, de, en, it };
 
   /**
-   * Constructor
-   * @param config - ConfigService, invenio core configuration
+   * Constructor.
+   *
+   * @param _appService Application service.
    */
-  constructor(private appService: AppConfigService) {
-    super(appService);
-    this.loadApplicationTranslations();
+  constructor(private _appService: AppConfigService) {
+    super(_appService);
+    this._loadApplicationTranslations();
   }
 
   /**
    * Load application translations
    */
-  private loadApplicationTranslations() {
-    for (const lang of this.appService.languages) {
-      this.translations[lang] = {...this.translations[lang], ...this.applicationTranslations[lang]};
+  private _loadApplicationTranslations() {
+    for (const lang of this._appService.languages) {
+      this.translations[lang] = {...this.translations[lang], ...this._applicationTranslations[lang]};
     }
   }
 }

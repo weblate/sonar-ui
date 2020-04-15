@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,15 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { EMPTY } from 'rxjs';
-import { first, switchMap, delay } from 'rxjs/operators';
-
-import { DialogService } from '@rero/ng-core';
 import { TranslateService } from '@ngx-translate/core';
+import { DialogService } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
-
+import { EMPTY } from 'rxjs';
+import { delay, first, switchMap } from 'rxjs/operators';
 import { UserService } from '../../user.service';
 import { DepositService } from '../deposit.service';
 
@@ -32,40 +30,42 @@ import { DepositService } from '../deposit.service';
 })
 export class ReviewComponent {
   /** Deposit record */
-  @Input() deposit: any = null;
+  @Input()
+  deposit: any = null;
 
   /** Used to retrieve value for the comment */
-  @ViewChild('comment', { static: false }) comment: ElementRef;
+  @ViewChild('comment', { static: false })
+  comment: ElementRef;
+
+  constructor(
+    private _userService: UserService,
+    private _dialogService: DialogService,
+    private _translateService: TranslateService,
+    private _depositService: DepositService,
+    private _toastr: ToastrService,
+    private _router: Router
+  ) { }
 
   /**
    * Return current logged user
    */
   get user(): any {
-    return this.userService.user;
+    return this._userService.user;
   }
-
-  constructor(
-    private userService: UserService,
-    private dialogService: DialogService,
-    private translateService: TranslateService,
-    private depositService: DepositService,
-    private toastr: ToastrService,
-    private router: Router
-  ) {}
 
   /**
    * Approve the deposit.
    */
   review(action: string) {
-    this.dialogService
+    this._dialogService
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this.translateService.instant(action),
-          body: this.translateService.instant('Do you really want to do this action?'),
+          title: this._translateService.instant(action),
+          body: this._translateService.instant('Do you really want to do this action?'),
           confirmButton: true,
-          confirmTitleButton: this.translateService.instant('OK'),
-          cancelTitleButton: this.translateService.instant('Cancel')
+          confirmTitleButton: this._translateService.instant('OK'),
+          cancelTitleButton: this._translateService.instant('Cancel')
         }
       })
       .pipe(
@@ -75,7 +75,7 @@ export class ReviewComponent {
             return EMPTY;
           }
 
-          return this.depositService.reviewDeposit(
+          return this._depositService.reviewDeposit(
             this.deposit,
             action,
             this.comment.nativeElement.value
@@ -84,8 +84,8 @@ export class ReviewComponent {
         delay(1000)
       )
       .subscribe((deposit: any) => {
-        this.toastr.success(this.translateService.instant('Review has been done successfully!'));
-        this.router.navigate(['records', 'deposits'], {
+        this._toastr.success(this._translateService.instant('Review has been done successfully!'));
+        this._router.navigate(['records', 'deposits'], {
           queryParams: { q: '', pid: deposit.pid }
         });
       });

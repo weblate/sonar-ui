@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,12 +17,26 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+/**
+ * Highlight a JSON structure.
+ */
 @Pipe({
   name: 'highlightJson'
 })
 export class HighlightJsonPipe implements PipeTransform {
+  /**
+   * Constructor.
+   *
+   * @param sanitizer DOM Sanitizer.
+   */
   constructor(public sanitizer: DomSanitizer) {}
 
+  /**
+   * Highlight a JSON structure.
+   *
+   * @param value Json structure.
+   * @return Highlighted string.
+   */
   transform(value: string): any {
     let json = value
       .replace(/&/g, '&amp;')

@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,16 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { RouterTestingModule } from '@angular/router/testing';
 import { TestBed } from '@angular/core/testing';
-
-import {
-  TranslateService,
-  TranslateModule,
-  TranslateLoader as BaseTranslateLoader
-} from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLoader } from '@rero/ng-core';
-
 import { AggregationFilter } from './aggregation-filter';
 
 const aggregations = {

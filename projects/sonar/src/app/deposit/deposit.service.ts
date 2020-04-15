@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,39 +16,43 @@
  */
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of, Observable, from, concat, throwError } from 'rxjs';
-import {
-  catchError,
-  map,
-  tap,
-  mergeMap,
-  ignoreElements,
-  switchMap,
-  reduce,
-  first
-} from 'rxjs/operators';
-
-import { ApiService, DialogService } from '@rero/ng-core';
 import { TranslateService } from '@ngx-translate/core';
+import { ApiService, DialogService } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
-
+import { concat, from, Observable, of, throwError } from 'rxjs';
+import { catchError, first, ignoreElements, map, mergeMap, reduce, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '../user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepositService {
+  /**
+   * Constructor.
+   *
+   * @param _apiService API service.
+   * @param _httpClient HTTP client.
+   * @param _userService User service.
+   * @param _toastrService Toast service.
+   * @param _translateService Translate service.
+   * @param _dialogService Dialog service.
+   */
   constructor(
-    private apiService: ApiService,
-    private httpClient: HttpClient,
-    private userService: UserService,
-    private toastrService: ToastrService,
-    private translateService: TranslateService,
-    private dialogService: DialogService
-  ) {}
+    private _apiService: ApiService,
+    private _httpClient: HttpClient,
+    private _userService: UserService,
+    private _toastrService: ToastrService,
+    private _translateService: TranslateService,
+    private _dialogService: DialogService
+  ) { }
 
+  /**
+   * Returns deposit endpoint.
+   *
+   * @return Deposit endpoint as string.
+   */
   get depositEndPoint(): string {
-    return `${this.apiService.getEndpointByType('deposits', true)}`;
+    return `${this._apiService.getEndpointByType('deposits', true)}`;
   }
 
   /**
@@ -56,11 +60,11 @@ export class DepositService {
    * @param id - string ID of deposit
    */
   get(id: string): Observable<any> {
-    return this.httpClient.get(`${this.apiService.getEndpointByType('deposits', true)}/${id}`).pipe(
+    return this._httpClient.get(`${this._apiService.getEndpointByType('deposits', true)}/${id}`).pipe(
       tap(result => {
         if (
-          this.userService.hasRole(['moderator', 'admin', 'superadmin']) === false &&
-          this.userService.checkUserReference(result.metadata.user.$ref) === false
+          this._userService.hasRole(['moderator', 'admin', 'superadmin']) === false &&
+          this._userService.checkUserReference(result.metadata.user.$ref) === false
         ) {
           throw new Error('Logged user is not owning this deposit');
         }
@@ -72,9 +76,9 @@ export class DepositService {
    * Create a deposit
    */
   create(): Observable<any> {
-    return this.httpClient.post(`${this.apiService.getEndpointByType('deposits', true)}/`, {
+    return this._httpClient.post(`${this._apiService.getEndpointByType('deposits', true)}/`, {
       user: {
-        $ref: this.userService.getUserRefEndpoint()
+        $ref: this._userService.getUserRefEndpoint()
       },
       step: 'metadata',
       status: 'in progress'
@@ -87,11 +91,11 @@ export class DepositService {
    * @param data Deposit metadata
    */
   update(id: string, data: any): Observable<any> {
-    return this.httpClient
-      .put(`${this.apiService.getEndpointByType('deposits', true)}/${id}`, data)
+    return this._httpClient
+      .put(`${this._apiService.getEndpointByType('deposits', true)}/${id}`, data)
       .pipe(
         catchError(error => {
-          this.toastrService.error(error.error.message);
+          this._toastrService.error(error.error.message);
           return of(null);
         })
       );
@@ -115,8 +119,8 @@ export class DepositService {
 
     return concat(
       deleteFileObservable$,
-      this.httpClient.delete(
-        `${this.apiService.getEndpointByType('deposits', true)}/${deposit.pid}`
+      this._httpClient.delete(
+        `${this._apiService.getEndpointByType('deposits', true)}/${deposit.pid}`
       )
     ).pipe(reduce(() => true));
   }
@@ -129,17 +133,17 @@ export class DepositService {
     let observable$ = of(true);
 
     if (deposit) {
-      observable$ = this.dialogService
+      observable$ = this._dialogService
         .show({
           ignoreBackdropClick: true,
           initialState: {
-            title: this.translateService.instant('Confirmation'),
-            body: this.translateService.instant(
+            title: this._translateService.instant('Confirmation'),
+            body: this._translateService.instant(
               'Do you really want to cancel and remove this deposit ?'
             ),
             confirmButton: true,
-            confirmTitleButton: this.translateService.instant('OK'),
-            cancelTitleButton: this.translateService.instant('Cancel')
+            confirmTitleButton: this._translateService.instant('OK'),
+            cancelTitleButton: this._translateService.instant('Cancel')
           }
         })
         .pipe(
@@ -148,8 +152,8 @@ export class DepositService {
             if (result === true) {
               return this.delete(deposit).pipe(
                 tap(() => {
-                  this.toastrService.success(
-                    this.translateService.instant('Deposit successfully removed.')
+                  this._toastrService.success(
+                    this._translateService.instant('Deposit successfully removed.')
                   );
                 }),
                 map(() => {
@@ -171,9 +175,9 @@ export class DepositService {
    * @param id Deposit ID to publish
    */
   publish(id: string): Observable<any> {
-    return this.httpClient
+    return this._httpClient
       .post(`${this.depositEndPoint}/${id}/publish`, null)
-      .pipe(catchError(err => this.handleError(err)));
+      .pipe(catchError(err => this._handleError(err)));
   }
 
   /**
@@ -184,8 +188,8 @@ export class DepositService {
    * @param file Binary data of the file
    */
   uploadFile(id: string, name: string, type: string, file: File): Observable<any> {
-    return this.httpClient.post(
-      `${this.apiService.getEndpointByType(
+    return this._httpClient.post(
+      `${this._apiService.getEndpointByType(
         'deposits',
         true
       )}/${id}/custom-files?key=${name}&type=${type}`,
@@ -199,9 +203,9 @@ export class DepositService {
    * @param data File data
    */
   updateFile(id: string, data: any): Observable<any> {
-    return this.httpClient
+    return this._httpClient
       .put(
-        `${this.apiService.getEndpointByType('deposits', true)}/${id}/custom-files/${data.key}`,
+        `${this._apiService.getEndpointByType('deposits', true)}/${id}/custom-files/${data.key}`,
         {
           label: data.label || data.key,
           embargo: data.embargo || false,
@@ -211,8 +215,8 @@ export class DepositService {
       )
       .pipe(
         catchError(() => {
-          this.toastrService.error(
-            this.translateService.instant('File could not be updated, please try again')
+          this._toastrService.error(
+            this._translateService.instant('File could not be updated, please try again')
           );
           return of(null);
         })
@@ -226,10 +230,10 @@ export class DepositService {
    * @param versionId File version, if specified, will make a hard delete of the file. See invenio-files-rest for detail.
    */
   removeFile(id: string, name: string, versionId: string = null): Observable<any> {
-    return this.httpClient
+    return this._httpClient
       .delete(
-        `${this.apiService.getEndpointByType('deposits', true)}/${id}/files/${name}${
-          versionId ? '?versionId=' + versionId : ''
+        `${this._apiService.getEndpointByType('deposits', true)}/${id}/files/${name}${
+        versionId ? '?versionId=' + versionId : ''
         }`
       )
       .pipe(catchError(() => of(null)));
@@ -240,8 +244,8 @@ export class DepositService {
    * @param id Deposit id
    */
   getFiles(id: string): Observable<any> {
-    return this.httpClient.get(
-      `${this.apiService.getEndpointByType('deposits', true)}/${id}/custom-files`
+    return this._httpClient.get(
+      `${this._apiService.getEndpointByType('deposits', true)}/${id}/custom-files`
     );
   }
 
@@ -252,11 +256,11 @@ export class DepositService {
    */
   getJsonSchema(type: string, version: string = '1.0.0'): Observable<any> {
     const recordType = type.replace(/ies$/, 'y').replace(/s$/, '');
-    return this.httpClient
-      .get(`${this.apiService.baseUrl}/schemas/${type}/${recordType}-v${version}.json`)
+    return this._httpClient
+      .get(`${this._apiService.baseUrl}/schemas/${type}/${recordType}-v${version}.json`)
       .pipe(
         map((result: any) => {
-          this.orderSchemaProperties(result);
+          this._orderSchemaProperties(result);
           return result;
         })
       );
@@ -269,12 +273,12 @@ export class DepositService {
   canAccessDeposit(deposit: any): boolean {
     if (
       (deposit.status === 'in progress' || deposit.status === 'ask for changes') &&
-      this.userService.checkUserReference(deposit.user.$ref)
+      this._userService.checkUserReference(deposit.user.$ref)
     ) {
       return true;
     }
 
-    if (deposit.status === 'to validate' && this.userService.user.is_moderator) {
+    if (deposit.status === 'to validate' && this._userService.user.is_moderator) {
       return true;
     }
 
@@ -287,13 +291,13 @@ export class DepositService {
    * @param action Action to send to API
    */
   reviewDeposit(deposit: any, action: string, comment: string = null): Observable<any> {
-    return this.httpClient
+    return this._httpClient
       .post(`${this.depositEndPoint}/${deposit.pid}/review`, {
         action,
-        user: this.userService.user.pid,
+        user: this._userService.user.pid,
         comment: comment || null
       })
-      .pipe(catchError(err => this.handleError(err)));
+      .pipe(catchError(err => this._handleError(err)));
   }
 
   /**
@@ -301,16 +305,16 @@ export class DepositService {
    * @param deposit Deposit
    */
   extractPDFMetadata(deposit: any): Observable<any> {
-    return this.httpClient
+    return this._httpClient
       .get(`${this.depositEndPoint}/${deposit.pid}/extract-pdf-metadata`)
-      .pipe(catchError(err => this.handleError(err)));
+      .pipe(catchError(err => this._handleError(err)));
   }
 
   /**
    * Order properties for the current entry.
    * @param schema Current entry of the JSON schema on which properties will be ordered
    */
-  private orderSchemaProperties(schema: any) {
+  private _orderSchemaProperties(schema: any) {
     if (schema.type !== 'object') {
       return;
     }
@@ -318,11 +322,11 @@ export class DepositService {
     // order properties for nested properties
     Object.entries(schema.properties).forEach((value: Array<any>) => {
       if (value[1].type === 'object') {
-        this.orderSchemaProperties(schema.properties[value[0]]);
+        this._orderSchemaProperties(schema.properties[value[0]]);
       }
 
       if (value[1].type === 'array') {
-        this.orderSchemaProperties(schema.properties[value[0]].items);
+        this._orderSchemaProperties(schema.properties[value[0]].items);
       }
     });
 
@@ -342,8 +346,8 @@ export class DepositService {
    * Error handling during api call process.
    * @param error - HttpErrorResponse
    */
-  private handleError(error: HttpErrorResponse) {
-    this.toastrService.error(error.error.message);
+  private _handleError(error: HttpErrorResponse) {
+    this._toastrService.error(error.error.message);
     return throwError('Something bad happened; please try again later.');
   }
 }

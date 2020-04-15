@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { DomSanitizer, ɵDomSanitizerImpl } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { inject } from '@angular/core/testing';
-
+import { DomSanitizer, ɵDomSanitizerImpl } from '@angular/platform-browser';
 import { HighlightJsonPipe } from './highlight-json.pipe';
 
 describe('HighlightJsonPipe', () => {

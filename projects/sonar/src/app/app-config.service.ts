@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,15 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-
 import { CoreConfigService } from '@rero/ng-core';
-
 import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppConfigService extends CoreConfigService {
+  /**
+   * Constructor.
+   */
   constructor() {
     super();
     this.production = environment.production;

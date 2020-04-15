@@ -1,6 +1,6 @@
 /*
- * SONAR UI
- * Copyright (C) 2019 RERO
+ * SONAR User Interface
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,21 @@
  */
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Get human readable file size.
+ */
 @Pipe({
-    name: 'filesize'
+  name: 'filesize'
 })
 export class FileSizePipe implements PipeTransform {
-    transform(size: number, extension: string = ' Mo') {
-        return (size / (1024 * 1024)).toFixed(2) + extension;
-    }
+  /**
+   * Transform size to a human readable size.
+   *
+   * @param size Size of file.
+   * @param extension Extension of file.
+   * @return Human readable file size.
+   */
+  transform(size: number, extension: string = ' Mo') {
+    return (size / (1024 * 1024)).toFixed(2) + extension;
+  }
 }
