@@ -24,12 +24,12 @@
     "build": "ng build sonar --prod",
     "deploy": "ng build sonar --prod  --deploy-url /static/sonar-ui/",
     "e2e": "ng e2e",
-    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translate/i18n/en_US.json --fi '  '",
     "lint": "ng lint",
     "pack": "npm run deploy && npm pack",
     "serve": "ng serve --configuration proxy",
     "test": "ng test",
-    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translate/i18n/{de,en,fr,it}.json --fi '  '"
+    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translations/i18n/messages.json --fi '  '",
+    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translations/i18n/{de,en,fr,it}.json --fi '  '"
   },
   "dependencies": {
     "@angular/animations": "~8.2.9",
@@ -69,7 +69,7 @@
     "@angular/compiler-cli": "~8.2.9",
     "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/language-service": "~8.2.9",
-    "@biesbjerg/ngx-translate-extract": "^4.2.0",
+    "@biesbjerg/ngx-translate-extract": "^6.0.4",
     "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
