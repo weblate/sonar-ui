@@ -18,9 +18,9 @@ import { Component } from '@angular/core';
 import { ResultItem } from '@rero/ng-core';
 
 @Component({
-  templateUrl: './institution.component.html'
+  templateUrl: './organisation.component.html'
 })
-export class InstitutionComponent implements ResultItem {
+export class OrganisationComponent implements ResultItem {
   // Record data.
   record: any;
 

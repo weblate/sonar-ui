@@ -22,9 +22,9 @@
     {{ record.metadata.title[0].subtitle | languageValue }}
   </h5>
   <dl class="row mt-4">
-    <ng-container *ngIf="record.metadata.institution">
-      <dt class="col-sm-3" translate>Institution</dt>
-      <dd class="col-sm-9">{{ record.metadata.institution.name | translate }}</dd>
+    <ng-container *ngIf="record.metadata.organisation">
+      <dt class="col-sm-3" translate>Organisation</dt>
+      <dd class="col-sm-9">{{ record.metadata.organisation.name | translate }}</dd>
     </ng-container>
 
     <ng-container *ngIf="record.metadata.documentType">

@@ -27,8 +27,8 @@ import { UploadComponent } from './deposit/upload/upload.component';
 import { AggregationFilter } from './record/document/aggregation-filter';
 import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
-import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
-import { InstitutionComponent } from './record/institution/institution.component';
+import { DetailComponent as OrganisationDetailComponent } from './record/organisation/detail/detail.component';
+import { OrganisationComponent } from './record/organisation/organisation.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
 import { UserComponent } from './record/user/user.component';
 import { AdminComponent } from './_layout/admin/admin.component';
@@ -89,10 +89,10 @@ const routes: Routes = [
               aggregations: AggregationFilter.filter
             },
             {
-              key: 'institutions',
-              label: 'Organizations',
-              component: InstitutionComponent,
-              detailComponent: InstitutionDetailComponent
+              key: 'organisations',
+              label: 'Organisations',
+              component: OrganisationComponent,
+              detailComponent: OrganisationDetailComponent
             },
             {
               key: 'users',
@@ -132,13 +132,13 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'organization/sonar/search',
+    path: 'organisation/sonar/search',
     loadChildren: () =>
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: false,
       adminMode: adminModeDisabled,
-      detailUrl: '/organization/sonar/:type/:pid',
+      detailUrl: '/organisation/sonar/:type/:pid',
       types: [
         {
           key: 'documents',
@@ -150,13 +150,13 @@ const routes: Routes = [
     }
   },
   {
-    path: 'organization/unisi/search',
+    path: 'organisation/unisi/search',
     loadChildren: () =>
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: false,
       adminMode: adminModeDisabled,
-      detailUrl: '/organization/unisi/:type/:pid',
+      detailUrl: '/organisation/unisi/:type/:pid',
       types: [
         {
           key: 'documents',
@@ -164,7 +164,7 @@ const routes: Routes = [
           component: DocumentComponent,
           aggregations: AggregationFilter.filter,
           preFilters: {
-            institution: 'unisi'
+            organisation: 'unisi'
           }
         }
       ]

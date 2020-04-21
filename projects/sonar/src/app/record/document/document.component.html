@@ -35,8 +35,8 @@
     </ng-container>
   </div>
   <div class="col-sm-10">
-    <p class="m-0" *ngIf="record.metadata.institution">
-      <i>{{ record.metadata.institution.name | translate }}</i>
+    <p class="m-0" *ngIf="record.metadata.organisation">
+      <i>{{ record.metadata.organisation.name | translate }}</i>
     </p>
     <h4 class="my-2">
       <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">{{

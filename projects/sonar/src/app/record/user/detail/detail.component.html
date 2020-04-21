@@ -23,9 +23,9 @@
     <dt>{{ "Email address" | translate }}</dt>
     <dd>{{ record.metadata.email | default: "Undefined" | translate }}</dd>
 
-    <div *ngIf="record.metadata.institution">
-      <dt>{{ "Organization" | translate }}</dt>
-      <dd>{{ record.metadata.institution.$ref }}</dd>
+    <div *ngIf="record.metadata.organisation">
+      <dt>{{ "Organisation" | translate }}</dt>
+      <dd>{{ record.metadata.organisation.$ref }}</dd>
     </div>
 
     <dt>{{ "Birthdate" | translate }}</dt>

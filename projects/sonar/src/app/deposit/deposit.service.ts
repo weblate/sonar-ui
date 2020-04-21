@@ -213,7 +213,7 @@ export class DepositService {
           label: data.label || data.key,
           embargo: data.embargo || false,
           embargoDate: data.embargoDate || null,
-          exceptInInstitution: data.exceptInInstitution || false
+          exceptInOrganisation: data.exceptInOrganisation || false
         }
       )
       .pipe(

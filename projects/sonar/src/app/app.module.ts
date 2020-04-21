@@ -45,8 +45,8 @@ import { UploadComponent } from './deposit/upload/upload.component';
 import { LanguageValuePipe } from './pipe/language-value.pipe';
 import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
-import { DetailComponent as InstitutionDetailComponent } from './record/institution/detail/detail.component';
-import { InstitutionComponent } from './record/institution/institution.component';
+import { DetailComponent as OrganisationDetailComponent } from './record/organisation/detail/detail.component';
+import { OrganisationComponent } from './record/organisation/organisation.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
 import { UserComponent } from './record/user/user.component';
 import { TranslateLoader } from './translations/loader/translate-loader';
@@ -59,11 +59,11 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
 @NgModule({
   declarations: [
     AppComponent,
-    InstitutionComponent,
+    OrganisationComponent,
     DocumentComponent,
     UserComponent,
     DocumentDetailComponent,
-    InstitutionDetailComponent,
+    OrganisationDetailComponent,
     UserDetailComponent,
     JoinPipe,
     LanguageValuePipe,
@@ -109,10 +109,10 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
   ],
   entryComponents: [
     DocumentComponent,
-    InstitutionComponent,
+    OrganisationComponent,
     UserComponent,
     DocumentDetailComponent,
-    InstitutionDetailComponent,
+    OrganisationDetailComponent,
     UserDetailComponent,
     BriefViewComponent
   ],

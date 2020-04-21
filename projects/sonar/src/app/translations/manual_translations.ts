@@ -16,7 +16,7 @@
  */
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-// Institutions
+// Organisations
 _('unifr');
 _('unisi');
 _('csal');
@@ -143,7 +143,7 @@ _('lang-ita');
 
 // Facets
 _('document_type');
-_('institution');
+_('organisation');
 _('language');
 _('subject');
 _('specific_collections');
