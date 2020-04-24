@@ -16,34 +16,38 @@
 -->
 <ng-container *ngIf="record$ | async as record">
   <h1 class="mb-4">{{ record.metadata.full_name }}</h1>
-  <dl>
-    <dt>{{ "Roles" | translate }}</dt>
-    <dd>{{ record.metadata.roles | join }}</dd>
+  <dl class="row mt-4">
+    <ng-container *ngIf="record.metadata.organisation">
+      <dt class="col-sm-3" translate>Organisation</dt>
+      <dd class="col-sm-9">{{ record.metadata.organisation.name }}</dd>
+    </ng-container>
 
-    <dt>{{ "Email address" | translate }}</dt>
-    <dd>{{ record.metadata.email | default: "Undefined" | translate }}</dd>
+    <dt class="col-sm-3" translate>Roles</dt>
+    <dd class="col-sm-9">{{ record.metadata.roles | join }}</dd>
 
-    <div *ngIf="record.metadata.organisation">
-      <dt>{{ "Organisation" | translate }}</dt>
-      <dd>{{ record.metadata.organisation.$ref }}</dd>
-    </div>
+    <dt class="col-sm-3" translate>Email address</dt>
+    <dd class="col-sm-9">{{ record.metadata.email }}</dd>
 
-    <dt>{{ "Birthdate" | translate }}</dt>
-    <dd>
-      {{ record.metadata.birth_date | date | default: "Undefined" | translate }}
-    </dd>
+    <ng-container *ngIf="record.metadata.birth_date">
+      <dt class="col-sm-3" translate>Birthdate</dt>
+      <dd class="col-sm-9">{{ record.metadata.birth_date | date }}</dd>
+    </ng-container>
 
-    <dt>{{ "Phone" | translate }}</dt>
-    <dd>{{ record.metadata.phone | default: "Undefined" | translate }}</dd>
+    <ng-container *ngIf="record.metadata.phone">
+      <dt class="col-sm-3" translate>Phone</dt>
+      <dd class="col-sm-9">{{ record.metadata.phone }}</dd>
+    </ng-container>
 
-    <dt>{{ "Address" | translate }}</dt>
-    <dd>
-      <p class="m-0">
-        {{ record.metadata.street }}
-      </p>
-      <p class="m-0">
-        {{ record.metadata.postal_code }} {{ record.metadata.city }}
-      </p>
-    </dd>
+    <ng-container *ngIf="record.metadata.street || record.metadata.postal_code || record.metadata.city">
+      <dt class="col-sm-3" translate>Address</dt>
+      <dd class="col-sm-9">
+        <p class="m-0" *ngIf="record.metadata.street">
+          {{ record.metadata.street }}
+        </p>
+        <p class="m-0" *ngIf="record.metadata.postal_code || record.metadata.city">
+          {{ record.metadata.postal_code }} {{ record.metadata.city }}
+        </p>
+      </dd>
+    </ng-container>
   </dl>
 </ng-container>
