@@ -16,11 +16,11 @@
 -->
 <ng-container *ngIf="record$ | async as record">
   <h1 class="mb-4">{{ record.metadata.name }}</h1>
-  <dl>
-    <dt>{{ "Name" | translate }}</dt>
-    <dd>{{ record.metadata.name }}</dd>
+  <dl class="row mt-4">
+    <dt class="col-sm-3" translate>Code</dt>
+    <dd class="col-sm-9">{{ record.metadata.code }}</dd>
 
-    <dt>{{ "Code" | translate }}</dt>
-    <dd>{{ record.metadata.code }}</dd>
+    <dt class="col-sm-3" translate>Name</dt>
+    <dd class="col-sm-9">{{ record.metadata.name }}</dd>
   </dl>
 </ng-container>
