@@ -61,7 +61,7 @@ export class ReviewComponent {
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this._translateService.instant(action),
+          title: this._translateService.instant('deposit_log_action_' + action),
           body: this._translateService.instant('Do you really want to do this action?'),
           confirmButton: true,
           confirmTitleButton: this._translateService.instant('OK'),

@@ -30,21 +30,20 @@
       *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"
       >{{ 'New' | translate }}</span
     >
-
-    <span class="badge badge-dark" *ngSwitchCase="'in progress'">{{
-      record.metadata.status | translate
+    <span class="badge badge-dark" *ngSwitchCase="'in_progress'">{{
+      ('deposit_status_' + record.metadata.status) | translate
     }}</span>
-    <span class="badge badge-info" *ngSwitchCase="'to validate'">{{
-      record.metadata.status | translate
+    <span class="badge badge-info" *ngSwitchCase="'to_validate'">{{
+      ('deposit_status_' + record.metadata.status) | translate
     }}</span>
-    <span class="badge badge-warning" *ngSwitchCase="'ask for changes'">{{
-      record.metadata.status | translate
+    <span class="badge badge-warning" *ngSwitchCase="'ask_for_changes'">{{
+      ('deposit_status_' + record.metadata.status) | translate
     }}</span>
     <span class="badge badge-success" *ngSwitchCase="'validated'">{{
-      record.metadata.status | translate
+      ('deposit_status_' + record.metadata.status) | translate
     }}</span>
     <span class="badge badge-danger" *ngSwitchCase="'rejected'">{{
-      record.metadata.status | translate
+      ('deposit_status_' + record.metadata.status) | translate
     }}</span>
   </div>
 
@@ -86,7 +85,7 @@
           </tr>
         </thead>
         <tr *ngFor="let log of record.metadata.logs">
-          <td>{{ log.action | ucfirst | translate }}</td>
+          <td>{{ ('deposit_log_action_' + log.action) | translate }}</td>
           <td>{{ log.date | dateTranslate: 'medium' }}</td>
           <td>{{ log.user.full_name }}</td>
           <td [innerHtml]="log.comment | nl2br"></td>

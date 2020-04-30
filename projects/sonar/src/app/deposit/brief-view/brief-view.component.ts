@@ -44,8 +44,8 @@ export class BriefViewComponent {
    */
   canContinueProcess(): boolean {
     if (
-      this.record.metadata.status !== 'in progress' &&
-      this.record.metadata.status !== 'ask for changes'
+      this.record.metadata.status !== 'in_progress' &&
+      this.record.metadata.status !== 'ask_for_changes'
     ) {
       return false;
     }
@@ -57,7 +57,7 @@ export class BriefViewComponent {
    * Check if current logged user can review the deposit.
    */
   canReview(): boolean {
-    if (this.record.metadata.status !== 'to validate') {
+    if (this.record.metadata.status !== 'to_validate') {
       return false;
     }
 

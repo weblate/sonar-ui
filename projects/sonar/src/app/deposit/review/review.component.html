@@ -14,7 +14,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="card my-5" *ngIf="deposit && deposit.status === 'to validate' && user.is_moderator">
+<div class="card my-5" *ngIf="deposit && deposit.status === 'to_validate' && user.is_moderator">
   <div class="card-header">
     <h5>{{ 'Deposit review' | translate }}</h5>
   </div>
@@ -36,7 +36,7 @@
         </button>
       </div>
       <div class="col-sm-3">
-        <button class="btn btn-warning btn-lg btn-block" (click)="review('ask-for-changes')">
+        <button class="btn btn-warning btn-lg btn-block" (click)="review('ask_for_changes')">
           {{ 'Ask for changes' | translate }}
         </button>
       </div>

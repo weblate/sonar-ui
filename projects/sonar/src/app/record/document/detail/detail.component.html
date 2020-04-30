@@ -44,7 +44,7 @@
       <dd class="col-sm-9">
         <p class="m-0" *ngFor="let identifier of record.metadata.identifiedBy">
           {{ identifier.value }}
-          <small class="badge badge-secondary text-uppercase text-light">{{ identifier.type | translate }}</small>
+          <small class="badge badge-secondary text-light">{{ identifier.type | translate }}</small>
         </p>
       </dd>
     </ng-container>
@@ -53,7 +53,7 @@
       <dt class="col-sm-3" translate>Languages</dt>
       <dd class="col-sm-9">
         <span *ngFor="let language of record.metadata.language">
-          {{ ('lang-' + language.value) | translate }}
+          {{ language.value | translateLanguage }}
         </span>
       </dd>
     </ng-container>
@@ -64,9 +64,9 @@
         <ul class="list-unstyled mb-0">
           <li *ngFor="let contribution of record.metadata.contribution; let last = last">
             <small
-              class="badge badge-secondary text-uppercase text-light">{{ contribution.agent.type | translate }}</small>
-            <small class="badge badge-secondary text-uppercase text-light ml-1"
-              *ngFor="let role of contribution.role">{{ role | translate }}</small>
+              class="badge badge-secondary text-light">{{ contribution.agent.type | translate }}</small>
+            <small class="badge badge-secondary text-light ml-1"
+              *ngFor="let role of contribution.role">{{ ('contribution_role_' + role) | translate }}</small>
             {{ contribution.agent.preferred_name }}
             <i class="text-muted" *ngIf="contribution.affiliation">({{ contribution.affiliation }})</i>
           </li>
@@ -92,7 +92,7 @@
       <dt class="col-sm-3" translate>Abstracts</dt>
       <dd class="col-sm-9">
         <p class="m-0 text-justify" *ngFor="let abstract of record.metadata.abstracts">
-          <span class="badge badge-secondary text-light mr-2">{{ abstract.language | uppercase }}</span>
+          <span class="badge badge-secondary text-light mr-2">{{ abstract.language | translateLanguage }}</span>
           <span [innerHtml]="abstract.value | nl2br"></span>
         </p>
       </dd>
@@ -102,7 +102,7 @@
       <dt class="col-sm-3" translate>Subjects</dt>
       <dd class="col-sm-9">
         <p class="m-0" *ngFor="let subject of record.metadata.subjects">
-          <span class="badge badge-secondary text-light mr-2">{{ subject.label.language | uppercase }}</span>
+          <span class="badge badge-secondary text-light mr-2">{{ subject.label.language | translateLanguage }}</span>
           {{ subject.label.value | join:' ; ' }}
         </p>
       </dd>

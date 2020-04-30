@@ -24,7 +24,6 @@ _('csal');
 // Provision activity
 _('bf:Publication');
 _('bf:Manufacture');
-_('bf:Distribution');
 _('bf:Production');
 _('bf:Place');
 _('bf:Person');
@@ -135,12 +134,6 @@ _('classification_93/94');
 _('classification_931');
 _('classification_94');
 
-// Languages
-_('lang-eng');
-_('lang-fre');
-_('lang-ger');
-_('lang-ita');
-
 // Facets
 _('document_type');
 _('organisation');
@@ -149,9 +142,27 @@ _('subject');
 _('specific_collections');
 
 // Contributor role
-_('ctb');
-_('edt');
-_('cre');
-_('prt');
-_('dgs');
+_('contribution_role_ctb');
+_('contribution_role_edt');
+_('contribution_role_cre');
+_('contribution_role_prt');
+_('contribution_role_dgs');
 
+// Deposit status
+_('deposit_status_in_progress');
+_('deposit_status_to_validate');
+_('deposit_status_validated');
+_('deposit_status_rejected');
+_('deposit_status_ask_for_changes');
+
+// Deposit log actions
+_('deposit_log_action_submit');
+_('deposit_log_action_approve');
+_('deposit_log_action_reject');
+_('deposit_log_action_ask_for_changes');
+
+// User roles
+_('role_superadmin');
+_('role_admin');
+_('role_moderator');
+_('role_user');

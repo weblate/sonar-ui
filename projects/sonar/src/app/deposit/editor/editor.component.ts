@@ -239,7 +239,7 @@ export class EditorComponent implements OnInit {
    */
   isFinished(): boolean {
     return (
-      (this.deposit.status === 'in progress' || this.deposit.status === 'ask for changes') &&
+      (this.deposit.status === 'in_progress' || this.deposit.status === 'ask_for_changes') &&
       this.currentStep === this.steps[this.steps.length - 1] &&
       this.deposit.step === this.steps[this.steps.length - 1]
     );
@@ -374,19 +374,8 @@ export class EditorComponent implements OnInit {
   private createForm(schema: any) {
     const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
       map: (fieldConfig: any, fieldSchema) => {
-        // Translate options for document type
-        if (fieldSchema.title === 'Document type') {
-          fieldConfig.templateOptions.options = this._translateService.getSelectOptions(fieldSchema.enum, 'document_type_');
-        }
-
-        // Translate options classification
-        if (fieldSchema.title === 'Classification') {
-          fieldConfig.templateOptions.options = this._translateService.getSelectOptions(fieldSchema.enum, 'classification_');
-        }
-
-        // Translate language code for each language select
-        if (fieldSchema.title === 'Language') {
-          fieldConfig.templateOptions.options = this._translateLanguageService.getSelectOptions(fieldSchema.enum);
+        if (fieldSchema.form && fieldSchema.form.options) {
+          fieldConfig.templateOptions.options = fieldSchema.form.options;
         }
 
         if (fieldSchema.template) {

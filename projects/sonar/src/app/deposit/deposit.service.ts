@@ -17,7 +17,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ApiService, DialogService, removeEmptyValues } from '@rero/ng-core';
+import { ApiService, DialogService, orderedJsonSchema, RecordService, removeEmptyValues } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
 import { concat, from, Observable, of, throwError } from 'rxjs';
 import { catchError, first, ignoreElements, map, mergeMap, reduce, switchMap, tap } from 'rxjs/operators';
@@ -36,6 +36,7 @@ export class DepositService {
    * @param _toastrService Toast service.
    * @param _translateService Translate service.
    * @param _dialogService Dialog service.
+   * @param _recordService Record service.
    */
   constructor(
     private _apiService: ApiService,
@@ -43,7 +44,8 @@ export class DepositService {
     private _userService: UserService,
     private _toastrService: ToastrService,
     private _translateService: TranslateService,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _recordService: RecordService
   ) { }
 
   /**
@@ -81,7 +83,7 @@ export class DepositService {
         $ref: this._userService.getUserRefEndpoint()
       },
       step: 'metadata',
-      status: 'in progress'
+      status: 'in_progress'
     });
   }
 
@@ -255,16 +257,13 @@ export class DepositService {
   /**
    * Return the JSON schema corresponding to resource, with properties ordered.
    * @param type Resource type
-   * @param version Version of the JSON schema
    */
-  getJsonSchema(type: string, version: string = '1.0.0'): Observable<any> {
-    const recordType = type.replace(/ies$/, 'y').replace(/s$/, '');
-    return this._httpClient
-      .get(`${this._apiService.baseUrl}/schemas/${type}/${recordType}-v${version}.json`)
+  getJsonSchema(type: string): Observable<any> {
+    return this._recordService.getSchemaForm(type)
       .pipe(
         map((result: any) => {
-          this._orderSchemaProperties(result);
-          return result;
+          orderedJsonSchema(result.schema);
+          return result.schema;
         })
       );
   }
@@ -275,13 +274,13 @@ export class DepositService {
    */
   canAccessDeposit(deposit: any): boolean {
     if (
-      (deposit.status === 'in progress' || deposit.status === 'ask for changes') &&
+      (deposit.status === 'in_progress' || deposit.status === 'ask_for_changes') &&
       this._userService.checkUserReference(deposit.user.$ref)
     ) {
       return true;
     }
 
-    if (deposit.status === 'to validate' && this._userService.user.is_moderator) {
+    if (deposit.status === 'to_validate' && this._userService.user.is_moderator) {
       return true;
     }
 
@@ -313,38 +312,6 @@ export class DepositService {
     return this._httpClient
       .get(`${this.depositEndPoint}/${deposit.pid}/extract-pdf-metadata`)
       .pipe(catchError(err => this._handleError(err)));
-  }
-
-  /**
-   * Order properties for the current entry.
-   * @param schema Current entry of the JSON schema on which properties will be ordered
-   */
-  private _orderSchemaProperties(schema: any) {
-    if (schema.type !== 'object') {
-      return;
-    }
-
-    // order properties for nested properties
-    Object.entries(schema.properties).forEach((value: Array<any>) => {
-      if (value[1].type === 'object') {
-        this._orderSchemaProperties(schema.properties[value[0]]);
-      }
-
-      if (value[1].type === 'array') {
-        this._orderSchemaProperties(schema.properties[value[0]].items);
-      }
-    });
-
-    if (schema.propertiesOrder) {
-      const orderedProperties: any = {};
-      for (const property of schema.propertiesOrder) {
-        if (schema.properties[property]) {
-          orderedProperties[property] = schema.properties[property];
-        }
-      }
-
-      schema.properties = orderedProperties;
-    }
   }
 
   /**

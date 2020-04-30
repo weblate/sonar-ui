@@ -17,7 +17,7 @@
 <ng-container *ngIf="deposit$ | async as deposit">
   <h1>{{ 'Confirmation' | translate }}</h1>
   <p>{{ 'Thank you for submitting a publication!' | translate }}</p>
-  <div class="alert alert-warning" *ngIf="deposit.status === 'to validate'">
+  <div class="alert alert-warning" *ngIf="deposit.status === 'to_validate'">
     {{ 'This deposit will be reviewed and published shortly.' | translate }}
   </div>
   <div class="alert alert-success" *ngIf="deposit.status === 'validated'">
