@@ -85,6 +85,7 @@ const routes: Routes = [
               key: 'documents',
               label: 'Documents',
               component: DocumentComponent,
+              editorLongMode: true,
               detailComponent: DocumentDetailComponent,
               aggregations: AggregationFilter.filter
             },

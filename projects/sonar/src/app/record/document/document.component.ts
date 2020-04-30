@@ -52,12 +52,12 @@ export class DocumentComponent implements ResultItem, OnInit {
     if (this.record.metadata._files) {
       this.mainFile = this.record.metadata._files.find((file: any) => file.type === 'file');
       if (this.mainFile) {
-        if (this.mainFile.restricted.date) {
-          this.embargoDate = this.mainFile.restricted.date;
+        if (this.mainFile.restriction.date) {
+          this.embargoDate = this.mainFile.restriction.date;
         }
 
-        if (this.mainFile.restricted.restricted) {
-          this.restricted = this.mainFile.restricted.restricted;
+        if (this.mainFile.restriction.restricted) {
+          this.restricted = this.mainFile.restriction.restricted;
         }
 
         this._loadThumbnail();
