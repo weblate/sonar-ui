@@ -33,6 +33,13 @@ export class AggregationFilter {
   static aggregationFilter(aggregations: object) {
     const aggs = {};
     Object.keys(aggregations).forEach(aggregation => {
+      // Translate values for document type
+      if (aggregation === 'document_type') {
+        aggregations[aggregation].buckets.forEach((bucket) => {
+          bucket.name = this.translateService.instant('document_type_' + bucket.key);
+        });
+      }
+
       if (aggregation.indexOf('__') > -1) {
         const splitted = aggregation.split('__');
         if (AggregationFilter.translateService.currentLang === splitted[1]) {
