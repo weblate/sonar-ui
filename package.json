@@ -41,7 +41,7 @@
     "@angular/platform-browser": "~8.2.9",
     "@angular/platform-browser-dynamic": "~8.2.9",
     "@angular/router": "~8.2.9",
-    "@cospired/i18n-iso-languages": "^2.0.5",
+    "@cospired/i18n-iso-languages": "^2.1.1",
     "@ngx-formly/bootstrap": "^5.5.10",
     "@ngx-formly/core": "^5.5.10",
     "@ngx-translate/core": "^12.1.1",
