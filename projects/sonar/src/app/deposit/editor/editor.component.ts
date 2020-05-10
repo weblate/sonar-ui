@@ -374,17 +374,17 @@ export class EditorComponent implements OnInit {
   private createForm(schema: any) {
     const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
       map: (fieldConfig: any, fieldSchema) => {
-        if (fieldSchema.form && fieldSchema.form.options) {
-          fieldConfig.templateOptions.options = fieldSchema.form.options;
-        }
-
-        if (fieldSchema.template) {
-          fieldConfig.templateOptions = { ...fieldConfig.templateOptions, ...fieldSchema.template };
+        if (fieldSchema.form) {
+          fieldConfig.templateOptions = { ...fieldConfig.templateOptions, ...fieldSchema.form };
 
           // change field input to textarea
-          if (fieldSchema.template.type === 'textarea') {
+          if (fieldSchema.form.type === 'textarea') {
             fieldConfig.type = 'textarea';
           }
+        }
+
+        if (fieldSchema.hideExpression) {
+          fieldConfig.hideExpression = fieldSchema.hideExpression;
         }
 
         return fieldConfig;
