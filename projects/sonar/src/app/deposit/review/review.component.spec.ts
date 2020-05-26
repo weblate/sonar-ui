@@ -19,6 +19,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
+import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
+import { UserService } from '../../user.service';
+import { DepositService } from '../deposit.service';
 import { ReviewComponent } from './review.component';
 
 describe('ReviewComponent', () => {
@@ -38,6 +41,10 @@ describe('ReviewComponent', () => {
         }),
         RecordModule,
         RouterTestingModule
+      ],
+      providers: [
+        { provide: UserService, useValue: userTestingService },
+        { provide: DepositService, useValue: depositTestingService }
       ]
     }).compileComponents();
   }));

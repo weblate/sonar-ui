@@ -19,6 +19,9 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLoader } from '@rero/ng-core';
+import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
+import { DepositService } from '../../deposit/deposit.service';
+import { UserService } from '../../user.service';
 import { AggregationFilter } from './aggregation-filter';
 
 const aggregations = {
@@ -66,7 +69,11 @@ describe('AggregationFilter', () => {
           isolate: false
         })
       ],
-      providers: [TranslateService]
+      providers: [
+        TranslateService,
+        { provide: UserService, useValue: userTestingService },
+        { provide: DepositService, useValue: depositTestingService }
+      ]
     }).compileComponents();
     translate = TestBed.get(TranslateService);
     translate.use('en');

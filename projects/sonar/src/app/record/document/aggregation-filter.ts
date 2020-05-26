@@ -35,8 +35,14 @@ export class AggregationFilter {
     Object.keys(aggregations).forEach(aggregation => {
       // Translate values for document type
       if (aggregation === 'document_type') {
-        aggregations[aggregation].buckets.forEach((bucket) => {
+        aggregations[aggregation].buckets.forEach((bucket: any) => {
           bucket.name = this.translateService.instant('document_type_' + bucket.key);
+        });
+      }
+
+      if (aggregation === 'status') {
+        aggregations[aggregation].buckets.forEach((bucket: any) => {
+          bucket.name = this.translateService.instant('deposit_status_' + bucket.key);
         });
       }
 

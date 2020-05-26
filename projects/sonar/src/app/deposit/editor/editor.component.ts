@@ -152,7 +152,7 @@ export class EditorComponent implements OnInit {
 
   /** Return if current logged user is an admin or a standard user */
   get isAdminUser(): boolean {
-    return this._userUservice.hasRole(['superadmin', 'admin', 'moderator']);
+    return this._userUservice.hasRole(['superuser', 'admin', 'moderator']);
   }
 
   /**

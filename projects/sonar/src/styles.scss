@@ -44,3 +44,7 @@ pre {
 .key {
   color: $danger;
 }
+
+.nav-item > a {
+  cursor: pointer;
+}

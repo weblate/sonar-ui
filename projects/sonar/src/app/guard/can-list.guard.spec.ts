@@ -14,42 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientModule } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { RecordModule, TranslateLoader } from '@rero/ng-core';
-import { ToastrModule } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
+import { DepositService } from '../deposit/deposit.service';
 import { UserService } from '../user.service';
-import { DepositService } from './deposit.service';
+import { CanListGuard } from './can-list.guard';
 
-describe('DepositService', () => {
-  beforeEach(() =>
+describe('CanListGuard', () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
-        ToastrModule.forRoot(),
-        TranslateModule.forRoot({
-          loader: {
-            provide: BaseTranslateLoader,
-            useClass: TranslateLoader
-          }
-        }),
-        RecordModule
+        HttpClientTestingModule
       ],
       providers: [
+        CanListGuard,
         { provide: UserService, useValue: userTestingService },
         { provide: DepositService, useValue: depositTestingService }
       ]
-    })
-  );
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
+    });
   });
 
-  it('should be created', () => {
-    const service: DepositService = TestBed.get(DepositService);
-    expect(service).toBeTruthy();
-  });
+  it('should create can list guard', inject([CanListGuard], (guard: CanListGuard) => {
+    expect(guard).toBeTruthy();
+  }));
 });

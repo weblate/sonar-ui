@@ -17,14 +17,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@rero/ng-core';
-import { of } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  user: any;
+  // Subject for generating new users.
+  private _userSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+
+  // Logged user
+  private _user: any = null;
 
   /**
    * Constructor.
@@ -32,7 +36,13 @@ export class UserService {
    * @param _apiService API service.
    * @param _http HTTP client.
    */
-  constructor(private _apiService: ApiService, private _http: HttpClient) { }
+  constructor(private _apiService: ApiService, private _http: HttpClient) {
+    this.loadLoggedUser().subscribe();
+  }
+
+  get user$(): Observable<any> {
+    return this._userSubject.asObservable();
+  }
 
   /**
    * Load logged user in backend
@@ -41,16 +51,15 @@ export class UserService {
     return this._http
       .get<any>(`${this._apiService.baseUrl}/logged-user/${resolve ? '?resolve=1' : ''}`)
       .pipe(
-        map(user => {
-          if (user.metadata) {
-            this.user = user.metadata;
-            return this.user;
-          }
-
-          return null;
+        catchError((e) => {
+          this._userSubject.error(e);
+          return throwError(e);
         }),
-        catchError(() => {
-          return of(null);
+        map(user => {
+          if (user.metadata && user.metadata.is_user) {
+            this._user = user.metadata;
+            this._userSubject.next(user.metadata);
+          }
         })
       );
   }
@@ -59,7 +68,7 @@ export class UserService {
    * Return $ref endpoint for current logged user.
    */
   getUserRefEndpoint() {
-    return this._apiService.getRefEndpoint('users', this.user.pid);
+    return this._apiService.getRefEndpoint('users', this._user.pid);
   }
 
   /**
@@ -72,7 +81,7 @@ export class UserService {
     }
 
     for (const role of roles) {
-      for (const userRole of this.user.roles) {
+      for (const userRole of this._user.roles) {
         if (role === userRole) {
           return true;
         }
@@ -80,6 +89,15 @@ export class UserService {
     }
 
     return false;
+  }
+
+  /**
+   * Check is user as at least the given role.
+   * @param role Role to check.
+   * @returns True if user has the role.
+   */
+  is(role: string): boolean {
+    return this._user['is_' + role] === true;
   }
 
   /**
@@ -101,6 +119,6 @@ export class UserService {
    * @param pid User PID to check against logged user
    */
   checkUserPid(pid: string): boolean {
-    return this.user.pid === pid;
+    return this._user.pid === pid;
   }
 }

@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
 import { UserService } from '../../user.service';
 
 @Component({
   selector: 'sonar-layout-admin',
   templateUrl: './admin.component.html'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit, OnDestroy {
   // Logged user
   user: any;
 
@@ -32,22 +33,45 @@ export class AdminComponent {
   // Navigation is collapsed?
   isCollapsed = true;
 
+  // User subscription
+  private _userSubscription: Subscription;
+
   /**
    * Constructor.
    *
    * @param _spinner Spinner service.
    * @param _userService User service.
    */
-  constructor(private _spinner: NgxSpinnerService, private _userService: UserService) {
+  constructor(private _spinner: NgxSpinnerService, private _userService: UserService) { }
+
+  /**
+   * Component initialization.
+   *
+   * Get the logged user and flag application as ready when he is retrieved.
+   */
+  ngOnInit() {
     this._spinner.show();
 
-    this._userService.loadLoggedUser().subscribe(user => {
-      if (user) {
-        this.user = user;
-      }
+    this._userSubscription = this._userService.user$.subscribe(
+      (user) => {
+        if (user !== null) {
+          this.user = user;
+          this._spinner.hide();
+          this.ready = true;
+        }
 
-      this._spinner.hide();
-      this.ready = true;
-    });
+      },
+      () => {
+        this._spinner.hide();
+        this.ready = true;
+      }
+    );
+  }
+
+  /**
+   * Component destruction
+   */
+  ngOnDestroy() {
+    this._userSubscription.unsubscribe();
   }
 }

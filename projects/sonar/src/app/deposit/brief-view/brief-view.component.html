@@ -16,7 +16,7 @@
 -->
 <ng-template #defaultTitle>{{ 'Deposit' | translate }} #{{ record.metadata.pid }}</ng-template>
 
-<ng-container *ngIf="record">
+<ng-container *ngIf="record && user">
   <div class="float-right"></div>
   <h4>
     <ng-container *ngIf="record.metadata.metadata; else defaultTitle">{{

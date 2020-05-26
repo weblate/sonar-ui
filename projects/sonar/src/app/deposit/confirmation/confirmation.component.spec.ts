@@ -21,7 +21,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
 import { ToastrModule } from 'ngx-toastr';
+import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
 import { JoinPipe } from '../../core/join.pipe';
+import { UserService } from '../../user.service';
+import { DepositService } from '../deposit.service';
 import { ConfirmationComponent } from './confirmation.component';
 
 describe('ConfirmationComponent', () => {
@@ -43,6 +46,10 @@ describe('ConfirmationComponent', () => {
         ToastrModule.forRoot(),
         HttpClientModule,
         RecordModule
+      ],
+      providers: [
+        { provide: UserService, useValue: userTestingService },
+        { provide: DepositService, useValue: depositTestingService }
       ]
     }).compileComponents();
   }));

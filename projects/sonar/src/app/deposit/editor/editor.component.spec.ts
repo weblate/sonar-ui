@@ -24,12 +24,15 @@ import { FormlyModule } from '@ngx-formly/core';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
 import { ModalModule } from 'ngx-bootstrap';
+import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
 import { of } from 'rxjs';
 import { FileLinkPipe } from '../../core/file-link.pipe';
 import { FileSizePipe } from '../../core/filesize.pipe';
 import { HighlightJsonPipe } from '../../core/highlight-json.pipe';
 import { JoinPipe } from '../../core/join.pipe';
 import { StepComponent } from '../../core/step/step.component';
+import { UserService } from '../../user.service';
+import { DepositService } from '../deposit.service';
 import { ReviewComponent } from '../review/review.component';
 import { EditorComponent } from './editor.component';
 
@@ -72,7 +75,11 @@ describe('EditorComponent', () => {
         FormlyModule,
         ModalModule.forRoot()
       ],
-      providers: [{ provide: ActivatedRoute, useValue: route }]
+      providers: [
+        { provide: ActivatedRoute, useValue: route },
+        { provide: UserService, useValue: userTestingService },
+        { provide: DepositService, useValue: depositTestingService }
+      ]
     }).compileComponents();
   }));
 

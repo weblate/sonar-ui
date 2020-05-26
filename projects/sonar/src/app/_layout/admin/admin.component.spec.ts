@@ -16,12 +16,16 @@
  */
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
 import { BsLocaleService } from 'ngx-bootstrap';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
+import { DepositService } from '../../deposit/deposit.service';
+import { UserService } from '../../user.service';
 import { AdminComponent } from './admin.component';
 
 describe('AdminComponent', () => {
@@ -31,6 +35,7 @@ describe('AdminComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         HttpClientModule,
         CollapseModule.forRoot(),
@@ -44,7 +49,11 @@ describe('AdminComponent', () => {
         })
       ],
       declarations: [AdminComponent],
-      providers: [BsLocaleService]
+      providers: [
+        BsLocaleService,
+        { provide: UserService, useValue: userTestingService },
+        { provide: DepositService, useValue: depositTestingService }
+      ]
     }).compileComponents();
   }));
 

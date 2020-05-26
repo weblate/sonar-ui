@@ -15,18 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiService, DialogService, orderedJsonSchema, RecordService, removeEmptyValues } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
-import { concat, from, Observable, of, throwError } from 'rxjs';
+import { concat, from, Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, first, ignoreElements, map, mergeMap, reduce, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '../user.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DepositService {
+export class DepositService implements OnDestroy {
+  // Logged user
+  private _user: any;
+
+  // User subscription
+  private _userSubscription: Subscription;
+
   /**
    * Constructor.
    *
@@ -46,7 +52,18 @@ export class DepositService {
     private _translateService: TranslateService,
     private _dialogService: DialogService,
     private _recordService: RecordService
-  ) { }
+  ) {
+    this._userSubscription = this._userService.user$.subscribe((user) => {
+      this._user = user;
+    });
+  }
+
+  /**
+   * Service destruction
+   */
+  ngOnDestroy() {
+    this._userSubscription.unsubscribe();
+  }
 
   /**
    * Returns deposit endpoint.
@@ -65,7 +82,7 @@ export class DepositService {
     return this._httpClient.get(`${this._apiService.getEndpointByType('deposits', true)}/${id}`).pipe(
       tap(result => {
         if (
-          this._userService.hasRole(['moderator', 'admin', 'superadmin']) === false &&
+          this._userService.hasRole(['moderator', 'admin', 'superuser']) === false &&
           this._userService.checkUserReference(result.metadata.user.$ref) === false
         ) {
           throw new Error('Logged user is not owning this deposit');
@@ -280,7 +297,7 @@ export class DepositService {
       return true;
     }
 
-    if (deposit.status === 'to_validate' && this._userService.user.is_moderator) {
+    if (deposit.status === 'to_validate' && this._user && this._user.is_moderator) {
       return true;
     }
 
