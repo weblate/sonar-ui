@@ -25,11 +25,8 @@
     <small *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"></small>
   </h4>
   <div class="my-2" [ngSwitch]="record.metadata.status">
-    <span
-      class="badge badge-dark mr-2"
-      *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"
-      >{{ 'New' | translate }}</span
-    >
+    <span class="badge badge-dark mr-2" *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"
+      translate>New</span>
     <span class="badge badge-dark" *ngSwitchCase="'in_progress'">{{
       ('deposit_status_' + record.metadata.status) | translate
     }}</span>
@@ -47,10 +44,7 @@
     }}</span>
   </div>
 
-  <div
-    class="my-2 text-justify"
-    *ngIf="record.metadata.metadata && record.metadata.metadata.abstracts"
-  >
+  <div class="my-2 text-justify" *ngIf="record.metadata.metadata && record.metadata.metadata.abstracts">
     {{ record.metadata.metadata.abstracts[0].abstract | truncateText: 50 }}
   </div>
 
@@ -66,22 +60,18 @@
     </span>
   </p>
 
-  <div class="my-2" *ngIf="user.is_moderator && record.metadata.logs">
-    <button
-      type="button"
-      class="btn btn-secondary btn-sm text-light"
-      (click)="toggleHistory(record)"
-    >
+  <div class="my-2" *ngIf="record.metadata.logs">
+    <button type="button" class="btn btn-secondary btn-sm text-light" (click)="toggleHistory(record)">
       {{ 'History' | translate }} ({{ record.metadata.logs.length }})
     </button>
     <ng-container *ngIf="record.showHistory">
       <table class="table table-bordered table-sm mt-3">
         <thead>
           <tr>
-            <th>{{ 'Action' | translate }}</th>
-            <th>{{ 'Date' | translate }}</th>
-            <th>{{ 'User' | translate }}</th>
-            <th>{{ 'Comment' | translate }}</th>
+            <th translate>Action</th>
+            <th translate>Date</th>
+            <th translate>User</th>
+            <th translate>Comment</th>
           </tr>
         </thead>
         <tr *ngFor="let log of record.metadata.logs">
@@ -95,22 +85,14 @@
   </div>
 
   <div *ngIf="canContinueProcess()">
-    <a
-      href
-      class="btn btn-primary btn-small"
-      [routerLink]="['/deposit', record.metadata.pid, 'create']"
-    >
-      {{ 'Continue process' | translate }}
+    <a href class="btn btn-primary btn-small" [routerLink]="['/deposit', record.metadata.pid, 'create']" translate>
+      Continue process
     </a>
   </div>
 
   <div *ngIf="canReview()">
-    <a
-      href
-      class="btn btn-primary btn-small"
-      [routerLink]="['/deposit', record.metadata.pid, 'metadata']"
-    >
-      {{ 'Review deposit' | translate }}
+    <a href class="btn btn-primary btn-small" [routerLink]="['/deposit', record.metadata.pid, 'metadata']" translate>
+      Review deposit
     </a>
   </div>
 </ng-container>
