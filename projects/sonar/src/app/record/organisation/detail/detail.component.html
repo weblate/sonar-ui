@@ -22,5 +22,15 @@
 
     <dt class="col-sm-3" translate>Name</dt>
     <dd class="col-sm-9">{{ record.metadata.name }}</dd>
+
+    <dt class="col-sm-3" translate>Is shared</dt>
+    <dd class="col-sm-9">
+      <i class="fa fa-{{ record.metadata.isShared ? 'check' : 'close' }}"></i>
+    </dd>
+
+    <dt class="col-sm-3" translate>Is dedicated</dt>
+    <dd class="col-sm-9">
+      <i class="fa fa-{{ record.metadata.isDedicated ? 'check' : 'close' }}"></i>
+    </dd>
   </dl>
 </ng-container>

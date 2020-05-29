@@ -53,6 +53,8 @@
   "ID": "ID",
   "Identifier": "Identifier",
   "Import metadata": "Import metadata",
+  "Is dedicated": "Is dedicated",
+  "Is shared": "Is shared",
   "Label": "Label",
   "Languages": "Languages",
   "Leave a comment for the user...": "Leave a comment for the user...",

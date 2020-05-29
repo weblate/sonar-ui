@@ -20,6 +20,18 @@ import { Observable, Subscriber } from 'rxjs';
 export class AggregationFilter {
   static translateService: TranslateService;
 
+  // Default code for global search
+  static globalSearchViewCode: string;
+
+  // Current view
+  static view: string;
+
+  /**
+   * Creates an observable emitting the aggregations.
+   *
+   * @param aggregations Object containing the aggregations.
+   * @returns Observable resolving aggregations.
+   */
   static filter(aggregations: object): Observable<any> {
     const obs = new Observable((observer: Subscriber<any>): void => {
       observer.next(AggregationFilter.aggregationFilter(aggregations));
@@ -30,8 +42,20 @@ export class AggregationFilter {
     return obs;
   }
 
-  static aggregationFilter(aggregations: object) {
+  /**
+   * Filter aggregations.
+   *
+   * @param aggregations Object containing the aggregations.
+   * @returns Filtered aggregations.
+   */
+  static aggregationFilter(aggregations: any) {
     const aggs = {};
+
+    // If not in global view, don't display organisation's aggregation.
+    if (this.view !== this.globalSearchViewCode) {
+      delete aggregations.organisation;
+    }
+
     Object.keys(aggregations).forEach(aggregation => {
       // Translate values for document type
       if (aggregation === 'document_type') {

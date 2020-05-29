@@ -15,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Router, RouterModule, Routes, UrlSegment } from '@angular/router';
+import { ActivationStart, Router, RouterEvent, RouterModule, Routes, UrlSegment } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ActionStatus, DetailComponent, EditorComponent, RecordSearchComponent } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AppConfigService } from './app-config.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BriefViewComponent } from './deposit/brief-view/brief-view.component';
 import { ConfirmationComponent } from './deposit/confirmation/confirmation.component';
@@ -74,43 +75,18 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'organisation/sonar/search',
+    path: 'organisation/:view/search',
     loadChildren: () =>
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: false,
       adminMode: adminModeDisabled,
-      detailUrl: '/organisation/sonar/:type/:pid',
       types: [
         {
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
-          aggregations: AggregationFilter.filter,
-          preFilters: {
-            view: 'sonar'
-          }
-        }
-      ]
-    }
-  },
-  {
-    path: 'organisation/unisi/search',
-    loadChildren: () =>
-      import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
-    data: {
-      showSearchInput: false,
-      adminMode: adminModeDisabled,
-      detailUrl: '/organisation/unisi/:type/:pid',
-      types: [
-        {
-          key: 'documents',
-          label: 'Documents',
-          component: DocumentComponent,
-          aggregations: AggregationFilter.filter,
-          preFilters: {
-            view: 'unisi'
-          }
+          aggregations: AggregationFilter.filter
         }
       ]
     }
@@ -129,9 +105,20 @@ export class AppRoutingModule {
    * Adds routes for resources
    *
    * @param _translateService Translate service.
+   * @param _router Router service.
+   * @param _userService User service.
+   * @param _appConfigService Config service.
    */
-  constructor(private _translateService: TranslateService, private _router: Router, private _userService: UserService) {
+  constructor(
+    private _translateService: TranslateService,
+    private _router: Router,
+    private _userService: UserService,
+    private _appConfigService: AppConfigService
+  ) {
+    AggregationFilter.globalSearchViewCode = this._appConfigService.globalSearchViewCode;
     AggregationFilter.translateService = this._translateService;
+
+    this._updateSearchRouteData();
 
     const recordsRoutesConfiguration = [
       {
@@ -189,6 +176,30 @@ export class AppRoutingModule {
       };
 
       this._router.config[0].children.push(route);
+    });
+  }
+
+  /**
+   * Updates route data properties which are depending to the view parameter.
+   */
+  private _updateSearchRouteData() {
+    this._router.events.subscribe((e: RouterEvent) => {
+      if (e instanceof ActivationStart &&
+        e.snapshot.parent.routeConfig &&
+        e.snapshot.parent.routeConfig.path === 'organisation/:view/search'
+      ) {
+        AggregationFilter.view = e.snapshot.params.view;
+
+        e.snapshot.data = {
+          ...e.snapshot.data, ...{
+            detailUrl: `/organisation/${e.snapshot.params.view}/:type/:pid`
+          }
+        };
+
+        e.snapshot.data.types[0].preFilters = {
+          view: e.snapshot.params.view
+        };
+      }
     });
   }
 
