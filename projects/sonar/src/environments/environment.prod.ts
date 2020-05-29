@@ -18,5 +18,8 @@ export const environment = {
   production: true,
   apiBaseUrl: '',
   $refPrefix: 'https://sonar.ch',
-  languages: ['fr', 'de', 'it', 'en']
+  languages: ['fr', 'de', 'it', 'en'],
+  translationsURLs: [
+    'static/sonar-ui/assets/i18n/${lang}.json',
+  ]
 };

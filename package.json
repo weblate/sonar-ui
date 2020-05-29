@@ -28,8 +28,8 @@
     "pack": "npm run deploy && npm pack",
     "serve": "ng serve --configuration proxy",
     "test": "ng test",
-    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translations/i18n/messages.json --fi '  '",
-    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/app/translations/i18n/{de,en,fr,it}.json --fi '  '"
+    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/assets/i18n/messages.json --fi '  '",
+    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/assets/i18n/{de,en,fr,it}.json --fi '  '"
   },
   "dependencies": {
     "@angular/animations": "~8.2.9",
@@ -45,7 +45,7 @@
     "@ngx-formly/bootstrap": "^5.5.10",
     "@ngx-formly/core": "^5.5.10",
     "@ngx-translate/core": "^12.1.1",
-    "@rero/ng-core": "^0.2.1",
+    "@rero/ng-core": "^0.2.4",
     "acorn": ">=6.4.1",
     "bootstrap": "^4.3.1",
     "crypto-js": "^3.1.9-1",

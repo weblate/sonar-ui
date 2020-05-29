@@ -23,7 +23,10 @@ export const environment = {
   production: false,
   apiBaseUrl: '',
   $refPrefix: 'https://sonar.ch',
-  languages: ['fr', 'de', 'it', 'en']
+  languages: ['fr', 'de', 'it', 'en'],
+  translationsURLs: [
+    '/assets/i18n/${lang}.json',
+  ]
 };
 
 /*

@@ -49,7 +49,7 @@ import { DetailComponent as OrganisationDetailComponent } from './record/organis
 import { OrganisationComponent } from './record/organisation/organisation.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
 import { UserComponent } from './record/user/user.component';
-import { TranslateLoader } from './translations/loader/translate-loader';
+import { TranslateLoader } from '@rero/ng-core';
 import { AdminComponent } from './_layout/admin/admin.component';
 
 export function minElementError(err: any, field: FormlyFieldConfig) {
