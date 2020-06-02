@@ -90,8 +90,7 @@ const routes: Routes = [
         }
       ]
     }
-  },
-  { path: '**', redirectTo: '' }
+  }
 ];
 
 @NgModule({
@@ -117,6 +116,26 @@ export class AppRoutingModule {
   ) {
     AggregationFilter.globalSearchViewCode = this._appConfigService.globalSearchViewCode;
     AggregationFilter.translateService = this._translateService;
+
+    // Page for editing user profile.
+    this._router.config.push({
+      path: ':type/profile/:pid',
+      component: EditorComponent,
+      canActivate: [RoleGuard],
+      data: {
+        types: [
+          {
+            key: 'users',
+            redirectUrl: (record: any) => {
+              return of(`/users/profile/${record.metadata.pid}`);
+            }
+          }
+        ]
+      }
+    });
+
+    // Fallback page
+    this._router.config.push({ path: '**', redirectTo: '' });
 
     this._updateSearchRouteData();
 
