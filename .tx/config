@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[sonar-ui.sonar-ui-messages]
+file_filter = projects/sonar/src/assets/i18n/<lang>.json
+minimum_perc = 0
+source_file = projects/sonar/src/assets/i18n/messages.json
+source_lang = en_US
+type = KEYVALUEJSON
+

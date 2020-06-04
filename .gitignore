@@ -46,3 +46,7 @@ Thumbs.db
 
 # TGZ
 *.tgz
+
+# Python
+Pipfile
+Pipfile.lock

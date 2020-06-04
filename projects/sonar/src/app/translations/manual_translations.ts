@@ -162,7 +162,6 @@ _('deposit_log_action_reject');
 _('deposit_log_action_ask_for_changes');
 
 // User roles
-_('role_superadmin');
 _('role_admin');
 _('role_moderator');
 _('role_publisher');
