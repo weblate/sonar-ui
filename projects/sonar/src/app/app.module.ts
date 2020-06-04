@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { CoreConfigService, RecordModule } from '@rero/ng-core';
+import { CoreConfigService, RecordModule, TranslateLoader } from '@rero/ng-core';
 import { BsLocaleService, ModalModule } from 'ngx-bootstrap';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -42,6 +42,7 @@ import { ConfirmationComponent } from './deposit/confirmation/confirmation.compo
 import { EditorComponent } from './deposit/editor/editor.component';
 import { ReviewComponent } from './deposit/review/review.component';
 import { UploadComponent } from './deposit/upload/upload.component';
+import { HttpInterceptor } from './interceptor/http.interceptor';
 import { LanguageValuePipe } from './pipe/language-value.pipe';
 import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
@@ -49,7 +50,6 @@ import { DetailComponent as OrganisationDetailComponent } from './record/organis
 import { OrganisationComponent } from './record/organisation/organisation.component';
 import { DetailComponent as UserDetailComponent } from './record/user/detail/detail.component';
 import { UserComponent } from './record/user/user.component';
-import { TranslateLoader } from '@rero/ng-core';
 import { AdminComponent } from './_layout/admin/admin.component';
 
 export function minElementError(err: any, field: FormlyFieldConfig) {
@@ -101,6 +101,11 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     RecordModule
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptor,
+      multi: true
+    },
     {
       provide: CoreConfigService,
       useClass: AppConfigService
