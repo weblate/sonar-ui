@@ -86,7 +86,18 @@ const routes: Routes = [
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
-          aggregations: AggregationFilter.filter
+          aggregations: AggregationFilter.filter,
+          aggregationsExpand: ['document_type', 'controlled_affiliation', 'year'],
+          aggregationsOrder: [
+            'document_type',
+            'controlled_affiliation',
+            'year',
+            'specific_collection',
+            'language',
+            'author',
+            'subject',
+            'organisation'
+          ]
         }
       ]
     }
@@ -145,6 +156,17 @@ export class AppRoutingModule {
         briefView: DocumentComponent,
         detailView: DocumentDetailComponent,
         aggregations: AggregationFilter.filter,
+        aggregationsExpand: ['document_type', 'controlled_affiliation', 'year'],
+        aggregationsOrder: [
+          'document_type',
+          'controlled_affiliation',
+          'year',
+          'specific_collection',
+          'language',
+          'author',
+          'subject',
+          'organisation',
+        ],
         editorLongMode: true
       },
       {
@@ -160,7 +182,9 @@ export class AppRoutingModule {
       {
         type: 'deposits',
         briefView: BriefViewComponent,
-        aggregations: AggregationFilter.filter
+        aggregations: AggregationFilter.filter,
+        aggregationsExpand: ['status', 'user', 'contributor'],
+        aggregationsOrder: ['status', 'user', 'contributor']
       }
     ];
 
@@ -185,6 +209,8 @@ export class AppRoutingModule {
               editorLongMode: config.editorLongMode || false,
               detailComponent: config.detailView || null,
               aggregations: config.aggregations || null,
+              aggregationsExpand: config.aggregationsExpand || [],
+              aggregationsOrder: config.aggregationsOrder || [],
               canAdd: () => this._can(config.type, 'add'),
               canUpdate: (record: any) => this._can(config.type, 'update', record),
               canDelete: (record: any) => this._can(config.type, 'delete', record),

@@ -95,6 +95,7 @@
   "Users": "Users",
   "You cannot add more files, please remove existing files first.": "You cannot add more files, please remove existing files first.",
   "administration": "administration",
+  "author": "author",
   "bf:Local": "bf:Local",
   "bf:Manufacture": "bf:Manufacture",
   "bf:Meeting": "bf:Meeting",
@@ -191,6 +192,7 @@
   "contribution_role_dgs": "contribution_role_dgs",
   "contribution_role_edt": "contribution_role_edt",
   "contribution_role_prt": "contribution_role_prt",
+  "controlled_affiliation": "controlled_affiliation",
   "csal": "csal",
   "deposit_log_action_approve": "deposit_log_action_approve",
   "deposit_log_action_ask_for_changes": "deposit_log_action_ask_for_changes",
@@ -225,8 +227,9 @@
   "role_submitter": "role_submitter",
   "role_superuser": "role_superuser",
   "role_user": "role_user",
-  "specific_collections": "specific_collections",
+  "specific_collection": "specific_collection",
   "subject": "subject",
   "unifr": "unifr",
-  "unisi": "unisi"
+  "unisi": "unisi",
+  "year": "year"
 }

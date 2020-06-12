@@ -19,9 +19,17 @@
             "polyfills": "projects/sonar/src/polyfills.ts",
             "tsConfig": "projects/sonar/tsconfig.app.json",
             "aot": false,
-            "assets": ["projects/sonar/src/favicon.ico", "projects/sonar/src/assets"],
-            "styles": ["projects/sonar/src/styles.scss"],
-            "scripts": [],
+            "assets": [
+              "projects/sonar/src/favicon.ico",
+              "projects/sonar/src/assets"
+            ],
+            "styles": [
+              "projects/sonar/src/styles.scss",
+              "node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap-slider/dist/bootstrap-slider.min.js"
+            ],
             "preserveSymlinks": true
           },
           "configurations": {
@@ -82,8 +90,13 @@
             "polyfills": "projects/sonar/src/polyfills.ts",
             "tsConfig": "projects/sonar/tsconfig.spec.json",
             "karmaConfig": "projects/sonar/karma.conf.js",
-            "assets": ["projects/sonar/src/favicon.ico", "projects/sonar/src/assets"],
-            "styles": ["projects/sonar/src/styles.scss"],
+            "assets": [
+              "projects/sonar/src/favicon.ico",
+              "projects/sonar/src/assets"
+            ],
+            "styles": [
+              "projects/sonar/src/styles.scss"
+            ],
             "scripts": []
           }
         },
@@ -95,7 +108,9 @@
               "projects/sonar/tsconfig.spec.json",
               "projects/sonar/e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {

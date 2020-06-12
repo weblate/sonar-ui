@@ -139,7 +139,10 @@ _('document_type');
 _('organisation');
 _('language');
 _('subject');
-_('specific_collections');
+_('specific_collection');
+_('controlled_affiliation');
+_('year');
+_('author');
 
 // Contributor role
 _('contribution_role_ctb');

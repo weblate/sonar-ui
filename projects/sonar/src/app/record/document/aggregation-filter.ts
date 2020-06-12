@@ -51,11 +51,6 @@ export class AggregationFilter {
   static aggregationFilter(aggregations: any) {
     const aggs = {};
 
-    // If not in global view, don't display organisation's aggregation.
-    if (this.view !== this.globalSearchViewCode) {
-      delete aggregations.organisation;
-    }
-
     Object.keys(aggregations).forEach(aggregation => {
       // Translate values for document type
       if (aggregation === 'document_type') {
