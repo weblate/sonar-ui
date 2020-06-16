@@ -165,6 +165,10 @@ export class EditorComponent implements OnInit {
       journal.push(this.deposit.metadata.publication.publishedIn);
     }
 
+    if (this.deposit.metadata.publication.year) {
+      journal.push(this.deposit.metadata.publication.year);
+    }
+
     if (this.deposit.metadata.publication.volume) {
       journal.push(
         this._translateService.translate('vol.') + ' ' + this.deposit.metadata.publication.volume

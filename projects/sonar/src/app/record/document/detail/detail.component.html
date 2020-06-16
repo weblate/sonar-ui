@@ -63,12 +63,13 @@
       <dd class="col-sm-9">
         <ul class="list-unstyled mb-0">
           <li *ngFor="let contribution of record.metadata.contribution; let last = last">
-            <small
-              class="badge badge-secondary text-light">{{ contribution.agent.type | translate }}</small>
-            <small class="badge badge-secondary text-light ml-1"
-              *ngFor="let role of contribution.role">{{ ('contribution_role_' + role) | translate }}</small>
             {{ contribution.agent.preferred_name }}
-            <i class="text-muted" *ngIf="contribution.affiliation">({{ contribution.affiliation }})</i>
+            <span class="badge badge-secondary text-light">{{ contribution.agent.type | translate }}</span>
+            <span class="badge badge-secondary text-light ml-1"
+              *ngFor="let role of contribution.role">{{ ('contribution_role_' + role) | translate }}</span>
+            <span class="badge badge-secondary text-light ml-1"
+              *ngIf="contribution.agent.identifiedBy">{{ contribution.agent.identifiedBy.value }}</span>
+            <small class="text-muted ml-1" *ngIf="contribution.affiliation"><i>{{ contribution.affiliation }}</i></small>
           </li>
         </ul>
       </dd>

@@ -58,7 +58,7 @@
           <pre class="bg-light p-3" [innerHTML]="deposit | json | highlightJson"></pre>
         </ng-container>
 
-        <ng-container *ngIf="showPreview">
+        <ng-container *ngIf="showPreview && deposit.metadata">
           <button type="button" class="btn btn-primary ml-2 pull-right" (click)="publish()"
             *ngIf="isFinished() === true">
             <i class="fa fa-check mr-2"></i>
@@ -89,10 +89,12 @@
               <i class="fa fa-calendar mr-2"></i> {{ updatedAt | dateTranslate: 'medium' }}
             </dd>
 
-            <dt class="col-sm-3" translate>Document type</dt>
-            <dd class="col-sm-9">{{ ('document_type_' + deposit.metadata.documentType) | translate }}</dd>
+            <ng-container *ngIf="deposit.metadata.documentType">
+              <dt class="col-sm-3" translate>Document type</dt>
+              <dd class="col-sm-9">{{ ('document_type_' + deposit.metadata.documentType) | translate }}</dd>
+            </ng-container>
 
-            <ng-container *ngIf="deposit.metadata.otherLanguageTitle">
+            <ng-container *ngIf="deposit.metadata.otherLanguageTitle && deposit.metadata.otherLanguageTitle.title">
               <dt class="col-sm-3" translate>Title in other language</dt>
               <dd class="col-sm-9">
                 <span
@@ -106,17 +108,24 @@
 
             <ng-container *ngIf="deposit.metadata.documentDate">
               <dt class="col-sm-3" translate>Document date</dt>
-              <dd class="col-sm-9">{{ deposit.metadata.documentDate | date:'dd.MM.yyyy' }}</dd>
+              <dd class="col-sm-9">
+                <ng-container *ngIf="deposit.metadata.documentDate.length === 4; else fullDate">
+                  {{ deposit.metadata.documentDate }}
+                </ng-container>
+                <ng-template #fullDate>
+                  {{ deposit.metadata.documentDate | date:'dd.MM.yyyy' }}
+                </ng-template>
+              </dd>
             </ng-container>
 
-            <ng-container *ngIf="deposit.metadata.publication">
+            <ng-container *ngIf="deposit.metadata.publication && deposit.metadata.publication.publishedIn">
               <dt class="col-sm-3" translate>Publication</dt>
               <dd class="col-sm-9">
                 {{ publication }}
                 <dl class="row m-0 no-gutters"
                   *ngIf="deposit.metadata.publication.editors && deposit.metadata.publication.editors.length">
                   <dt class="col-sm-3" translate>Editors</dt>
-                  <dd class="col-sm-9 m-0">{{ deposit.metadata.publication.editors | join:', ' }}</dd>
+                  <dd class="col-sm-9 m-0">{{ deposit.metadata.publication.editors | join:' ; ' }}</dd>
                 </dl>
                 <dl class="row m-0 no-gutters" *ngIf="deposit.metadata.publication.publisher">
                   <dt class="col-sm-3" translate>Publisher</dt>
@@ -130,7 +139,7 @@
               <dt class="col-sm-3" translate>Other electronic versions</dt>
               <dd class="col-sm-9">
                 <p class="m-0" *ngFor="let version of deposit.metadata.otherElectronicVersions">
-                  <span class="badge badge-secondary text-light mr-2">{{ version.type }}</span>
+                  <span class="badge badge-secondary text-light mr-2">{{ version.publicNote }}</span>
                   <a [href]="version.url" target="_blank">{{ version.url }}</a>
                 </p>
               </dd>
@@ -143,8 +152,10 @@
               </dd>
             </ng-container>
 
-            <dt class="col-sm-3" translate>Classification</dt>
-            <dd class="col-sm-9">{{ ('classification_' + deposit.metadata.classification) | translate }}</dd>
+            <ng-container *ngIf="deposit.metadata.classification">
+              <dt class="col-sm-3" translate>Classification</dt>
+              <dd class="col-sm-9">{{ ('classification_' + deposit.metadata.classification) | translate }}</dd>
+            </ng-container>
 
             <ng-container *ngIf="deposit.metadata.abstracts && deposit.metadata.abstracts.length">
               <dt class="col-sm-3" translate>Abstracts</dt>
@@ -166,18 +177,23 @@
               </dd>
             </ng-container>
 
-            <dt class="col-sm-3" translate>Contributors</dt>
-            <dd class="col-sm-9">
-              <p class="m-0" *ngFor="let author of deposit.contributors">
-                {{ author.name }}
-                <i class="text-muted" *ngIf="author.affiliation">({{ author.affiliation }})</i>
-              </p>
-            </dd>
+            <ng-container *ngIf="deposit.contributors">
+              <dt class="col-sm-3" translate>Contributors</dt>
+              <dd class="col-sm-9">
+                <p class="m-0" *ngFor="let author of deposit.contributors">
+                  {{ author.name }}
+                  <span
+                    class="badge badge-secondary text-light ml-1">{{ ('contribution_role_' + author.role) | translate }}</span>
+                  <span class="badge badge-secondary text-light ml-1" *ngIf="author.orcid">{{ author.orcid }}</span>
+                  <small class="text-muted ml-1" *ngIf="author.affiliation"><i>{{ author.affiliation }}</i></small>
+                </p>
+              </dd>
+            </ng-container>
           </dl>
         </ng-container>
       </div>
-      <div class="col-sm-4 text-left text-sm-right" *ngIf="mainFile">
-        <div class="btn-group mb-4" role="group">
+      <div class="col-sm-4 text-left text-sm-right">
+        <div class="btn-group mb-4" role="group" *ngIf="deposit.metadata">
           <button type="button" class="btn" [ngClass]="{
               'btn-primary': view === viewItem.key,
               'btn-light': view !== viewItem.key
@@ -192,27 +208,31 @@
           </button>
         </div>
 
-        <h4>{{ 'Main file' | translate }}</h4>
-        {{ mainFile.key }} ({{ mainFile.size | filesize }})
-        <a href="#" class="ml-2" (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
-          <i class="fa fa-eye"></i>
-        </a>
-        <a [href]="mainFile.key | fileLink: 'deposits':deposit.pid:'files'" target="_blank" class="ml-2">
-          <i class="fa fa-download"></i>
-        </a>
+        <ng-container *ngIf="mainFile">
+          <h4>{{ 'Main file' | translate }}</h4>
+          {{ mainFile.key }} ({{ mainFile.size | filesize }})
+          <a href="#" class="ml-2"
+            (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
+            <i class="fa fa-eye"></i>
+          </a>
+          <a [href]="mainFile.key | fileLink: 'deposits':deposit.pid:'files'" target="_blank" class="ml-2">
+            <i class="fa fa-download"></i>
+          </a>
 
-        <div class="mt-5" *ngIf="additionalFiles && additionalFiles.length > 0">
-          <h4>{{ 'Additional files' | translate }}</h4>
-          <p *ngFor="let file of additionalFiles">
-            {{ file.key }} ({{ file.size | filesize }})
-            <a href="#" class="ml-2" (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()">
-              <i class="fa fa-eye"></i>
-            </a>
-            <a [href]="file.key | fileLink: 'deposits':deposit.pid:'files'" target="_blank" class="ml-2">
-              <i class="fa fa-download"></i>
-            </a>
-          </p>
-        </div>
+          <div class="mt-5" *ngIf="additionalFiles && additionalFiles.length > 0">
+            <h4>{{ 'Additional files' | translate }}</h4>
+            <p *ngFor="let file of additionalFiles">
+              {{ file.key }} ({{ file.size | filesize }})
+              <a href="#" class="ml-2"
+                (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()">
+                <i class="fa fa-eye"></i>
+              </a>
+              <a [href]="file.key | fileLink: 'deposits':deposit.pid:'files'" target="_blank" class="ml-2">
+                <i class="fa fa-download"></i>
+              </a>
+            </p>
+          </div>
+        </ng-container>
       </div>
     </div>
   </form>
