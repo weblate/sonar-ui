@@ -165,5 +165,5 @@ _('deposit_log_action_ask_for_changes');
 _('role_superuser');
 _('role_admin');
 _('role_moderator');
-_('role_publisher');
+_('role_submitter');
 _('role_user');

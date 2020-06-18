@@ -222,7 +222,7 @@
   "organisation": "organisation",
   "role_admin": "role_admin",
   "role_moderator": "role_moderator",
-  "role_publisher": "role_publisher",
+  "role_submitter": "role_submitter",
   "role_superuser": "role_superuser",
   "role_user": "role_user",
   "specific_collections": "specific_collections",

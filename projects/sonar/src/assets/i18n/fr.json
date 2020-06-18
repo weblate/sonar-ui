@@ -222,7 +222,7 @@
   "organisation": "Organisations",
   "role_admin": "Admin",
   "role_moderator": "Moderator",
-  "role_publisher": "Submitter",
+  "role_submitter": "Submitter",
   "role_superuser": "Super user",
   "role_user": "User",
   "specific_collections": "Specific collections",

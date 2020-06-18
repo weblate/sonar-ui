@@ -55,7 +55,7 @@ const routes: Routes = [
         path: 'deposit/:id',
         canActivate: [RoleGuard],
         data: {
-          role: 'publisher'
+          role: 'submitter'
         },
         children: [
           {
@@ -175,7 +175,7 @@ export class AppRoutingModule {
           { path: 'new', component: EditorComponent, canActivate: [CanAddGuard] }
         ],
         data: {
-          role: 'publisher',
+          role: 'submitter',
           showSearchInput: true,
           types: [
             {
