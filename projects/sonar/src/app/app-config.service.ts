@@ -19,11 +19,31 @@ import { CoreConfigService } from '@rero/ng-core';
 import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppConfigService extends CoreConfigService {
   // View key for global search
   globalSearchViewCode = 'sonar';
+
+  // Languages map.
+  languagesMap = [
+    {
+      code: 'en',
+      bibCode: 'eng',
+    },
+    {
+      code: 'fr',
+      bibCode: 'fre',
+    },
+    {
+      code: 'de',
+      bibCode: 'ger',
+    },
+    {
+      code: 'it',
+      bibCode: 'ita',
+    },
+  ];
 
   /**
    * Constructor.

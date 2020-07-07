@@ -83,6 +83,7 @@ const routes: Routes = [
       adminMode: adminModeDisabled,
       types: [
         {
+          showLabel: false,
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,

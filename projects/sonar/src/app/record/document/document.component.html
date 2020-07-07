@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="row">
-  <div class="col-sm-2 text-center">
+  <div class="col-2 d-none d-lg-block text-center">
     <ng-container *ngIf="thumbnail">
       <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">
         <img [src]="thumbnail" class="img-thumbnail img-fluid p-2"
@@ -33,34 +33,36 @@
         </span>
       </p>
     </ng-container>
-  </div>
-  <div class="col-sm-10">
-    <p class="m-0" *ngIf="record.metadata.organisation">
-      <i>{{ record.metadata.organisation.name | translate }}</i>
+    <p class="my-2" *ngIf="record.metadata.documentType">
+      <small>{{ ('document_type_' + record.metadata.documentType) | translate }}</small>
     </p>
-    <h4 class="my-2">
-      <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">{{
-        record.metadata.title[0].mainTitle | languageValue
-      }}</a>
+  </div>
+  <div class="col-12 col-lg-10">
+    <h4 class="mb-2">
+      <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">
+        {{ record.metadata.title[0].mainTitle | languageValue }}<ng-container *ngIf="record.metadata.title[0].subtitle">
+          :&nbsp;{{ record.metadata.title[0].subtitle | languageValue }}</ng-container>
+      </a>
       <ng-template #routingLink>
         <a [routerLink]="detailUrl.link">
-          {{ record.metadata.title[0].mainTitle | languageValue }}
+          {{ record.metadata.title[0].mainTitle | languageValue }}<ng-container
+            *ngIf="record.metadata.title[0].subtitle">:&nbsp;{{ record.metadata.title[0].subtitle | languageValue }}
+          </ng-container>
         </a>
       </ng-template>
     </h4>
-    <h5 *ngIf="record.metadata.title[0].subtitle" class="text-muted">
-      {{ record.metadata.title[0].subtitle | languageValue }}
-    </h5>
-    <p>
-      <ng-container *ngFor="let contributor of record.metadata.contribution">
-        <span class="badge badge-primary mr-1"
-          *ngIf="contributor.agent && contributor.agent.type === 'bf:Person' && contributor.role[0] === 'cre'">
-          {{ contributor.agent.preferred_name }}
-        </span>
+    <p class="mb-0">
+      <ng-container *ngFor="let contributor of record.metadata.contribution; let first = first;">
+        <ng-container *ngIf="!first">&nbsp;;&nbsp;</ng-container>
+        {{ contributor.agent.preferred_name }}
+        <span
+          *ngIf="contributor.role[0] !== 'cre'">({{ ('contribution_role_' + contributor.role[0]) | translate | lowercase }})</span>
       </ng-container>
     </p>
-    <div *ngIf="record.metadata.abstracts">
-      {{ record.metadata.abstracts | languageValue | truncateText: 30 }}
+    <p class="mb-2 d-none d-lg-block" *ngIf="record.metadata.partOf && record.metadata.partOf.length > 0">
+      {{ record.metadata.partOf[0] | publication }}</p>
+    <div class="d-none d-lg-block text-muted text-justify text-small" *ngIf="abstract">
+      {{ abstract | truncateText: 30 }}
     </div>
   </div>
 </div>

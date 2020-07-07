@@ -14,13 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ResultItem } from '@rero/ng-core';
+import { Subscription } from 'rxjs';
+import { AppConfigService } from '../../app-config.service';
+
+const SORT_CONTRIBUTOR_PRIORITY = ['cre', 'ctb', 'dgs', 'edt', 'prt'];
 
 @Component({
-  templateUrl: './document.component.html'
+  templateUrl: './document.component.html',
 })
-export class DocumentComponent implements ResultItem, OnInit {
+export class DocumentComponent implements ResultItem, OnDestroy, OnInit {
   // Record object
   record: any;
 
@@ -28,7 +33,7 @@ export class DocumentComponent implements ResultItem, OnInit {
   type: string;
 
   // Detail URL object
-  detailUrl: { link: string, external: boolean };
+  detailUrl: { link: string; external: boolean };
 
   // Thumbnail file for record
   thumbnail: any;
@@ -42,6 +47,23 @@ export class DocumentComponent implements ResultItem, OnInit {
   // Boolean giving the information is the main file is restricted
   restricted: boolean;
 
+  // Abstract corresponding to current language.
+  abstract: string;
+
+  // Subscription to observables, used to unsubscribe to all at the same time.
+  private _subscription: Subscription = new Subscription();
+
+  /**
+   * Constructor.
+   *
+   * @param _configService Config service
+   * @param _translateService Translate service
+   */
+  constructor(
+    private _configService: AppConfigService,
+    private _translateService: TranslateService
+  ) {}
+
   /**
    * Component initialization.
    * - Extracts and stores main file from document files.
@@ -49,8 +71,26 @@ export class DocumentComponent implements ResultItem, OnInit {
    * - Load thumbnail for the record.
    */
   ngOnInit() {
+    // Initialize and sort contributors
+    if (!this.record.metadata.contribution) {
+      this.record.metadata.contribution = [];
+    }
+    this._sortContributors();
+
+    // Load abstract
+    this._storeAbstract();
+
+    // When language change, abstracts are sorted and first one is displayed.
+    this._subscription.add(
+      this._translateService.onLangChange.subscribe(() => {
+        this._storeAbstract();
+      })
+    );
+
     if (this.record.metadata._files) {
-      this.mainFile = this.record.metadata._files.find((file: any) => file.type === 'file');
+      this.mainFile = this.record.metadata._files.find(
+        (file: any) => file.type === 'file'
+      );
       if (this.mainFile) {
         if (this.mainFile.restriction.date) {
           this.embargoDate = this.mainFile.restriction.date;
@@ -66,6 +106,15 @@ export class DocumentComponent implements ResultItem, OnInit {
   }
 
   /**
+   * Component destruction.
+   *
+   * Unsubscribe from subscribers.
+   */
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
+
+  /**
    * Load the thumbnail for record
    */
   private _loadThumbnail() {
@@ -73,7 +122,9 @@ export class DocumentComponent implements ResultItem, OnInit {
       return;
     }
 
-    const thumbnail = this.record.metadata._files.find((file: any) => file.type === 'thumbnail');
+    const thumbnail = this.record.metadata._files.find(
+      (file: any) => file.type === 'thumbnail'
+    );
 
     if (!thumbnail) {
       return;
@@ -85,5 +136,46 @@ export class DocumentComponent implements ResultItem, OnInit {
     }
 
     this.thumbnail = `/documents/${this.record.metadata.pid}/files/${thumbnail.key}`;
+  }
+
+  /**
+   * Sort contributors by given priorities array constant.
+   */
+  private _sortContributors() {
+    this.record.metadata.contribution = this.record.metadata.contribution.sort(
+      (a: any, b: any) => {
+        const aIndex = SORT_CONTRIBUTOR_PRIORITY.findIndex(
+          (role) => a.role[0] === role
+        );
+        const bIndex = SORT_CONTRIBUTOR_PRIORITY.findIndex(
+          (role) => b.role[0] === role
+        );
+        if (aIndex === bIndex) {
+          return 0;
+        }
+        return aIndex < bIndex ? -1 : 1;
+      }
+    );
+  }
+
+  private _storeAbstract() {
+    if (
+      !this.record.metadata.abstracts ||
+      this.record.metadata.abstracts.length === 0
+    ) {
+      return null;
+    }
+
+    const currentLang = this._configService.languagesMap.find(
+      (item) => item.code === this._translateService.currentLang
+    );
+
+    const abstract = this.record.metadata.abstracts.find(
+      (item: any) => item.language === currentLang.bibCode
+    );
+
+    this.abstract = abstract
+      ? abstract.value
+      : this.record.metadata.abstracts[0].value;
   }
 }
