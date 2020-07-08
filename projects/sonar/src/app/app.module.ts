@@ -25,6 +25,7 @@ import { CoreConfigService, RecordModule, TranslateLoader } from '@rero/ng-core'
 import { BsLocaleService, ModalModule } from 'ngx-bootstrap';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
@@ -88,6 +89,7 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     HttpClientModule,
     CollapseModule.forRoot(),
     TabsModule.forRoot(),
+    TooltipModule.forRoot(),
     ModalModule.forRoot(),
     NgxSpinnerModule,
     TranslateModule.forRoot({

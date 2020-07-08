@@ -14,129 +14,199 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ng-container *ngIf="record$ | async as record">
-  <h1>
-    {{ record.metadata.title[0].mainTitle | languageValue }}
-  </h1>
-  <h5 *ngIf="record.metadata.title[0].subtitle" class="text-muted">
-    {{ record.metadata.title[0].subtitle | languageValue }}
-  </h5>
-  <dl class="row mt-4">
-    <ng-container *ngIf="record.metadata.organisation">
-      <dt class="col-sm-3" translate>Organisation</dt>
-      <dd class="col-sm-9">{{ record.metadata.organisation.name | translate }}</dd>
-    </ng-container>
+<ng-container *ngIf="record">
+  <section class="mt-3">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="mb-4 text-center" *ngIf="mainFile">
+          <ng-template let-thumbnail [ngTemplateOutletContext]="{ $implicit: getThumbnail(mainFile) }"
+            [ngTemplateOutlet]="t" #t>
+            <a href (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()"
+              *ngIf="thumbnail">
+              <img [src]="thumbnail" class="img-thumbnail img-fluid">
+            </a>
+          </ng-template>
+          <p class="my-1 small">{{ mainFile.label || mainFile.key }}</p>
+          <p class="m-0">
+            <a href (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
+              <i class="fa fa-eye mr-2"></i>
+            </a>
+            <a [href]="'/documents/' + record.pid + '/files/' + mainFile.key" target="_blank">
+              <i class="fa fa-download"></i>
+            </a>
+          </p>
+        </div>
 
-    <ng-container *ngIf="record.metadata.documentType">
-      <dt class="col-sm-3" translate>Document type</dt>
-      <dd class="col-sm-9">{{ ('document_type_' + record.metadata.documentType) | translate }}</dd>
-    </ng-container>
+        <!-- DOCUMENT TYPE -->
+        <h5 class="text-center my-4" *ngIf="record.documentType">
+          {{ ('document_type_' + record.documentType) | translate }}
+        </h5>
 
-    <ng-container *ngIf="record.metadata.classification">
-      <dt class="col-sm-3" translate>Classification</dt>
-      <dd class="col-sm-9">
-        {{ ('classification_' + record.metadata.classification[0].classificationPortion) | translate }}
-      </dd>
-    </ng-container>
-
-    <ng-container *ngIf="record.metadata.identifiedBy">
-      <dt class="col-sm-3" translate>Identifier</dt>
-      <dd class="col-sm-9">
-        <p class="m-0" *ngFor="let identifier of record.metadata.identifiedBy">
-          {{ identifier.value }}
-          <small class="badge badge-secondary text-light">{{ identifier.type | translate }}</small>
+        <p class="text-center" *ngIf="filteredFiles.length > 1">
+          <a href="#" (click)="goToOtherFile($event, 'other-files')">+ {{ filteredFiles.length-1 }}
+            {{ 'other files' | translate }}</a>
         </p>
-      </dd>
-    </ng-container>
+      </div>
+      <div class="col">
+        <h1 class="text-primary">
+          {{ record.title[0].mainTitle | languageValue }}<ng-container *ngIf="record.title[0].subtitle">
+            &nbsp;:&nbsp;{{ record.title[0].subtitle | languageValue }}</ng-container>
+        </h1>
 
-    <ng-container *ngIf="record.metadata.language">
-      <dt class="col-sm-3" translate>Languages</dt>
-      <dd class="col-sm-9">
-        <span *ngFor="let language of record.metadata.language">
-          {{ language.value | translateLanguage }}
-        </span>
-      </dd>
-    </ng-container>
+        <!-- CONTRIBUTORS-->
+        <div class="my-2" *ngIf="record.contribution.length > 0">
+          <ul class="list-unstyled m-0">
+            <ng-container *ngFor="let contributor of filteredContributors">
+              <li>
+                {{ contributor.agent.preferred_name }}
+                <span
+                  *ngIf="!contributor.role.includes('cre')">({{ ('contribution_role_' + contributor.role[0]) | translate | lowercase }})</span>
+                <a [href]="'https://orcid.org/' + contributor.agent.identifiedBy.value" target="_blank"
+                  class="badge badge-secondary text-light mx-1" *ngIf="contributor.agent.identifiedBy">
+                  ORCID
+                </a>
+                <ng-container *ngIf="contributor.affiliation">
+                  <small class="ml-1" *ngIf="contributor.controlledAffiliation; else affiliation"
+                    [tooltip]="contributor.controlledAffiliation | join:' ; '">
+                    <i class="text-muted">{{ contributor.affiliation }}</i>
+                  </small>
+                  <ng-template #affiliation>
+                    <small class="ml-1">
+                      <i class="text-muted">{{ contributor.affiliation }}</i>
+                    </small>
+                  </ng-template>
+                </ng-container>
+              </li>
+            </ng-container>
+          </ul>
+          <a href="#" (click)="showMoreContributors($event)"
+            *ngIf="record.contribution.length > 3">{{ 'Show more' | translate }}&hellip;</a>
+        </div>
 
-    <ng-container *ngIf="record.metadata.contribution">
-      <dt class="col-sm-3" translate>Contributions</dt>
-      <dd class="col-sm-9">
-        <ul class="list-unstyled mb-0">
-          <li *ngFor="let contribution of record.metadata.contribution; let last = last">
-            {{ contribution.agent.preferred_name }}
-            <span class="badge badge-secondary text-light">{{ contribution.agent.type | translate }}</span>
-            <span class="badge badge-secondary text-light ml-1"
-              *ngFor="let role of contribution.role">{{ ('contribution_role_' + role) | translate }}</span>
-            <span class="badge badge-secondary text-light ml-1"
-              *ngIf="contribution.agent.identifiedBy">{{ contribution.agent.identifiedBy.value }}</span>
-            <small class="text-muted ml-1" *ngIf="contribution.affiliation"><i>{{ contribution.affiliation }}</i></small>
-          </li>
+        <!-- PUBLICATION STATEMENT -->
+        <ul class="list-unstyled my-2" *ngIf="record.provisionActivity && record.provisionActivity.length > 0">
+          <ng-container *ngFor="let statement of record.provisionActivity">
+            <li *ngFor="let item of statement.text | keyvalue">
+              {{ item.value }}
+            </li>
+          </ng-container>
         </ul>
-      </dd>
-    </ng-container>
 
-    <ng-container *ngIf="record.metadata.type">
-      <dt class="col-sm-3" translate>Document type</dt>
-      <dd class="col-sm-9 text-justify">
-        {{ ('type-' + record.metadata.type) | translate }}
-      </dd>
-    </ng-container>
+        <!-- Extent -->
+        <p class="my-2" *ngIf="record.extent">{{ record.extent }}</p>
 
-    <ng-container *ngIf="record.metadata.copyrightDate">
-      <dt class="col-sm-3" translate>Copyright date</dt>
-      <dd class="col-sm-9 text-justify">
-        {{ record.metadata.copyrightDate | join : ', ' }}
-      </dd>
-    </ng-container>
+        <!-- PART OF -->
+        <div class="d-flex flex-row mb-3" *ngIf="record.partOf && record.partOf.length > 0">
+          <div class="mr-1"><strong>{{ 'Published in' | translate }}:</strong></div>
+          <div class="">
+            <ul class="list-unstyled mb-0">
+              <li *ngFor="let partOf of record.partOf">
+                {{ partOf.text }}
+              </li>
+            </ul>
+          </div>
+        </div>
 
-    <ng-container *ngIf="record.metadata.abstracts">
-      <dt class="col-sm-3" translate>Abstracts</dt>
-      <dd class="col-sm-9">
-        <p class="m-0 text-justify" *ngFor="let abstract of record.metadata.abstracts">
-          <span class="badge badge-secondary text-light mr-2">{{ abstract.language | translateLanguage }}</span>
-          <span [innerHtml]="abstract.value | nl2br"></span>
-        </p>
-      </dd>
-    </ng-container>
+        <!-- SUBJECTS -->
+        <div class="my-3" *ngIf="record.subjects && record.subjects.length > 0">
+          <ng-container *ngFor="let subject of record.subjects">
+            <h5 class="d-inline mr-1" *ngFor="let value of subject.label.value">
+              <span class="badge badge-secondary text-light font-weight-light">
+                <i class="fa fa-tag mx-1"></i> {{ value }}
+              </span>
+            </h5>
+          </ng-container>
+        </div>
 
-    <ng-container *ngIf="record.metadata.subjects && record.metadata.subjects.length">
-      <dt class="col-sm-3" translate>Subjects</dt>
-      <dd class="col-sm-9">
-        <p class="m-0" *ngFor="let subject of record.metadata.subjects">
-          <span class="badge badge-secondary text-light mr-2">{{ subject.label.language | translateLanguage }}</span>
-          {{ subject.label.value | join:' ; ' }}
-        </p>
-      </dd>
-    </ng-container>
-  </dl>
+        <!-- ABSTRACT -->
+        <div class="my-4 text-justify" *ngIf="record.abstracts.length > 0">
+          <a href="#" class="abstract-lang badge badge-secondary text-light mr-1"
+            [ngClass]="{'badge-secondary text-light': abstract.show, 'badge-light text-reset': !abstract.show}"
+            (click)="$event.preventDefault(); changeAbstract(abstract)"
+            *ngFor="let abstract of record.abstracts">{{ abstract.language | translateLanguage }}</a>
+          <span *ngFor="let abstract of record.abstracts">
+            <ng-container *ngIf="abstract.show">
+              <ng-container *ngIf="!abstract.full && abstract.value.length > 400; else fullAbstract">
+                {{ abstract.value | slice:0:400 }} <a href="#"
+                  (click)="showMoreAbstract($event, abstract)">{{ 'Show more' | translate }}&hellip;</a>
+              </ng-container>
+              <ng-template #fullAbstract>
+                {{ abstract.value }}
+              </ng-template>
+            </ng-container>
+          </span>
+        </div>
 
-  <ng-container *ngIf="record.metadata._files">
-    <h5 class="mt-5" translate>Files</h5>
-    <table class="table">
-      <thead>
-        <tr>
-          <th translate>Label</th>
-          <th translate>File</th>
-          <th translate>Size</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let file of filterFiles(record.metadata._files)">
-          <td>{{ file.label | default:'-' }}</td>
-          <td>{{ file.key }}</td>
-          <td>{{ file.size | filesize }}</td>
-          <td class="text-right">
-            <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()"
-              class="btn btn-secondary btn-sm text-light previewLink mr-2"><i class="fa fa-eye"></i>
-              {{ 'Preview' | translate }}</a>
-            <a [href]="file.key | fileLink: 'documents':record.metadata.pid:'files'" target="_blank"
-              class="btn btn-secondary btn-sm text-light"><i class="fa fa-download"></i>
-              {{ 'Download' | translate }}</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <dl class="row mb-0">
+          <!-- OTHER EDITION -->
+          <ng-container *ngIf="record.otherEdition">
+            <dt class="col-lg-4" translate>
+              Other electronic version
+            </dt>
+            <dd class="col-lg-6">
+              <p class="m-0" *ngFor="let otherEdition of record.otherEdition">
+                {{ otherEdition.publicNote }} : <a [href]="otherEdition.document.electronicLocator"
+                  target="_blank">{{ otherEdition.document.electronicLocator }}</a>
+              </p>
+            </dd>
+          </ng-container>
+
+          <!-- LANGUAGE -->
+          <ng-container *ngIf="record.language">
+            <dt class="col-lg-4" translate>Language</dt>
+            <dd class="col-lg-8">
+              <ul class="list-unstyled mb-0">
+                <li *ngFor="let language of record.language">
+                  {{ language.value | translateLanguage }}
+                </li>
+              </ul>
+            </dd>
+          </ng-container>
+
+          <!-- CLASSIFICATION -->
+          <ng-container *ngIf="record.classification">
+            <dt class="col-lg-4" translate>Classification</dt>
+            <dd class="col-lg-8">
+              <ng-container *ngFor="let classification of record.classification">
+                {{ ('classification_' + classification.classificationPortion) | translate }}
+              </ng-container>
+            </dd>
+          </ng-container>
+
+          <!-- PERMANENT LINK -->
+          <dt class="col-lg-4" translate>Permalink</dt>
+          <dd class="col-lg-8 text-truncate">
+            <a [href]="record.permalink">{{ record.permalink }}</a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngIf="filteredFiles.length > 1">
+    <h5 id="other-files" class="mt-5" translate>Other files</h5>
+    <hr class="mb-4 mt-0">
+    <div class="row">
+      <ng-container *ngFor="let file of filteredFiles; let first = first">
+        <div class="text-center col-lg-2 mb-4" *ngIf="!first">
+          <ng-template let-thumbnail [ngTemplateOutletContext]="{ $implicit: getThumbnail(file) }"
+            [ngTemplateOutlet]="t" #t>
+            <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()" *ngIf="thumbnail">
+              <img [src]="thumbnail" class="img-thumbnail img-fluid">
+            </a>
+          </ng-template>
+          <p class="my-1 small">{{ file.label || file.key }}</p>
+          <p class="m-0">
+            <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()">
+              <i class="fa fa-eye mr-2"></i>
+            </a>
+            <a [href]="'/documents/' + record.pid + '/files/' + file.key" target="_blank">
+              <i class="fa fa-download"></i>
+            </a>
+          </p>
+        </div>
+      </ng-container>
+    </div>
   </ng-container>
 
   <!--Preview modal-->
@@ -152,7 +222,7 @@
         </div>
         <div class="modal-body">
           <iframe class="preview-iframe" id="preview-iframe" width="100%" height="500"
-            [src]="previewFileKey | fileLink: 'documents':record.metadata.pid:'preview'" style="border: none;"
+            [src]="previewFileKey | fileLink: 'documents':record.pid:'preview'" style="border: none;"
             *ngIf="previewFileKey"></iframe>
         </div>
       </div>
