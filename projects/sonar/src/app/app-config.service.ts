@@ -23,7 +23,7 @@ import { environment } from '../environments/environment';
 })
 export class AppConfigService extends CoreConfigService {
   // View key for global search
-  globalSearchViewCode = 'sonar';
+  globalSearchViewCode = 'global';
 
   // Languages map.
   languagesMap = [

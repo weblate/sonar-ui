@@ -75,7 +75,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'organisation/:view/search',
+    path: ':view/search',
     loadChildren: () =>
       import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
@@ -232,13 +232,13 @@ export class AppRoutingModule {
     this._router.events.subscribe((e: RouterEvent) => {
       if (e instanceof ActivationStart &&
         e.snapshot.parent.routeConfig &&
-        e.snapshot.parent.routeConfig.path === 'organisation/:view/search'
+        e.snapshot.parent.routeConfig.path === ':view/search'
       ) {
         AggregationFilter.view = e.snapshot.params.view;
 
         e.snapshot.data = {
           ...e.snapshot.data, ...{
-            detailUrl: `/organisation/${e.snapshot.params.view}/:type/:pid`
+            detailUrl: `/${e.snapshot.params.view}/:type/:pid`
           }
         };
 
