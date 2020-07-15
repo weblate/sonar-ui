@@ -22,7 +22,6 @@ import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-tr
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
 import { BsLocaleService } from 'ngx-bootstrap';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { depositTestingService, userTestingService } from 'projects/sonar/tests/utils';
 import { DepositService } from '../../deposit/deposit.service';
 import { UserService } from '../../user.service';
@@ -39,7 +38,6 @@ describe('AdminComponent', () => {
         RouterTestingModule,
         HttpClientModule,
         CollapseModule.forRoot(),
-        NgxSpinnerModule,
         RecordModule,
         TranslateModule.forRoot({
           loader: {

@@ -27,7 +27,6 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -91,7 +90,6 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    NgxSpinnerModule,
     TranslateModule.forRoot({
       loader: {
         provide: BaseTranslateLoader,
