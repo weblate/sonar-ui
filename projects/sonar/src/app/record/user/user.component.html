@@ -16,9 +16,7 @@
 -->
 <h4>{{ record.metadata.full_name }}</h4>
 <p class="my-2">
-  <span class="badge badge-primary mr-1" *ngFor="let role of record.metadata.roles">{{
-    role | ucfirst
-  }}</span>
+  <span class="badge badge-primary mr-1">{{ ('role_' + record.metadata.role) | translate }}</span>
 </p>
 <p class="m-0">
   {{ record.metadata.email

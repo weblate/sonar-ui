@@ -22,8 +22,8 @@
       <dd class="col-sm-9">{{ record.metadata.organisation.name }}</dd>
     </ng-container>
 
-    <dt class="col-sm-3" translate>Roles</dt>
-    <dd class="col-sm-9">{{ record.metadata.roles | join }}</dd>
+    <dt class="col-sm-3" translate>Role</dt>
+    <dd class="col-sm-9">{{ ('role_' + record.metadata.role) | translate }}</dd>
 
     <dt class="col-sm-3" translate>Email address</dt>
     <dd class="col-sm-9">{{ record.metadata.email }}</dd>

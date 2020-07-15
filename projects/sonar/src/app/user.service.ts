@@ -81,10 +81,8 @@ export class UserService {
     }
 
     for (const role of roles) {
-      for (const userRole of this._user.roles) {
-        if (role === userRole) {
-          return true;
-        }
+      if (role === this._user.role) {
+        return true;
       }
     }
 
