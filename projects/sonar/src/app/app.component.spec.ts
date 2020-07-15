@@ -21,7 +21,6 @@ import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-tr
 import { RecordModule, TranslateLoader } from '@rero/ng-core';
 import { BsLocaleService } from 'ngx-bootstrap';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -31,7 +30,6 @@ describe('AppComponent', () => {
         RouterTestingModule,
         HttpClientModule,
         CollapseModule.forRoot(),
-        NgxSpinnerModule,
         RecordModule,
         TranslateModule.forRoot({
           loader: {
