@@ -377,7 +377,7 @@ export class EditorComponent implements OnInit {
    */
   private createForm(schema: any) {
     const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
-      map: (fieldConfig: any, fieldSchema) => {
+      map: (fieldConfig: any, fieldSchema: any) => {
         if (fieldSchema.form) {
           fieldConfig.templateOptions = { ...fieldConfig.templateOptions, ...fieldSchema.form };
 
