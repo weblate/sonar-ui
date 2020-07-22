@@ -86,9 +86,14 @@
         <!-- PUBLICATION STATEMENT -->
         <ul class="list-unstyled my-2" *ngIf="record.provisionActivity && record.provisionActivity.length > 0">
           <ng-container *ngFor="let statement of record.provisionActivity">
-            <li *ngFor="let item of statement.text | keyvalue">
-              {{ item.value }}
-            </li>
+            <ng-container *ngIf="statement.text && statement.text.default; else statementDate">
+              <li *ngFor="let item of statement.text | keyvalue">
+                {{ item.value }}
+              </li>
+            </ng-container>
+            <ng-template #statementDate>
+              <li>{{ statement.text }}</li>
+            </ng-template>
           </ng-container>
         </ul>
 
