@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -76,7 +77,7 @@ export class EditorComponent implements OnInit {
    * @param _dialogService Dialog service.
    * @param _userUservice User service.
    * @param _spinner Spinner service.
-   * @param _translateLanguageService Translate language service.
+   * @param _datePipe Date pipe.
    */
   constructor(
     private _toastrService: ToastrService,
@@ -88,7 +89,7 @@ export class EditorComponent implements OnInit {
     private _dialogService: DialogService,
     private _userUservice: UserService,
     private _spinner: NgxSpinnerService,
-    private _translateLanguageService: TranslateLanguageService
+    private _datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -186,6 +187,51 @@ export class EditorComponent implements OnInit {
     }
 
     return journal.join(', ');
+  }
+
+  /**
+   * Return formatted text for dissertation.
+   *
+   * @returns Text for dissertation.
+   */
+  get dissertation(): string {
+    if (!this.deposit.metadata.dissertation) {
+      return null;
+    }
+
+    const dissertation = [this.deposit.metadata.dissertation.degree];
+
+    if (
+      this.deposit.metadata.dissertation.grantingInstitution ||
+      this.deposit.metadata.dissertation.date
+    ) {
+      dissertation.push(': ');
+
+      if (this.deposit.metadata.dissertation.grantingInstitution) {
+        dissertation.push(this.deposit.metadata.dissertation.grantingInstitution);
+      }
+
+      if (this.deposit.metadata.dissertation.date) {
+        const date =
+          this.deposit.metadata.dissertation.date.length === 4
+            ? this.deposit.metadata.dissertation.date
+            : this._datePipe.transform(
+                this.deposit.metadata.dissertation.date,
+                'dd.MM.yyyy'
+              );
+        dissertation.push(`, ${date}`);
+      }
+    }
+
+    if (this.deposit.metadata.dissertation.jury_note) {
+      dissertation.push(
+        ` (${this._translateService
+          .translate('Jury note')
+          .toLowerCase()}: ${this.deposit.metadata.dissertation.jury_note})`
+      );
+    }
+
+    return dissertation.join('');
   }
 
   /**

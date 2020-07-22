@@ -134,6 +134,13 @@
               </dd>
             </ng-container>
 
+            <ng-container *ngIf="deposit.metadata.dissertation">
+              <dt class="col-sm-3" translate>Dissertation</dt>
+              <dd class="col-sm-9">
+                {{ dissertation }}
+              </dd>
+            </ng-container>
+
             <ng-container
               *ngIf="deposit.metadata.otherElectronicVersions && deposit.metadata.otherElectronicVersions.length">
               <dt class="col-sm-3" translate>Other electronic versions</dt>

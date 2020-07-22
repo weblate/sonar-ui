@@ -100,6 +100,9 @@
         <!-- Extent -->
         <p class="my-2" *ngIf="record.extent">{{ record.extent }}</p>
 
+        <!-- Dissertation -->
+        <p class="my-2" *ngIf="record.dissertation">{{ record.dissertation.text }}</p>
+
         <!-- PART OF -->
         <div class="d-flex flex-row mb-3" *ngIf="record.partOf && record.partOf.length > 0">
           <div class="mr-1"><strong>{{ 'Published in' | translate }}:</strong></div>

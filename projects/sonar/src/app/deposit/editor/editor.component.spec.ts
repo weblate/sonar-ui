@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -76,6 +77,7 @@ describe('EditorComponent', () => {
         ModalModule.forRoot()
       ],
       providers: [
+        DatePipe,
         { provide: ActivatedRoute, useValue: route },
         { provide: UserService, useValue: userTestingService },
         { provide: DepositService, useValue: depositTestingService }

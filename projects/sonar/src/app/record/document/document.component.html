@@ -59,9 +59,10 @@
           *ngIf="contributor.role[0] !== 'cre'">({{ ('contribution_role_' + contributor.role[0]) | translate | lowercase }})</span>
       </ng-container>
     </p>
-    <p class="mb-2 d-none d-lg-block" *ngIf="record.metadata.partOf && record.metadata.partOf.length > 0">
+    <p class="my-0 d-none d-lg-block" *ngIf="record.metadata.partOf && record.metadata.partOf.length > 0">
       {{ record.metadata.partOf[0] | publication }}</p>
-    <div class="d-none d-lg-block text-muted text-justify text-small" *ngIf="abstract">
+    <p class="my-0  d-none d-lg-block" *ngIf="record.metadata.dissertation">{{ record.metadata.dissertation.text }}</p>
+    <div class="d-none d-lg-block text-muted text-justify text-small mt-2" *ngIf="abstract">
       {{ abstract | truncateText: 30 }}
     </div>
   </div>

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { DatePipe } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -112,7 +113,8 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
       provide: CoreConfigService,
       useClass: AppConfigService
     },
-    BsLocaleService
+    BsLocaleService,
+    DatePipe
   ],
   entryComponents: [
     DocumentComponent,
