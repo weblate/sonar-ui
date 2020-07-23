@@ -14,8 +14,8 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div *ngIf="ready">
-  <div *ngIf="user; else errorTemplate">
+<ng-container *ngIf="ready">
+  <ng-container *ngIf="user; else errorTemplate">
     <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
       <div class="container">
         <a class="navbar-brand" routerLink="">SONAR <span class="text-secondary" translate>administration</span></a>
@@ -49,6 +49,7 @@
             <li class="nav-item dropdown" dropdown>
               <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                <i class="fa fa-user mr-2"></i>
                 {{ user.full_name }}
               </a>
               <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
@@ -59,6 +60,16 @@
                 <a class="dropdown-item" href="/logout/" translate>Logout</a>
               </div>
             </li>
+            <li class="nav-item dropdown ml-3" dropdown>
+              <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                {{ currentLanguage | uppercase }}
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+                <a class="dropdown-item" href (click)="$event.preventDefault(); changeLanguage(language.code)"
+                  *ngFor="let language of languages">{{ language.bibCode | translateLanguage }}</a>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -66,7 +77,26 @@
     <div class="container my-5">
       <router-outlet></router-outlet>
     </div>
-  </div>
+    <footer id="footer" class="bg-light mt-5">
+      <div class="container">
+        <div class="row justify-content-center align-items-center">
+          <div class="col-12 col-sm-6 py-2 py-sm-5 text-center text-sm-left">
+            <div class="d-flex flex-row">
+              <div>
+                  <a href="/help/">Help</a>
+              </div>
+              <div class="ml-3">
+                  <a href="https://sonar.ch" target="_blank">Project and contact</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 py-2 py-sm-5 text-center text-sm-right">
+            Powered by <a href="https://www.rero.ch" target="_blank">RERO</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </ng-container>
   <ng-template #errorTemplate>
     <div class="container mt-5">
       <div class="alert alert-danger">
@@ -76,4 +106,4 @@
       </div>
     </div>
   </ng-template>
-</div>
+</ng-container>
