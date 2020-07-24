@@ -168,7 +168,8 @@ export class AppRoutingModule {
           'subject',
           'organisation',
         ],
-        editorLongMode: true
+        editorLongMode: true,
+        filesEnabled: true
       },
       {
         type: 'users',
@@ -212,6 +213,7 @@ export class AppRoutingModule {
               aggregations: config.aggregations || null,
               aggregationsExpand: config.aggregationsExpand || [],
               aggregationsOrder: config.aggregationsOrder || [],
+              filesEnabled: config.filesEnabled || false,
               canAdd: () => this._can(config.type, 'add'),
               canUpdate: (record: any) => this._can(config.type, 'update', record),
               canDelete: (record: any) => this._can(config.type, 'delete', record),
