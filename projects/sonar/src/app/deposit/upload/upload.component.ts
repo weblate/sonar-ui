@@ -235,7 +235,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         ignoreBackdropClick: true,
         initialState: {
           title: _('Confirmation'),
-          body: _('Do you really want to remove this file ?'),
+          body: _('Do you really want to remove this file?'),
           confirmButton: true,
           confirmTitleButton: _('OK'),
           cancelTitleButton: _('Cancel')

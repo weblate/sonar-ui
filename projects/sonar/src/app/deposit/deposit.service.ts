@@ -161,7 +161,7 @@ export class DepositService implements OnDestroy {
           initialState: {
             title: this._translateService.instant('Confirmation'),
             body: this._translateService.instant(
-              'Do you really want to cancel and remove this deposit ?'
+              'Do you really want to cancel and remove this deposit?'
             ),
             confirmButton: true,
             confirmTitleButton: this._translateService.instant('OK'),
