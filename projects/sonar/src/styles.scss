@@ -14,10 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// Font awesome
+$fa-font-path: "~font-awesome/fonts";
+
+// Bootstrap
 $font-family-base: "Roboto", sans-serif;
 $primary: #205078 !default;
 $secondary: rgb(246, 130, 17) !default;
 
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,700|Roboto+Condensed:300,700');
+@import '~font-awesome/scss/font-awesome.scss';
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~ngx-toastr/toastr-bs4-alert";
 
