@@ -179,7 +179,8 @@ export class AppRoutingModule {
       {
         type: 'organisations',
         briefView: OrganisationComponent,
-        detailView: OrganisationDetailComponent
+        detailView: OrganisationDetailComponent,
+        filesEnabled: true
       },
       {
         type: 'deposits',

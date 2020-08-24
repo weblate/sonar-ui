@@ -14,5 +14,11 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<h4>{{ record.metadata.name }}</h4>
+
+<h4>
+  <a href="#" routerLink="{{ detailUrl.link }}">{{ record.metadata.name }}</a>
+</h4>
 <p class="mb-0"><span class="badge badge-primary">{{ record.metadata.code }}</span></p>
+<p class="mt-2" *ngIf="record.metadata.description">
+  {{ record.metadata.description | truncateText: 50 }}
+</p>

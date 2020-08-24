@@ -23,6 +23,11 @@
     <dt class="col-sm-3" translate>Name</dt>
     <dd class="col-sm-9">{{ record.metadata.name }}</dd>
 
+    <ng-container *ngIf="record.metadata.description">
+      <dt class="col-sm-3" translate>Description</dt>
+      <dd class="col-sm-9" [innerHtml]="record.metadata.description | nl2br"></dd>
+    </ng-container>
+
     <dt class="col-sm-3" translate>Is shared</dt>
     <dd class="col-sm-9">
       <i class="fa fa-{{ record.metadata.isShared ? 'check' : 'close' }}"></i>
