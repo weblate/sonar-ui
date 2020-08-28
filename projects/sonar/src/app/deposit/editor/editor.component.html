@@ -19,7 +19,7 @@
     (cancel)="cancelDeposit()">
   </sonar-deposit-step>
 
-  <sonar-deposit-review [deposit]="deposit"></sonar-deposit-review>
+  <sonar-deposit-review [deposit]="deposit" *ngIf="currentStep === 'diffusion'"></sonar-deposit-review>
 </ng-container>
 
 <ng-container *ngIf="deposit">
