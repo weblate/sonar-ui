@@ -171,6 +171,24 @@
             </dd>
           </ng-container>
 
+          <!-- IDENTIFIED BY -->
+          <ng-container *ngIf="record.identifiedBy">
+            <dt class="col-lg-4" translate>
+              Identifiers
+            </dt>
+            <dd class="col-lg-6">
+              <p class="m-0" *ngFor="let identifier of record.identifiedBy">
+                <span class="badge badge-secondary text-light mr-1">
+                  {{ identifier.type | translate }}
+                </span>
+                {{ identifier.value }}
+                <i class="text-muted ml-1" *ngIf="identifier.source">
+                  {{ identifier.source }}
+                </i>
+              </p>
+            </dd>
+          </ng-container>
+
           <!-- CLASSIFICATION -->
           <ng-container *ngIf="record.classification">
             <dt class="col-lg-4" translate>Classification</dt>

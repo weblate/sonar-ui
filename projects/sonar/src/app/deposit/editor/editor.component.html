@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          <formly-form [form]="form" [model]="model" [fields]="fields"></formly-form>
+          <formly-form [form]="form" [model]="model" [fields]="fields" [class]="'step-' + currentStep"></formly-form>
         </ng-container>
 
         <ng-container *ngIf="view === 'json'">
@@ -115,6 +115,16 @@
                 <ng-template #fullDate>
                   {{ deposit.metadata.documentDate | date:'dd.MM.yyyy' }}
                 </ng-template>
+              </dd>
+            </ng-container>
+
+            <ng-container *ngIf="deposit.metadata.identifiedBy">
+              <dt class="col-sm-3" translate>Identifiers</dt>
+              <dd class="col-sm-9">
+                <p class="m-0" *ngFor="let identifier of deposit.metadata.identifiedBy">
+                  <span class="badge badge-secondary text-light mr-1">{{ identifier.type | translate }}</span>
+                  {{ identifier.value }}
+                </p>
               </dd>
             </ng-container>
 
