@@ -73,35 +73,6 @@ const routes: Routes = [
         ]
       }
     ]
-  },
-  {
-    path: ':view/search',
-    loadChildren: () =>
-      import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
-    data: {
-      showSearchInput: false,
-      adminMode: adminModeDisabled,
-      types: [
-        {
-          showLabel: false,
-          key: 'documents',
-          label: 'Documents',
-          component: DocumentComponent,
-          aggregations: AggregationFilter.filter,
-          aggregationsExpand: ['document_type', 'controlled_affiliation', 'year'],
-          aggregationsOrder: [
-            'document_type',
-            'controlled_affiliation',
-            'year',
-            'specific_collection',
-            'language',
-            'author',
-            'subject',
-            'organisation'
-          ]
-        }
-      ]
-    }
   }
 ];
 
@@ -128,6 +99,44 @@ export class AppRoutingModule {
   ) {
     AggregationFilter.globalSearchViewCode = this._appConfigService.globalSearchViewCode;
     AggregationFilter.translateService = this._translateService;
+
+    this._router.config.push({
+      path: ':view/search',
+      children: [
+        { path: ':type', component: RecordSearchComponent },
+        { path: ':type/detail/:pid', component: DetailComponent }
+      ],
+      data: {
+        showSearchInput: false,
+        adminMode: adminModeDisabled,
+        types: [
+          {
+            showLabel: false,
+            key: 'documents',
+            label: 'Documents',
+            component: DocumentComponent,
+            aggregations: AggregationFilter.filter,
+            aggregationsExpand: ['document_type', 'controlled_affiliation', 'year'],
+            aggregationsOrder: [
+              'document_type',
+              'controlled_affiliation',
+              'year',
+              'specific_collection',
+              'language',
+              'author',
+              'subject',
+              'organisation'
+            ],
+            searchFields: [
+              {
+                label: this._translateService.instant('Full-text'),
+                path: 'fulltext'
+              }
+            ]
+          }
+        ]
+      }
+    });
 
     // Page for editing user profile.
     this._router.config.push({
@@ -169,7 +178,13 @@ export class AppRoutingModule {
           'organisation',
         ],
         editorLongMode: true,
-        filesEnabled: true
+        filesEnabled: true,
+        searchFields: [
+          {
+            label: this._translateService.instant('Full-text'),
+            path: 'fulltext'
+          }
+        ]
       },
       {
         type: 'users',
@@ -215,6 +230,7 @@ export class AppRoutingModule {
               aggregationsExpand: config.aggregationsExpand || [],
               aggregationsOrder: config.aggregationsOrder || [],
               filesEnabled: config.filesEnabled || false,
+              searchFields: config.searchFields || null,
               canAdd: () => this._can(config.type, 'add'),
               canUpdate: (record: any) => this._can(config.type, 'update', record),
               canDelete: (record: any) => this._can(config.type, 'delete', record),
