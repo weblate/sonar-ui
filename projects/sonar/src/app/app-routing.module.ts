@@ -127,6 +127,7 @@ export class AppRoutingModule {
               'subject',
               'organisation'
             ],
+            aggregationsBucketSize: 10,
             searchFields: [
               {
                 label: this._translateService.instant('Full-text'),
@@ -229,6 +230,7 @@ export class AppRoutingModule {
               aggregations: config.aggregations || null,
               aggregationsExpand: config.aggregationsExpand || [],
               aggregationsOrder: config.aggregationsOrder || [],
+              aggregationsBucketSize: 10,
               filesEnabled: config.filesEnabled || false,
               searchFields: config.searchFields || null,
               canAdd: () => this._can(config.type, 'add'),
