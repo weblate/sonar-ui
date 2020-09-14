@@ -52,6 +52,7 @@
     "elliptic": ">=6.5.3",
     "font-awesome": "^4.7.0",
     "handlebars": ">=4.4.5",
+    "http-proxy": ">=1.18.1",
     "https-proxy-agent": ">=2.2.3",
     "kind-of": ">=6.0.3",
     "lodash": ">=4.17.19",
