@@ -179,7 +179,17 @@ export class AppRoutingModule {
           'organisation',
         ],
         editorLongMode: true,
-        filesEnabled: true,
+        files: {
+          enabled: true,
+          filterList: (item: any) => {
+            return item.metadata && item.metadata.type && item.metadata.type === 'file';
+          },
+          orderList: (a: any, b: any) => {
+            return a.metadata.order - b.metadata.order;
+          },
+          infoExcludedFields: ['restriction', 'type'],
+          canUpdateMetadata: () => of({ can: true, message: '' })
+        },
         searchFields: [
           {
             label: this._translateService.instant('Full-text'),
@@ -196,7 +206,9 @@ export class AppRoutingModule {
         type: 'organisations',
         briefView: OrganisationComponent,
         detailView: OrganisationDetailComponent,
-        filesEnabled: true
+        files: {
+          enabled: true
+        },
       },
       {
         type: 'deposits',
@@ -231,7 +243,7 @@ export class AppRoutingModule {
               aggregationsExpand: config.aggregationsExpand || [],
               aggregationsOrder: config.aggregationsOrder || [],
               aggregationsBucketSize: 10,
-              filesEnabled: config.filesEnabled || false,
+              files: config.files || null,
               searchFields: config.searchFields || null,
               canAdd: () => this._can(config.type, 'add'),
               canUpdate: (record: any) => this._can(config.type, 'update', record),
