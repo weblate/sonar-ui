@@ -122,8 +122,27 @@ export class DocumentComponent implements ResultItem, OnDestroy, OnInit {
       return;
     }
 
+    // Try to find the main file. This is the first file, because files are
+    // already ordered during REST API call.
+    const mainFile = this.record.metadata._files.find(
+      (file: any) => file.type === 'file'
+    );
+
+    if (!mainFile) {
+      return;
+    }
+
+    // Find filename without extension.
+    const matches = mainFile.key.match(/^(.*)\..*$/);
+
+    if (!matches) {
+      return;
+    }
+
+    // Find thumbnail corresponding to filename.
     const thumbnail = this.record.metadata._files.find(
-      (file: any) => file.type === 'thumbnail'
+      (file: any) =>
+        file.type === 'thumbnail' && file.key === `${matches[1]}.jpg`
     );
 
     if (!thumbnail) {
