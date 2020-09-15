@@ -174,6 +174,7 @@ _('specific_collection');
 _('controlled_affiliation');
 _('year');
 _('author');
+_('missing_organisation');
 
 // Contributor role
 _('contribution_role_ctb');
