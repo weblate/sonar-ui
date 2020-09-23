@@ -16,11 +16,6 @@
  */
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-// Organisations
-_('unifr');
-_('usi');
-_('csal');
-
 // Provision activity
 _('bf:Publication');
 _('bf:Manufacture');
