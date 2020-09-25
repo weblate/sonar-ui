@@ -18,23 +18,8 @@
   <section class="mt-3">
     <div class="row">
       <div class="col-lg-3 text-center">
-        <div class="mb-4" *ngIf="mainFile">
-          <ng-template let-thumbnail [ngTemplateOutletContext]="{ $implicit: getThumbnail(mainFile) }"
-            [ngTemplateOutlet]="t" #t>
-            <a href (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()"
-              *ngIf="thumbnail">
-              <img [src]="thumbnail" class="img-thumbnail img-fluid">
-            </a>
-          </ng-template>
-          <p class="my-1 small">{{ mainFile.label || mainFile.key }}</p>
-          <p class="m-0">
-            <a href (click)="$event.preventDefault(); previewFileKey = mainFile.key; previewModal.show()">
-              <i class="fa fa-eye mr-2"></i>
-            </a>
-            <a [href]="'/documents/' + record.pid + '/files/' + mainFile.key" target="_blank">
-              <i class="fa fa-download"></i>
-            </a>
-          </p>
+        <div class="mb-4">
+          <sonar-document-file [file]="mainFile" (previewClicked)="showPreview($event)"></sonar-document-file>
         </div>
 
         <!-- DOCUMENT TYPE -->
@@ -223,44 +208,26 @@
     <hr class="mb-4 mt-0">
     <div class="row">
       <ng-container *ngFor="let file of filteredFiles; let first = first">
-        <div class="text-center col-lg-2 mb-4" *ngIf="!first">
-          <ng-template let-thumbnail [ngTemplateOutletContext]="{ $implicit: getThumbnail(file) }"
-            [ngTemplateOutlet]="t" #t>
-            <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()" *ngIf="thumbnail">
-              <img [src]="thumbnail" class="img-thumbnail img-fluid">
-            </a>
-          </ng-template>
-          <p class="my-1 small">{{ file.label || file.key }}</p>
-          <p class="m-0">
-            <a href (click)="$event.preventDefault(); previewFileKey = file.key; previewModal.show()">
-              <i class="fa fa-eye mr-2"></i>
-            </a>
-            <a [href]="'/documents/' + record.pid + '/files/' + file.key" target="_blank">
-              <i class="fa fa-download"></i>
-            </a>
-          </p>
+        <div class="col-lg-2 mb-5" *ngIf="!first">
+          <sonar-document-file [file]="file" (previewClicked)="showPreview($event)"></sonar-document-file>
         </div>
       </ng-container>
     </div>
   </ng-container>
 
   <!--Preview modal-->
-  <div bsModal #previewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-sizes-name1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{ previewFileKey }}</h4>
-          <button type="button" class="close pull-right" (click)="previewModal.hide()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <iframe class="preview-iframe" id="preview-iframe" width="100%" height="500"
-            [src]="previewFileKey | fileLink: 'documents':record.pid:'preview'" style="border: none;"
-            *ngIf="previewFileKey"></iframe>
-        </div>
+  <ng-template #previewModal>
+    <ng-container *ngIf="previewFile">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{ previewFile.label }}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="previewModalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
-  </div>
+      <div class="modal-body">
+        <iframe class="preview-iframe" id="preview-iframe" width="100%" height="500" [src]="previewFile.url"
+          style="border: none;"></iframe>
+      </div>
+    </ng-container>
+  </ng-template>
 </ng-container>

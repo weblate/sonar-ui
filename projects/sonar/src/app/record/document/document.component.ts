@@ -19,6 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ResultItem } from '@rero/ng-core';
 import { Subscription } from 'rxjs';
 import { AppConfigService } from '../../app-config.service';
+import { DocumentFile } from './document.interface';
 
 const SORT_CONTRIBUTOR_PRIORITY = ['cre', 'ctb', 'dgs', 'edt', 'prt'];
 
@@ -34,18 +35,6 @@ export class DocumentComponent implements ResultItem, OnDestroy, OnInit {
 
   // Detail URL object
   detailUrl: { link: string; external: boolean };
-
-  // Thumbnail file for record
-  thumbnail: any;
-
-  // Main file of the document
-  mainFile: any;
-
-  // Embargo date
-  embargoDate: string;
-
-  // Boolean giving the information is the main file is restricted
-  restricted: boolean;
 
   // Abstract corresponding to current language.
   abstract: string;
@@ -66,9 +55,6 @@ export class DocumentComponent implements ResultItem, OnDestroy, OnInit {
 
   /**
    * Component initialization.
-   * - Extracts and stores main file from document files.
-   * - Stores embargo information from main file.
-   * - Load thumbnail for the record.
    */
   ngOnInit() {
     // Initialize and sort contributors
@@ -86,23 +72,6 @@ export class DocumentComponent implements ResultItem, OnDestroy, OnInit {
         this._storeAbstract();
       })
     );
-
-    if (this.record.metadata._files) {
-      this.mainFile = this.record.metadata._files.find(
-        (file: any) => file.type === 'file'
-      );
-      if (this.mainFile) {
-        if (this.mainFile.restriction.date) {
-          this.embargoDate = this.mainFile.restriction.date;
-        }
-
-        if (this.mainFile.restriction.restricted) {
-          this.restricted = this.mainFile.restriction.restricted;
-        }
-
-        this._loadThumbnail();
-      }
-    }
   }
 
   /**
@@ -115,46 +84,16 @@ export class DocumentComponent implements ResultItem, OnDestroy, OnInit {
   }
 
   /**
-   * Load the thumbnail for record
+   * Return the main file of the record.
    */
-  private _loadThumbnail() {
-    if (!this.record.metadata._files) {
-      return;
+  get mainFile(): DocumentFile {
+    if (!this.record.metadata._files || this.record.metadata._files.length === 0) {
+      return null;
     }
 
-    // Try to find the main file. This is the first file, because files are
-    // already ordered during REST API call.
-    const mainFile = this.record.metadata._files.find(
-      (file: any) => file.type === 'file'
-    );
+    const files = this.record.metadata._files.filter((file: any) => file.type === 'file');
 
-    if (!mainFile) {
-      return;
-    }
-
-    // Find filename without extension.
-    const matches = mainFile.key.match(/^(.*)\..*$/);
-
-    if (!matches) {
-      return;
-    }
-
-    // Find thumbnail corresponding to filename.
-    const thumbnail = this.record.metadata._files.find(
-      (file: any) =>
-        file.type === 'thumbnail' && file.key === `${matches[1]}.jpg`
-    );
-
-    if (!thumbnail) {
-      return;
-    }
-
-    if (this.restricted === true) {
-      this.thumbnail = '/static/images/restricted.png';
-      return;
-    }
-
-    this.thumbnail = `/documents/${this.record.metadata.pid}/files/${thumbnail.key}`;
+    return files.length === 0 ? null : files[0];
   }
 
   /**

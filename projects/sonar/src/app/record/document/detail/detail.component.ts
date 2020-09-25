@@ -14,10 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { AppConfigService } from '../../../app-config.service';
+import { DocumentFile } from '../document.interface';
 
 const SORT_CONTRIBUTOR_PRIORITY = ['cre', 'ctb', 'dgs', 'edt', 'prt'];
 
@@ -28,8 +37,11 @@ export class DetailComponent implements OnDestroy, OnInit {
   /** Observable resolving record data */
   record$: Observable<any>;
 
-  /** File key to preview */
-  previewFileKey: string;
+  /** File to preview */
+  previewFile: {
+    label: string;
+    url: SafeUrl;
+  };
 
   // Show only three contributors on startup.
   contributorsLength = 3;
@@ -37,18 +49,29 @@ export class DetailComponent implements OnDestroy, OnInit {
   // Record retrieved from observable.
   record: any = null;
 
+  // Form modal reference.
+  previewModalRef: BsModalRef;
+
   // Subscription to observables, used to unsubscribe to all at the same time.
   private _subscription: Subscription = new Subscription();
+
+  // Reference to preview modal in template.
+  @ViewChild('previewModal', { static: false })
+  previewModalTemplate: TemplateRef<any>;
 
   /**
    * Constructor.
    *
    * @param _configSservice Config service.
    * @param _translateService Translate service.
+   * @param _sanitizer DOM sanitizer.
+   * @param _modalService Modal service.
    */
   constructor(
     private _configSservice: AppConfigService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _sanitizer: DomSanitizer,
+    private _modalService: BsModalService
   ) {}
 
   /**
@@ -172,29 +195,6 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Returns the thumbnail corresponding to PDF file.
-   *
-   * @param file PDF file object.
-   * @returns Thumbnail URL.
-   */
-  getThumbnail(file: any): string {
-    const key = file.key.replace(/(.*)\.(.*)$/, '$1.jpg');
-    const thumbnail = this.record._files.find(
-      (recordFile: any) => recordFile.key === key
-    );
-
-    if (!thumbnail) {
-      return null;
-    }
-
-    if (file.restriction.restricted === true) {
-      return '/static/images/restricted.png';
-    }
-
-    return `/documents/${this.record.pid}/files/${thumbnail.key}`;
-  }
-
-  /**
    * Scroll to target.
    *
    * @param event DOM event triggered.
@@ -203,6 +203,21 @@ export class DetailComponent implements OnDestroy, OnInit {
   goToOtherFile(event: any, target: string) {
     event.preventDefault();
     document.querySelector('#' + target).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /**
+   * Show a preview in modal for file.
+   *
+   * @param file Document file object.
+   */
+  showPreview(file: DocumentFile): void {
+    this.previewModalRef = this._modalService.show(this.previewModalTemplate, {
+      class: 'modal-lg',
+    });
+    this.previewFile = {
+      label: file.label,
+      url: this._sanitizer.bypassSecurityTrustResourceUrl(file.links.preview),
+    };
   }
 
   /**

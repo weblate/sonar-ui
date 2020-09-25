@@ -47,6 +47,7 @@ import { HttpInterceptor } from './interceptor/http.interceptor';
 import { LanguageValuePipe } from './pipe/language-value.pipe';
 import { DetailComponent as DocumentDetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
+import { FileComponent } from './record/document/file/file.component';
 import { PublicationPipe } from './record/document/publication.pipe';
 import { DetailComponent as OrganisationDetailComponent } from './record/organisation/detail/detail.component';
 import { OrganisationComponent } from './record/organisation/organisation.component';
@@ -80,7 +81,8 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     HighlightJsonPipe,
     ReviewComponent,
     AdminComponent,
-    PublicationPipe
+    PublicationPipe,
+    FileComponent
   ],
   imports: [
     BrowserModule,

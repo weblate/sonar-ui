@@ -189,7 +189,7 @@ export class AppRoutingModule {
           orderList: (a: any, b: any) => {
             return a.metadata.order - b.metadata.order;
           },
-          infoExcludedFields: ['restriction', 'type'],
+          infoExcludedFields: ['restriction', 'type', 'links', 'thumbnail'],
           canUpdateMetadata: () => of({ can: true, message: '' })
         },
         searchFields: [

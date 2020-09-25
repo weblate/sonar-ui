@@ -1,0 +1,75 @@
+<!--
+ SONAR User Interface
+ Copyright (C) 2020 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="text-center">
+  <ng-container *ngIf="file; else noFile">
+    <ng-container *ngIf="link; else previewOrExternal">
+      <a [routerLink]="link" *ngIf="inRouter; else normalLink">
+        <img src="{{ file.thumbnail }}" class="img-fluid" alt="{{ file.label }}">
+      </a>
+      <ng-template #normalLink>
+        <a [href]="link">
+          <img src="{{ file.thumbnail }}" class="img-fluid" alt="{{ file.label }}">
+        </a>
+      </ng-template>
+    </ng-container>
+    <ng-template #previewOrExternal>
+      <ng-container *ngIf="showExternalLink && file.links.external; else previewLink">
+        <a href="{{ file.links.external }}" target="_blank">
+          <img src="{{ file.thumbnail }}" class="img-fluid" alt="{{ file.label }}">
+        </a>
+      </ng-container>
+      <ng-template #previewLink>
+        <ng-container *ngIf="showPreview && file.links.preview; else downloadLink">
+          <a href="{{ file.links.preview }}" (click)="preview(file); $event.preventDefault()">
+            <img src="{{ file.thumbnail }}" class="img-fluid" alt="{{ file.label }}">
+          </a>
+        </ng-container>
+        <ng-template #downloadLink>
+          <ng-container *ngIf="showDownload && file.links.download; else noLink">
+            <a href="{{ file.links.download }}?download" *ngIf="showDownload && file.links.download">
+              <img src="{{ file.thumbnail }}" class="img-fluid" alt="{{ file.label }}">
+            </a>
+          </ng-container>
+          <ng-template #noLink>
+            <img src="{{ file.thumbnail }}" class="img-fluid" alt="{{ file.label }}">
+          </ng-template>
+        </ng-template>
+      </ng-template>
+    </ng-template>
+    <div class="my-1 small" *ngIf="showLabel">{{ file.label }}</div>
+    <div class="my-1">
+      <span class="badge badge-secondary text-light" *ngIf="file.restriction && file.restriction.date">
+        {{ 'Public access from' | translate }}<br>{{ file.restriction.date }}
+      </span>
+    </div>
+    <div class="my-1">
+      <a href="{{ file.links.external }}" target="_blank" *ngIf="showExternalLink && file.links.external">
+        <i class="fa fa-external-link mx-1"></i>
+      </a>
+      <a href="{{ file.links.preview }}" *ngIf="showPreview && file.links.preview"
+        (click)="preview(file); $event.preventDefault()">
+        <i class="fa fa-eye mx-1"></i>
+      </a>
+      <a href="{{ file.links.download }}?download" *ngIf="showDownload && file.links.download">
+        <i class="fa fa-download mx-1"></i>
+      </a>
+    </div>
+  </ng-container>
+  <ng-template #noFile>
+    <img src="/static/images/no-image.png" class="img-fluid">
+  </ng-template>
+</div>

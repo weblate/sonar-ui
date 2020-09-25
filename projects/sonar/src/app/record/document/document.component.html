@@ -16,23 +16,7 @@
 -->
 <div class="row">
   <div class="col-2 d-none d-lg-block text-center">
-    <ng-container *ngIf="thumbnail">
-      <a [href]="detailUrl.link" *ngIf="detailUrl.external; else routingLink">
-        <img [src]="thumbnail" class="img-thumbnail img-fluid p-2"
-          [alt]="record.metadata.title[0].mainTitle | languageValue">
-      </a>
-      <ng-template #routingLink>
-        <a [routerLink]="detailUrl.link">
-          <img [src]="thumbnail" class="img-thumbnail img-fluid"
-            [alt]="record.metadata.title[0].mainTitle | languageValue">
-        </a>
-      </ng-template>
-      <p class="my-2" *ngIf="embargoDate">
-        <span class="badge badge-secondary text-light">
-          {{ 'Public access from' | translate }}<br>{{ embargoDate | date:'dd/MM/yyyy' }}
-        </span>
-      </p>
-    </ng-container>
+    <sonar-document-file [file]="mainFile" [showLabel]="false" [showPreview]="false" [showDownload]="false" [showExternalLink]="false" [link]="detailUrl.link" [inRouter]="!detailUrl.external"></sonar-document-file>
     <p class="my-2" *ngIf="record.metadata.documentType">
       <small>{{ ('document_type_' + record.metadata.documentType) | translate }}</small>
     </p>
