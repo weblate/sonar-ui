@@ -223,3 +223,14 @@ _('uri');
 _('bf:ReportNumber');
 _('bf:Strn');
 _('pmid');
+
+// Licenses
+_('CC0');
+_('CC BY');
+_('CC BY-NC');
+_('CC BY-NC-ND');
+_('CC BY-NC-SA');
+_('CC BY-ND');
+_('CC BY-SA');
+_('Other OA / license undefined');
+_('Not OA / Rights reserved');

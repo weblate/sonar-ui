@@ -42,6 +42,10 @@ export class StepComponent implements OnInit {
   @Output()
   cancel: EventEmitter<any> = new EventEmitter();
 
+  /** Event emitted when a step is clicked. */
+  @Output()
+  clicked: EventEmitter<any> = new EventEmitter();
+
   ngOnInit() {
     if (this.steps.length === 0) {
       throw new Error('No steps defined');
@@ -82,5 +86,14 @@ export class StepComponent implements OnInit {
   doCancel(event: Event) {
     event.preventDefault();
     this.cancel.emit();
+  }
+
+  /**
+   * Method triggered when a step is clicked.
+   *
+   * @param step Step clicked.
+   */
+  click(step: string) {
+    this.clicked.emit(step);
   }
 }

@@ -36,6 +36,7 @@
           [routerLink]="[linkPrefix, step]"
           *ngIf="i <= maxStepIndex; else noLink"
           [ngClass]="{ 'text-light': i <= currentStepIndex }"
+          (click)="click(step)"
         >
           <ng-container
             *ngTemplateOutlet="

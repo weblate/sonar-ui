@@ -91,7 +91,7 @@ export class EditorComponent implements OnInit {
     private _userUservice: UserService,
     private _spinner: NgxSpinnerService,
     private _datePipe: DatePipe
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this._route.params
@@ -179,25 +179,28 @@ export class EditorComponent implements OnInit {
 
     if (this.deposit.metadata.publication.volume) {
       journal.push(
-        this._translateService.translate('vol.') +
-        ' ' +
-        this.deposit.metadata.publication.volume
+        [
+          this._translateService.translate('vol.'),
+          this.deposit.metadata.publication.volume,
+        ].join(' ')
       );
     }
 
     if (this.deposit.metadata.publication.number) {
       journal.push(
-        this._translateService.translate('no.') +
-        ' ' +
-        this.deposit.metadata.publication.number
+        [
+          this._translateService.translate('no.'),
+          this.deposit.metadata.publication.number,
+        ].join(' ')
       );
     }
 
     if (this.deposit.metadata.publication.pages) {
       journal.push(
-        this._translateService.translate('p.') +
-        ' ' +
-        this.deposit.metadata.publication.pages
+        [
+          this._translateService.translate('p.'),
+          this.deposit.metadata.publication.pages,
+        ].join(' ')
       );
     }
 
@@ -233,9 +236,9 @@ export class EditorComponent implements OnInit {
           this.deposit.metadata.dissertation.date.length === 4
             ? this.deposit.metadata.dissertation.date
             : this._datePipe.transform(
-              this.deposit.metadata.dissertation.date,
-              'dd.MM.yyyy'
-            );
+                this.deposit.metadata.dissertation.date,
+                'dd.MM.yyyy'
+              );
         dissertation.push(`, ${date}`);
       }
     }
@@ -243,7 +246,7 @@ export class EditorComponent implements OnInit {
     if (this.deposit.metadata.dissertation.jury_note) {
       dissertation.push(
         ` (${this._translateService.translate('Jury note').toLowerCase()}: ${
-        this.deposit.metadata.dissertation.jury_note
+          this.deposit.metadata.dissertation.jury_note
         })`
       );
     }
@@ -314,12 +317,12 @@ export class EditorComponent implements OnInit {
   /**
    * Return if the form is ready to publish or not.
    */
-  isFinished(): boolean {
+  canSubmit(): boolean {
     return (
       (this.deposit.status === 'in_progress' ||
         this.deposit.status === 'ask_for_changes') &&
-      this.currentStep === this.steps[this.steps.length - 1] &&
-      this.deposit.step === this.steps[this.steps.length - 1]
+      this.currentStep === 'diffusion' &&
+      this.deposit.diffusion
     );
   }
 
@@ -489,7 +492,8 @@ export class EditorComponent implements OnInit {
 
           // expression properties
           if (fieldSchema.form.expressionProperties) {
-            fieldConfig.expressionProperties = fieldSchema.form.expressionProperties;
+            fieldConfig.expressionProperties =
+              fieldSchema.form.expressionProperties;
           }
 
           // hide expression

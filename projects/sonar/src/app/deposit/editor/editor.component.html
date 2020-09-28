@@ -16,17 +16,17 @@
 -->
 <ng-container *ngIf="deposit">
   <sonar-deposit-step [currentStep]="currentStep" [maxStep]="maxStep" [linkPrefix]="linkPrefix" [steps]="steps"
-    (cancel)="cancelDeposit()">
+    (cancel)="cancelDeposit()" (clicked)="view = 'form'">
   </sonar-deposit-step>
 
   <sonar-deposit-review [deposit]="deposit" *ngIf="currentStep === 'diffusion'"></sonar-deposit-review>
 </ng-container>
 
 <ng-container *ngIf="deposit">
-  <form [formGroup]="form" (ngSubmit)="save()">
+  <form [formGroup]="form">
     <div class="row">
       <div class="col-sm-8">
-        <ng-container *ngIf="view === 'form' && currentStep !== 'diffusion'">
+        <ng-container *ngIf="view === 'form'">
           <div class="row mb-4">
             <div class="col-6">
               <div class="btn-group" dropdown *ngIf="currentStep === 'metadata' && mainFile">
@@ -44,9 +44,17 @@
               </div>
             </div>
             <div class="col-6 text-right">
-              <button type="submit" class="btn btn-primary" *ngIf="isFinished() === false">
+              <button type="submit" class="btn btn-primary" (click)="save()">
                 <i class="fa fa-floppy-o mr-2"></i>
                 {{ 'Save' | translate }}
+              </button>
+              <button type="submit" class="btn btn-primary ml-2 pull-right" (click)="publish()"
+                *ngIf="canSubmit()">
+                <i class="fa fa-check mr-2"></i>
+                <span *ngIf="isAdminUser; else submitLabel">
+                  {{ 'Publish' | translate }}
+                </span>
+                <ng-template #submitLabel>{{ 'Submit' | translate }}</ng-template>
               </button>
             </div>
           </div>
@@ -59,15 +67,6 @@
         </ng-container>
 
         <ng-container *ngIf="showPreview && deposit.metadata">
-          <button type="button" class="btn btn-primary ml-2 pull-right" (click)="publish()"
-            *ngIf="isFinished() === true">
-            <i class="fa fa-check mr-2"></i>
-            <span *ngIf="isAdminUser; else submitLabel">
-              {{ 'Publish' | translate }}
-            </span>
-            <ng-template #submitLabel>{{ 'Submit' | translate }}</ng-template>
-          </button>
-
           <h3 class="mb-2">{{ deposit.metadata.title }}</h3>
           <p class="m-0">
             <strong></strong>
@@ -118,7 +117,7 @@
               </dd>
             </ng-container>
 
-            <ng-container *ngIf="deposit.metadata.identifiedBy">
+            <ng-container *ngIf="deposit.metadata.identifiedBy && deposit.metadata.identifiedBy.length">
               <dt class="col-sm-3" translate>Identifiers</dt>
               <dd class="col-sm-9">
                 <p class="m-0" *ngFor="let identifier of deposit.metadata.identifiedBy">
@@ -144,7 +143,7 @@
               </dd>
             </ng-container>
 
-            <ng-container *ngIf="deposit.metadata.dissertation">
+            <ng-container *ngIf="deposit.metadata.dissertation && deposit.metadata.dissertation.degree">
               <dt class="col-sm-3" translate>Dissertation</dt>
               <dd class="col-sm-9">
                 {{ dissertation }}
