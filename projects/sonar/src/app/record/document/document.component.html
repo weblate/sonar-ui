@@ -54,9 +54,7 @@
     <p class="mb-0">
       <ng-container *ngFor="let contributor of record.metadata.contribution; let first = first;">
         <ng-container *ngIf="!first">&nbsp;;&nbsp;</ng-container>
-        {{ contributor.agent.preferred_name }}
-        <span
-          *ngIf="contributor.role[0] !== 'cre'">({{ ('contribution_role_' + contributor.role[0]) | translate | lowercase }})</span>
+        {{ contributor.text }}
       </ng-container>
     </p>
     <p class="my-0 d-none d-lg-block" *ngIf="record.metadata.partOf && record.metadata.partOf.length > 0">

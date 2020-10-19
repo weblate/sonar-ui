@@ -58,9 +58,7 @@
           <ul class="list-unstyled m-0">
             <ng-container *ngFor="let contributor of filteredContributors">
               <li>
-                {{ contributor.agent.preferred_name }}
-                <span
-                  *ngIf="!contributor.role.includes('cre')">({{ ('contribution_role_' + contributor.role[0]) | translate | lowercase }})</span>
+                {{ contributor.text }}
                 <a [href]="'https://orcid.org/' + contributor.agent.identifiedBy.value" target="_blank"
                   class="badge badge-secondary text-light mx-1" *ngIf="contributor.agent.identifiedBy">
                   ORCID
