@@ -103,7 +103,7 @@
   "bf:Doi": "bf:Doi",
   "bf:Ean": "bf:Ean",
   "bf:Gtin14Number": "bf:Gtin14Number",
-  "bf:Identifier": "bf:Identifier",
+  "bf:Identifier": "other identifier",
   "bf:Isan": "bf:Isan",
   "bf:Isbn": "bf:Isbn",
   "bf:Ismn": "bf:Ismn",
