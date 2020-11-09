@@ -178,7 +178,9 @@ export class AppRoutingModule {
           'subject',
           'organisation',
         ],
-        editorLongMode: true,
+        editorSettings: {
+          longMode: true
+        },
         files: {
           enabled: true,
           filterList: (item: any) => {
@@ -238,7 +240,7 @@ export class AppRoutingModule {
               key: config.type,
               label: config.type.charAt(0).toUpperCase() + config.type.slice(1),
               component: config.briefView || null,
-              editorLongMode: config.editorLongMode || false,
+              editorSettings: config.editorSettings || false,
               detailComponent: config.detailView || null,
               aggregations: config.aggregations || null,
               aggregationsExpand: config.aggregationsExpand || [],
