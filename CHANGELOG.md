@@ -1,5 +1,28 @@
 # Changelog
 
+## [v0.5.0](https://github.com/rero/sonar-ui/tree/v0.5.0) (2020-11-12)
+
+[Full Changelog](https://github.com/rero/sonar-ui/compare/v0.4.0...v0.5.0)
+
+**Merged pull requests:**
+
+- documents: enable editor long mode [\#159](https://github.com/rero/sonar-ui/pull/159) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalogs [\#158](https://github.com/rero/sonar-ui/pull/158) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalogs [\#156](https://github.com/rero/sonar-ui/pull/156) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documents: display meeting text [\#155](https://github.com/rero/sonar-ui/pull/155) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documents: display embargo date [\#153](https://github.com/rero/sonar-ui/pull/153) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- deposit: add license [\#151](https://github.com/rero/sonar-ui/pull/151) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documents: display files [\#150](https://github.com/rero/sonar-ui/pull/150) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- organisations: remove manual translations [\#149](https://github.com/rero/sonar-ui/pull/149) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- dependencies: upgrade ng-core library [\#147](https://github.com/rero/sonar-ui/pull/147) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update `unisi` key [\#144](https://github.com/rero/sonar-ui/pull/144) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- Translations update from Weblate [\#143](https://github.com/rero/sonar-ui/pull/143) ([weblate](https://github.com/weblate))
+- users: facet for users without organisation [\#142](https://github.com/rero/sonar-ui/pull/142) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- security: update dependencies [\#141](https://github.com/rero/sonar-ui/pull/141) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documents: display thumbnails in brief views. [\#140](https://github.com/rero/sonar-ui/pull/140) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documents: add configurations for handling files [\#139](https://github.com/rero/sonar-ui/pull/139) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- Translations update from Weblate [\#137](https://github.com/rero/sonar-ui/pull/137) ([weblate](https://github.com/weblate))
+
 ## [v0.4.0](https://github.com/rero/sonar-ui/tree/v0.4.0) (2020-09-08)
 
 [Full Changelog](https://github.com/rero/sonar-ui/compare/v0.3.0...v0.4.0)

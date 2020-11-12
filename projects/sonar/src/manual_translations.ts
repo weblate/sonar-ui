@@ -234,3 +234,15 @@ _('CC BY-ND');
 _('CC BY-SA');
 _('Other OA / license undefined');
 _('Not OA / Rights reserved');
+
+// Files metadata
+_('access');
+_('embargo_date');
+_('external_url');
+_('label');
+_('mimetype');
+_('order');
+_('restricted_outside_organisation');
+_('coar:c_abf2');
+_('coar:c_f1cf');
+_('coar:c_16ec');
