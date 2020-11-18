@@ -178,6 +178,10 @@ _('contribution_role_cre');
 _('contribution_role_prt');
 _('contribution_role_dgs');
 
+// Investigator role
+_('investigator');
+_('coinvestigator');
+
 // Deposit status
 _('deposit_status_in_progress');
 _('deposit_status_to_validate');
@@ -246,3 +250,10 @@ _('restricted_outside_organisation');
 _('coar:c_abf2');
 _('coar:c_f1cf');
 _('coar:c_16ec');
+
+// Deposit steps
+_('step_create');
+_('step_metadata');
+_('step_contributors');
+_('step_projects');
+_('step_diffusion');

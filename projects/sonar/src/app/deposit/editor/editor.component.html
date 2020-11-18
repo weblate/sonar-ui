@@ -48,8 +48,7 @@
                 <i class="fa fa-floppy-o mr-2"></i>
                 {{ 'Save' | translate }}
               </button>
-              <button type="submit" class="btn btn-primary ml-2 pull-right" (click)="publish()"
-                *ngIf="canSubmit()">
+              <button type="submit" class="btn btn-primary ml-2 pull-right" (click)="publish()" *ngIf="canSubmit()">
                 <i class="fa fa-check mr-2"></i>
                 <span *ngIf="isAdminUser; else submitLabel">
                   {{ 'Publish' | translate }}
@@ -203,6 +202,52 @@
                   <span class="badge badge-secondary text-light ml-1" *ngIf="author.orcid">{{ author.orcid }}</span>
                   <small class="text-muted ml-1" *ngIf="author.affiliation"><i>{{ author.affiliation }}</i></small>
                 </p>
+              </dd>
+            </ng-container>
+
+            <ng-container *ngIf="deposit.projects">
+              <dt class="col-sm-3" translate>Projects</dt>
+              <dd class="col-sm-9">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item py-1 pl-0" *ngFor="let project of deposit.projects">
+                    <ng-container *ngIf="project.$ref; else fullProject">
+                      <ng-container *ngIf="project.$ref | getRecord: 'projects' | async as savedProject">
+                        {{ savedProject.metadata.name }}
+                        <span class="badge badge-secondary text-light ml-2" translate>Existing project</span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #fullProject>
+                      {{ project.name }}
+                      <ng-container *ngIf="project.identifier">
+                        <span class="badge badge-secondary text-light mx-2">{{ project.identifier }}</span>
+                      </ng-container>
+                      <small>{{ project.startDate }}{{ project.endDate ? ' - ' + project.endDate : '' }}</small>
+                      <ng-container *ngIf="project.description">
+                        <br><small [innerHtml]="project.description | nl2br"></small>
+                      </ng-container>
+                      <div class="mt-1" *ngIf="project.investigators">
+                        {{ 'Investigators' | translate }}:
+                        <small>
+                          <div *ngFor="let investigator of project.investigators">
+                            {{ investigator.name }}
+                            <span class="badge badge-secondary text-light ml-1">{{ investigator.role | translate }}</span>
+                            <span class="badge badge-secondary text-light ml-1" *ngIf="investigator.affiliation">{{ investigator.affiliation }}</span>
+                            <span class="badge badge-secondary text-light ml-1" *ngIf="investigator.orcid">{{ investigator.orcid }}</span>
+                          </div>
+                        </small>
+                      </div>
+                      <div class="mt-1" *ngIf="project.funding_organisations">
+                        {{ 'Funding organsations' | translate }}:
+                        <small>
+                          <div *ngFor="let funding_organisation of project.funding_organisations">
+                            {{ funding_organisation.name }}
+                            <span class="badge badge-secondary text-light ml-1" *ngIf="funding_organisation.identifier">{{ funding_organisation.identifier }}</span>
+                          </div>
+                        </small>
+                      </div>
+                    </ng-template>
+                  </li>
+                </ul>
               </dd>
             </ng-container>
           </dl>

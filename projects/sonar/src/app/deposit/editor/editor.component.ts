@@ -46,7 +46,13 @@ export class EditorComponent implements OnInit {
   currentStep = 'metadata';
 
   /** Deposit steps */
-  steps: string[] = ['create', 'metadata', 'contributors', 'diffusion'];
+  steps: string[] = [
+    'create',
+    'metadata',
+    'contributors',
+    'projects',
+    'diffusion',
+  ];
 
   /** Form for current type */
   form: FormGroup = new FormGroup({});
@@ -121,7 +127,7 @@ export class EditorComponent implements OnInit {
 
           this.createdAt = result[1].created;
           this.updatedAt = result[1].updated;
-          this.createForm(result[0]);
+          this._createForm(result[0]);
 
           this._files = result[2];
         },
@@ -453,7 +459,7 @@ export class EditorComponent implements OnInit {
         this._spinner.hide();
 
         if (result !== false) {
-          this.createForm(result);
+          this._createForm(result);
           this._toastrService.success(
             this._translateService.translate('Data imported successfully')
           );
@@ -465,9 +471,12 @@ export class EditorComponent implements OnInit {
    * Create form by extracting section corresponding to current step from JSON schema.
    * @param schema JSON schema
    */
-  private createForm(schema: any) {
+  private _createForm(schema: any) {
     const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
       map: (fieldConfig: any, fieldSchema: any) => {
+        // Force long mode to be able to remove fields.
+        fieldConfig.templateOptions.longMode = true;
+
         if (fieldSchema.form) {
           // Template options
           if (fieldSchema.form.templateOptions) {
@@ -499,6 +508,17 @@ export class EditorComponent implements OnInit {
           // hide expression
           if (fieldSchema.form.hideExpression) {
             fieldConfig.hideExpression = fieldSchema.form.hideExpression;
+          }
+
+          if (
+            fieldSchema.form.remoteTypeahead &&
+            fieldSchema.form.remoteTypeahead.type
+          ) {
+            fieldConfig.type = 'remoteTypeahead';
+            fieldConfig.templateOptions = {
+              ...fieldConfig.templateOptions,
+              ...{ remoteTypeahead: fieldSchema.form.remoteTypeahead },
+            };
           }
         }
 

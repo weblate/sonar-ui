@@ -221,6 +221,27 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Return the formatted string for funding organisations.
+   *
+   * @param project Project record.
+   * @returns String representing the funding organisations.
+   */
+  get_funding_organisations(project: any): string {
+    if (!project.funding_organisations) {
+      return '';
+    }
+
+    const text = project.funding_organisations.map((item: any) => {
+      return item.agent.preferred_name;
+    });
+
+    return `(${this._translateService.instant(
+      'supported by {{ organisations }}',
+      { organisations: text.join(', ') }
+    )})`;
+  }
+
+  /**
    * Sort contributors by given priorities array constant.
    */
   private sortContributors() {

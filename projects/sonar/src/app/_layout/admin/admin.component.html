@@ -34,6 +34,9 @@
             <li class="nav-item" *ngIf="user.is_moderator">
               <a class="nav-link" routerLink="/records/documents" translate>Documents</a>
             </li>
+            <li class="nav-item" *ngIf="user.is_submitter">
+              <a class="nav-link" routerLink="/records/projects" translate>Research projects</a>
+            </li>
             <li class="nav-item dropdown" *ngIf="user.is_submitter" dropdown>
               <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" dropdownToggle translate>

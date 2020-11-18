@@ -1,0 +1,95 @@
+<!--
+ SONAR User Interface
+ Copyright (C) 2020 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ng-container *ngIf="record$ | async as record">
+  <h1 class="mb-4">{{ record.metadata.name }}</h1>
+  <dl class="row mt-4">
+    <ng-container *ngIf="record.metadata.description">
+      <dt class="col-sm-3" translate>Description</dt>
+      <dd class="col-sm-9" [innerHtml]="record.metadata.description | nl2br"></dd>
+    </ng-container>
+
+    <dt class="col-sm-3" translate>Period</dt>
+    <dd class="col-sm-9">{{ record.metadata.startDate | dateTranslate: 'd/M/yyyy' }} -
+      {{ record.metadata.endDate | dateTranslate: 'd/M/yyyy' }}</dd>
+
+    <ng-container *ngIf="record.metadata.endDate">
+      <dt class="col-sm-3" translate>End date</dt>
+      <dd class="col-sm-9">{{ record.metadata.endDate | dateTranslate: 'longDate' }}</dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.identifiedBy">
+      <dt class="col-sm-3" translate>Identifier</dt>
+      <dd class="col-sm-9">
+        <sonar-record-identifier [type]="record.metadata.identifiedBy.type" [value]="record.metadata.identifiedBy.value"
+          [source]="record.metadata.identifiedBy.source"></sonar-record-identifier>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.investigators">
+      <dt class="col-sm-3" translate>Investigators</dt>
+      <dd class="col-sm-9">
+
+        <p class="m-0" *ngFor="let investigator of record.metadata.investigators">
+          {{ investigator.agent.preferred_name }} (<ng-container
+            *ngFor="let role of investigator.role; let last = last;">{{ role | translate }}<ng-container *ngIf="!last">
+              ,&nbsp;</ng-container>
+          </ng-container>)
+          <sonar-record-identifier [type]="investigator.identifiedBy.type" [value]="investigator.identifiedBy.value"
+            [source]="investigator.identifiedBy.source" *ngIf="investigator.identifiedBy">
+          </sonar-record-identifier>
+          <ng-container *ngIf="investigator.affiliation">
+            <small class="ml-1" *ngIf="investigator.controlledAffiliation; else affiliation"
+              [tooltip]="investigator.controlledAffiliation | join:' ; '">
+              <i class="text-muted">{{ investigator.affiliation }}</i>
+            </small>
+            <ng-template #affiliation>
+              <small class="ml-1">
+                <i class="text-muted">{{ investigator.affiliation }}</i>
+              </small>
+            </ng-template>
+          </ng-container>
+        </p>
+
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="record.metadata.funding_organisations">
+      <dt class="col-sm-3" translate>Funding organisations</dt>
+      <dd class="col-sm-9">
+        <p class="m-0" *ngFor="let funding_organisation of record.metadata.funding_organisations">
+          {{ funding_organisation.agent.preferred_name }}
+          <sonar-record-identifier [type]="funding_organisation.identifiedBy.type"
+            [value]="funding_organisation.identifiedBy.value" [source]="funding_organisation.identifiedBy.source"
+            *ngIf="funding_organisation.identifiedBy">
+          </sonar-record-identifier>
+        </p>
+      </dd>
+    </ng-container>
+  </dl>
+
+  <ng-container *ngIf="user$ | async as user">
+    <ng-container *ngIf="record.metadata.documents && record.metadata.documents.length > 0 && user.is_moderator">
+      <h4 translate>Linked documents</h4>
+      <ul>
+        <li *ngFor="let document of record.metadata.documents">
+          <a
+            [routerLink]="['/', 'records', 'documents', 'detail', document.pid]">{{ document.title[0].mainTitle | languageValue }}</a>
+        </li>
+      </ul>
+    </ng-container>
+  </ng-container>
+</ng-container>

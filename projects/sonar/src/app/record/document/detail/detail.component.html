@@ -44,10 +44,10 @@
             <ng-container *ngFor="let contributor of filteredContributors">
               <li>
                 {{ contributor.text }}
-                <a [href]="'https://orcid.org/' + contributor.agent.identifiedBy.value" target="_blank"
-                  class="badge badge-secondary text-light mx-1" *ngIf="contributor.agent.identifiedBy">
-                  ORCID
-                </a>
+                <sonar-record-identifier [type]="contributor.agent.identifiedBy.type"
+                  [value]="contributor.agent.identifiedBy.value" [source]="contributor.agent.identifiedBy.source"
+                  *ngIf="contributor.agent.identifiedBy">
+                </sonar-record-identifier>
                 <ng-container *ngIf="contributor.affiliation">
                   <small class="ml-1" *ngIf="contributor.controlledAffiliation; else affiliation"
                     [tooltip]="contributor.controlledAffiliation | join:' ; '">
@@ -129,12 +129,27 @@
         </div>
 
         <dl class="row mb-0">
+          <!-- PROJECTS -->
+          <ng-container *ngIf="record.projects">
+            <dt class="col-lg-4" translate>Research projects</dt>
+            <dd class="col-lg-8">
+              <ul class="list-unstyled mb-0">
+                <li class="p-0" *ngFor="let project of record.projects">
+                  <a [routerLink]="['/', 'records', 'projects', 'detail', project.pid]">
+                    {{ project.name }}
+                  </a>
+                  {{ get_funding_organisations(project) }}
+                </li>
+              </ul>
+            </dd>
+          </ng-container>
+
           <!-- OTHER EDITION -->
           <ng-container *ngIf="record.otherEdition">
             <dt class="col-lg-4" translate>
               Other electronic version
             </dt>
-            <dd class="col-lg-6">
+            <dd class="col-lg-8">
               <p class="m-0" *ngFor="let otherEdition of record.otherEdition">
                 {{ otherEdition.publicNote }} : <a [href]="otherEdition.document.electronicLocator"
                   target="_blank">{{ otherEdition.document.electronicLocator }}</a>
@@ -161,13 +176,9 @@
             </dt>
             <dd class="col-lg-6">
               <p class="m-0" *ngFor="let identifier of record.identifiedBy">
-                <span class="badge badge-secondary text-light mr-1">
-                  {{ identifier.type | translate }}
-                </span>
-                {{ identifier.value }}
-                <i class="text-muted ml-1" *ngIf="identifier.source">
-                  {{ identifier.source }}
-                </i>
+                <sonar-record-identifier [type]="identifier.type" [value]="identifier.value"
+                  [source]="identifier.source">
+                </sonar-record-identifier>
               </p>
             </dd>
           </ng-container>
