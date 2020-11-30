@@ -25,7 +25,7 @@ describe('PublicationPipe', () => {
   beforeEach(() => {
     TestBed.configureTestingModule(mockedConfiguration);
 
-    pipe = new PublicationPipe(TestBed.get(TranslateService));
+    pipe = new PublicationPipe(TestBed.inject(TranslateService));
   });
 
   it('create an instance', () => {

@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { RecordModule, TranslateLoader } from '@rero/ng-core';
+import { CoreConfigService, RecordModule, TranslateLoader } from '@rero/ng-core';
 import { TabsModule } from 'ngx-bootstrap';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { of } from 'rxjs';
@@ -39,7 +39,7 @@ describe('UploadComponent', () => {
     })
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [UploadComponent, StepComponent, ReviewComponent, FileSizePipe],
       imports: [
@@ -52,7 +52,8 @@ describe('UploadComponent', () => {
         TranslateModule.forRoot({
           loader: {
             provide: BaseTranslateLoader,
-            useClass: TranslateLoader
+            useClass: TranslateLoader,
+            deps: [CoreConfigService, HttpClient]
           }
         })
       ],

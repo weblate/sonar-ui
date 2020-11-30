@@ -56,7 +56,7 @@ export class DetailComponent implements OnDestroy, OnInit {
   private _subscription: Subscription = new Subscription();
 
   // Reference to preview modal in template.
-  @ViewChild('previewModal', { static: false })
+  @ViewChild('previewModal')
   previewModalTemplate: TemplateRef<any>;
 
   /**

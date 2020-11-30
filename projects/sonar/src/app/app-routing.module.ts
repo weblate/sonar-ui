@@ -17,7 +17,7 @@
 import { NgModule } from '@angular/core';
 import { ActivationStart, Router, RouterEvent, RouterModule, Routes, UrlSegment } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ActionStatus, DetailComponent, EditorComponent, RecordSearchComponent } from '@rero/ng-core';
+import { ActionStatus, DetailComponent, EditorComponent, RecordSearchPageComponent } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AppConfigService } from './app-config.service';
@@ -77,7 +77,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
@@ -103,7 +103,7 @@ export class AppRoutingModule {
     this._router.config.push({
       path: ':view/search',
       children: [
-        { path: ':type', component: RecordSearchComponent },
+        { path: ':type', component: RecordSearchPageComponent },
         { path: ':type/detail/:pid', component: DetailComponent }
       ],
       data: {
@@ -227,7 +227,7 @@ export class AppRoutingModule {
         matcher: (url: any) => this._routeMatcher(url, config.type),
         canActivate: [RoleGuard],
         children: [
-          { path: '', component: RecordSearchComponent },
+          { path: '', component: RecordSearchPageComponent },
           { path: 'detail/:pid', component: DetailComponent },
           { path: 'edit/:pid', component: EditorComponent },
           { path: 'new', component: EditorComponent, canActivate: [CanAddGuard] }

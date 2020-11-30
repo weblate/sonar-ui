@@ -14,8 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AfterContentChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, Validators } from '@angular/forms';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,12 +34,22 @@ import { DialogService } from '@rero/ng-core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, from, Observable, of } from 'rxjs';
-import { concatMap, delay, first, map, mergeMap, reduce, switchMap, takeWhile, tap } from 'rxjs/operators';
+import {
+  concatMap,
+  delay,
+  first,
+  map,
+  mergeMap,
+  reduce,
+  switchMap,
+  takeWhile,
+  tap,
+} from 'rxjs/operators';
 import { DepositService } from '../deposit.service';
 
 @Component({
   selector: 'sonar-deposit-upload',
-  templateUrl: './upload.component.html'
+  templateUrl: './upload.component.html',
 })
 export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
   /**
@@ -68,17 +89,23 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         tap(() => {
           this._spinner.show();
         }),
-        switchMap(params => {
+        switchMap((params) => {
           if (params.id !== '0') {
-            return forkJoin(
+            return forkJoin([
               this._depositService.get(params.id),
-              this._depositService.getFiles(params.id)
-            ).pipe(
-              tap(result => {
+              this._depositService.getFiles(params.id),
+            ]).pipe(
+              tap((result) => {
                 this.deposit = result[0].metadata;
 
-                if (this._depositService.canAccessDeposit(this.deposit) === false) {
-                  this._router.navigate(['deposit', this.deposit.pid, 'confirmation']);
+                if (
+                  this._depositService.canAccessDeposit(this.deposit) === false
+                ) {
+                  this._router.navigate([
+                    'deposit',
+                    this.deposit.pid,
+                    'confirmation',
+                  ]);
                 }
 
                 this.files = result[1];
@@ -141,7 +168,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
 
     // Create a deposit if not existing
     let createDeposit$: Observable<any> = this._depositService.create().pipe(
-      tap(deposit => (this.deposit = deposit.metadata)),
+      tap((deposit) => (this.deposit = deposit.metadata)),
       delay(1000),
       map(() => {
         if (type === 'main') {
@@ -159,14 +186,21 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         switchMap(() => {
           return from(files).pipe(
             concatMap((file: File) => {
-              return this._depositService.uploadFile(this.deposit.pid, file.name, type, file);
+              return this._depositService.uploadFile(
+                this.deposit.pid,
+                file.name,
+                type,
+                file
+              );
             })
           );
         })
       )
       .subscribe({
         next: (file: any) => {
-          this._toastr.success(_('File uploaded successfully') + ': ' + file.key);
+          this._toastr.success(
+            _('File uploaded successfully') + ': ' + file.key
+          );
           this.files.push(file);
           this._addFormField(file);
         },
@@ -175,8 +209,10 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         },
         error: () => {
           this._spinner.hide();
-          this._toastr.error(_('An error occurred during file upload process, please try again.'));
-        }
+          this._toastr.error(
+            _('An error occurred during file upload process, please try again.')
+          );
+        },
       });
   }
 
@@ -184,13 +220,15 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    * Removes a deposit (after confirmation) and go back to upload homepage.
    */
   cancelDeposit() {
-    this._depositService.deleteDepositWithConfirmation(this.deposit).subscribe((result: any) => {
-      if (result === true) {
-        this.files = [];
-        this.deposit = null;
-        this._router.navigate(['deposit', '0', 'create']);
-      }
-    });
+    this._depositService
+      .deleteDepositWithConfirmation(this.deposit)
+      .subscribe((result: any) => {
+        if (result === true) {
+          this.files = [];
+          this.deposit = null;
+          this._router.navigate(['deposit', '0', 'create']);
+        }
+      });
   }
 
   /**
@@ -202,14 +240,22 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
    */
   onSelect(event: any, type: string, limit: number) {
     if (limit !== 0 && this.getFilesByType(type).length >= limit) {
-      this._toastr.error(_('You cannot add more files, please remove existing files first.'));
+      this._toastr.error(
+        _('You cannot add more files, please remove existing files first.')
+      );
       return;
     }
 
     event.addedFiles.forEach((file: any, index: number) => {
-      if (this.getFilesByType(type).filter(item => item.key === file.name).length > 0) {
+      if (
+        this.getFilesByType(type).filter((item) => item.key === file.name)
+          .length > 0
+      ) {
         this._toastr.error(
-          _('File with the same name is already added to the deposit: ' + file.name)
+          _(
+            'File with the same name is already added to the deposit: ' +
+              file.name
+          )
         );
         event.addedFiles.splice(index, 1);
       }
@@ -238,8 +284,8 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
           body: _('Do you really want to remove this file?'),
           confirmButton: true,
           confirmTitleButton: _('OK'),
-          cancelTitleButton: _('Cancel')
-        }
+          cancelTitleButton: _('Cancel'),
+        },
       })
       .pipe(
         switchMap((confirm: boolean) => {
@@ -256,7 +302,9 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
           const index = this.files.indexOf(file);
           this.files.splice(this.files.indexOf(file), 1);
           this._toastr.success(
-            this._translateService.instant(`File ${file.key} removed successfully.`)
+            this._translateService.instant(
+              `File ${file.key} removed successfully.`
+            )
           );
           this.filesForm.removeAt(index);
         }
@@ -298,7 +346,9 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
 
     if (this.filesForm.touched === true) {
       this.filesForm.value.forEach((value: any) => {
-        const index = this.files.findIndex(item => item.version_id === value.id);
+        const index = this.files.findIndex(
+          (item) => item.version_id === value.id
+        );
 
         if (this.filesForm.at(index).dirty) {
           // remove embargo date if embargo is not checked
@@ -320,7 +370,9 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
         )
         .subscribe(() => {
           this._toastr.success(
-            this._translateService.instant('The files have been updated successfully.')
+            this._translateService.instant(
+              'The files have been updated successfully.'
+            )
           );
           this._router.navigate(['deposit', this.deposit.pid, 'metadata']);
         });
@@ -343,7 +395,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
   private _initForm() {
     this.filesForm = this._fb.array([]);
 
-    this.files.forEach(file => {
+    this.files.forEach((file) => {
       this._addFormField(file);
     });
   }
@@ -358,7 +410,7 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
       embargo: [file.embargo],
       embargoDate: [file.embargoDate, this._embargoDateValidator],
       exceptInOrganisation: [file.exceptInOrganisation],
-      id: file.version_id
+      id: file.version_id,
     });
     this.filesForm.push(control);
     control

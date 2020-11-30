@@ -40,7 +40,7 @@ export class ReviewComponent implements OnInit, OnDestroy {
   private _userSubscription: Subscription;
 
   /** Used to retrieve value for the comment */
-  @ViewChild('comment', { static: false })
+  @ViewChild('comment')
   comment: ElementRef;
 
   constructor(

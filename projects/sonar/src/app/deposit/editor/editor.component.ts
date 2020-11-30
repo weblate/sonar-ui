@@ -100,11 +100,11 @@ export class EditorComponent implements OnInit {
           this.currentStep = params.step;
         }),
         switchMap((params) => {
-          return combineLatest(
+          return combineLatest([
             this._depositService.getJsonSchema('deposits'),
             this._depositService.get(params.id),
-            this._depositService.getFiles(params.id)
-          );
+            this._depositService.getFiles(params.id),
+          ]);
         })
       )
       .subscribe(

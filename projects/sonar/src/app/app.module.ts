@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { DatePipe } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -96,7 +96,8 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     TranslateModule.forRoot({
       loader: {
         provide: BaseTranslateLoader,
-        useClass: TranslateLoader
+        useClass: TranslateLoader,
+        deps: [CoreConfigService, HttpClient]
       }
     }),
     ReactiveFormsModule,
@@ -117,15 +118,6 @@ export function minElementError(err: any, field: FormlyFieldConfig) {
     },
     BsLocaleService,
     DatePipe
-  ],
-  entryComponents: [
-    DocumentComponent,
-    OrganisationComponent,
-    UserComponent,
-    DocumentDetailComponent,
-    OrganisationDetailComponent,
-    UserDetailComponent,
-    BriefViewComponent
   ],
   bootstrap: [AppComponent]
 })

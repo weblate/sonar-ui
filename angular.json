@@ -18,7 +18,7 @@
             "main": "projects/sonar/src/main.ts",
             "polyfills": "projects/sonar/src/polyfills.ts",
             "tsConfig": "projects/sonar/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "projects/sonar/src/favicon.ico",
               "projects/sonar/src/assets"
@@ -33,9 +33,7 @@
             "preserveSymlinks": true
           },
           "configurations": {
-            "proxy": {
-              "aot": false
-            },
+            "proxy": {},
             "production": {
               "fileReplacements": [
                 {
@@ -46,9 +44,7 @@
               "optimization": true,
               "outputHashing": "none",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -57,6 +53,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
