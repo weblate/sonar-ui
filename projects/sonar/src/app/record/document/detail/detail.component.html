@@ -34,7 +34,8 @@
       </div>
       <div class="col">
         <h1 class="text-primary">
-          {{ record.title[0].mainTitle | languageValue }}<ng-container *ngIf="record.title[0].subtitle">
+          <span [innerHTML]="record.title[0].mainTitle | languageValue | nl2br"></span>
+          <ng-container *ngIf="record.title[0].subtitle">
             &nbsp;:&nbsp;{{ record.title[0].subtitle | languageValue }}</ng-container>
         </h1>
 
@@ -122,7 +123,7 @@
                   (click)="showMoreAbstract($event, abstract)">{{ 'Show more' | translate }}&hellip;</a>
               </ng-container>
               <ng-template #fullAbstract>
-                {{ abstract.value }}
+                <span [innerHtml]="abstract.value | nl2br"></span>
               </ng-template>
             </ng-container>
           </span>

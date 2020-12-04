@@ -520,6 +520,27 @@ export class EditorComponent implements OnInit {
               ...{ remoteTypeahead: fieldSchema.form.remoteTypeahead },
             };
           }
+
+          // Validation messages
+          if (fieldSchema.form.validation) {
+            const messages = fieldSchema.form.validation.messages;
+            if (messages) {
+              if (!fieldConfig.validation) {
+                fieldConfig.validation = {};
+              }
+              if (!fieldConfig.validation.messages) {
+                fieldConfig.validation.messages = {};
+              }
+              for (const key of Object.keys(messages)) {
+                const msg = messages[key];
+                // add support of key with or without Message suffix (required == requiredMessage),
+                // this is usefull for backend translation extraction
+                fieldConfig.validation.messages[
+                  key.replace(/Message$/, '')
+                ] = msg;
+              }
+            }
+          }
         }
 
         // Force validate `value` field when type is changed.

@@ -19,9 +19,9 @@
 <ng-container *ngIf="record && user">
   <div class="float-right"></div>
   <h4>
-    <ng-container *ngIf="record.metadata.metadata; else defaultTitle">{{
-      record.metadata.metadata.title
-    }}</ng-container>
+    <ng-container *ngIf="record.metadata.metadata; else defaultTitle">
+      <span [innerHtml]="record.metadata.metadata.title | nl2br"></span>
+    </ng-container>
     <small *ngIf="!record.metadata.logs || record.metadata.logs.length === 1"></small>
   </h4>
   <div class="my-2" [ngSwitch]="record.metadata.status">
