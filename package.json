@@ -29,8 +29,7 @@
     "serve": "ng serve --configuration proxy",
     "test": "ng test",
     "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/assets/i18n/messages.json --fi '  '",
-    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/assets/i18n/{de,en,fr,it}.json --fi '  '",
-    "postinstall": "ngcc"
+    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/sonar/src -o ./projects/sonar/src/assets/i18n/{de,en,fr,it}.json --fi '  '"
   },
   "dependencies": {
     "@angular/animations": "~11.0.2",
