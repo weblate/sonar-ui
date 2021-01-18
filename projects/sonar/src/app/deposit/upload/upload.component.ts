@@ -47,6 +47,8 @@ import {
 } from 'rxjs/operators';
 import { DepositService } from '../deposit.service';
 
+const MAX_FILE_SIZE = 500; // Max file size in Mb.
+
 @Component({
   selector: 'sonar-deposit-upload',
   templateUrl: './upload.component.html',
@@ -247,16 +249,21 @@ export class UploadComponent implements OnInit, AfterContentChecked, OnDestroy {
     }
 
     event.addedFiles.forEach((file: any, index: number) => {
-      if (
-        this.getFilesByType(type).filter((item) => item.key === file.name)
-          .length > 0
-      ) {
-        this._toastr.error(
-          _(
-            'File with the same name is already added to the deposit: ' +
-              file.name
-          )
-        );
+      try {
+        if (file.size > MAX_FILE_SIZE * 1000 * 1000) {
+          throw new Error(`The maximum size for a file is ${MAX_FILE_SIZE}Mb, ${file.name} cannot be uploaded.`);
+        }
+
+        if (
+          this.getFilesByType(type).filter((item) => item.key === file.name)
+            .length > 0
+        ) {
+          throw new Error(
+            `File with the same name is already added to the deposit: ${file.name}`
+          );
+        }
+      } catch (error) {
+        this._toastr.error(_(error.message));
         event.addedFiles.splice(index, 1);
       }
     });
