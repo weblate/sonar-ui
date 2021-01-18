@@ -16,7 +16,11 @@
 -->
 
 <ng-container *ngIf="isSourceOrcid === false; else orcid">
-  <span class="badge badge-secondary text-light mr-1">{{ badgeValue }}</span>{{ value }}
+  <span class="badge badge-secondary text-light mr-1">{{ badgeValue }}</span>
+  <ng-container *ngIf="type === 'bf:Doi'; else simpleValue">
+    <a href="https://doi.org/{{ value }}" target="_blank">{{ value }}</a>
+  </ng-container>
+  <ng-template #simpleValue>{{ value }}</ng-template>
 </ng-container>
 <ng-template #orcid>
   <a [href]="'https://orcid.org/' + value" target="_blank" class="badge badge-secondary text-light mx-1">
