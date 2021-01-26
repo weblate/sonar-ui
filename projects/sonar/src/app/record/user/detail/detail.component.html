@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <ng-container *ngIf="record$ | async as record">
-  <h1 class="mb-4">{{ record.metadata.full_name }}</h1>
+  <h1 class="mb-4">{{ record.metadata.first_name }} {{ record.metadata.last_name }}</h1>
   <dl class="row mt-4">
     <ng-container *ngIf="record.metadata.organisation">
       <dt class="col-sm-3" translate>Organisation</dt>

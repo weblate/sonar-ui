@@ -50,7 +50,7 @@
 
   <p>
     <span class="badge badge-light">
-      {{ 'Created by' | translate }}: {{ record.metadata.user.full_name }}
+      {{ 'Created by' | translate }}: {{ record.metadata.user.first_name }} {{ record.metadata.user.last_name }}
     </span>
     <span class="badge badge-light ml-1">
       {{ 'Created at' | translate }}: {{ record.created | dateTranslate: 'medium' }}
@@ -77,7 +77,7 @@
         <tr *ngFor="let log of record.metadata.logs">
           <td>{{ ('deposit_log_action_' + log.action) | translate }}</td>
           <td>{{ log.date | dateTranslate: 'medium' }}</td>
-          <td>{{ log.user.full_name }}</td>
+          <td>{{ log.user.first_name }} {{ log.user.last_name }}</td>
           <td [innerHtml]="log.comment | nl2br"></td>
         </tr>
       </table>
