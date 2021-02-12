@@ -1,11 +1,42 @@
 # Changelog
 
-## [v0.5.0](https://github.com/rero/sonar-ui/tree/v0.5.0) (2020-11-12)
+## [v1.0.0](https://github.com/rero/sonar-ui/tree/v1.0.0) (2021-02-12)
+
+[Full Changelog](https://github.com/rero/sonar-ui/compare/v0.5.0...v1.0.0)
+
+**Implemented enhancements:**
+
+- users: separate first name and last name. [\#186](https://github.com/rero/sonar-ui/pull/186) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- deposits: limit uploads to 500Mb [\#183](https://github.com/rero/sonar-ui/pull/183) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documents: set DOI clickable [\#182](https://github.com/rero/sonar-ui/pull/182) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
+**Closed issues:**
+
+- Update UI to angular 11 [\#170](https://github.com/rero/sonar-ui/issues/170)
+- Show pages by institutions with description [\#28](https://github.com/rero/sonar-ui/issues/28)
+- Show hierarchical facets in public search [\#20](https://github.com/rero/sonar-ui/issues/20)
+
+**Merged pull requests:**
+
+- project: update copyright year [\#192](https://github.com/rero/sonar-ui/pull/192) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: improve display [\#191](https://github.com/rero/sonar-ui/pull/191) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalog [\#189](https://github.com/rero/sonar-ui/pull/189) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- gh actions: set the stale workflow [\#187](https://github.com/rero/sonar-ui/pull/187) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- security: update dependencies [\#185](https://github.com/rero/sonar-ui/pull/185) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- dependencies: upgrade ng-core [\#180](https://github.com/rero/sonar-ui/pull/180) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- compiler: remove ngcc in post install [\#178](https://github.com/rero/sonar-ui/pull/178) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- deposit: improve editor [\#176](https://github.com/rero/sonar-ui/pull/176) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- dependencies: update to angular 11 [\#171](https://github.com/rero/sonar-ui/pull/171) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalogs [\#167](https://github.com/rero/sonar-ui/pull/167) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- projects: activate resource [\#162](https://github.com/rero/sonar-ui/pull/162) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
+## [v0.5.0](https://github.com/rero/sonar-ui/tree/v0.5.0) (2020-11-13)
 
 [Full Changelog](https://github.com/rero/sonar-ui/compare/v0.4.0...v0.5.0)
 
 **Merged pull requests:**
 
+- release: version 0.5.0 [\#160](https://github.com/rero/sonar-ui/pull/160) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - documents: enable editor long mode [\#159](https://github.com/rero/sonar-ui/pull/159) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - translations: update catalogs [\#158](https://github.com/rero/sonar-ui/pull/158) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - translations: update catalogs [\#156](https://github.com/rero/sonar-ui/pull/156) ([sebastiendeleze](https://github.com/sebastiendeleze))
@@ -30,9 +61,9 @@
 **Closed issues:**
 
 - Show more values in facets [\#131](https://github.com/rero/sonar-ui/issues/131)
-- Checkbox for full text search \(by default disabled\) [\#126](https://github.com/rero/sonar-ui/issues/126)
 - Add choices for local identifiers in deposits [\#124](https://github.com/rero/sonar-ui/issues/124)
 - Deposit process review [\#123](https://github.com/rero/sonar-ui/issues/123)
+- Checkbox for full text search \(by default disabled\) [\#126](https://github.com/rero/sonar-ui/issues/126)
 - Add degree field in deposit form [\#122](https://github.com/rero/sonar-ui/issues/122)
 - Improve permissions to access resources [\#114](https://github.com/rero/sonar-ui/issues/114)
 - Update admin interface [\#113](https://github.com/rero/sonar-ui/issues/113)
