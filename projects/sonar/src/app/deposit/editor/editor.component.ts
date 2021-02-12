@@ -474,9 +474,6 @@ export class EditorComponent implements OnInit {
   private _createForm(schema: any) {
     const depositFields = this._formlyJsonschema.toFieldConfig(schema, {
       map: (fieldConfig: any, fieldSchema: any) => {
-        // Force long mode to be able to remove fields.
-        fieldConfig.templateOptions.longMode = true;
-
         if (fieldSchema.form) {
           // Template options
           if (fieldSchema.form.templateOptions) {
