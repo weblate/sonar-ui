@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.1](https://github.com/rero/sonar-ui/tree/v1.0.1) (2021-02-12)
+
+[Full Changelog](https://github.com/rero/sonar-ui/compare/v1.0.0...v1.0.1)
+
+**Merged pull requests:**
+
+- translations: update catalog [\#193](https://github.com/rero/sonar-ui/pull/193) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.0.0](https://github.com/rero/sonar-ui/tree/v1.0.0) (2021-02-12)
 
 [Full Changelog](https://github.com/rero/sonar-ui/compare/v0.5.0...v1.0.0)
