@@ -21,5 +21,6 @@ export const environment = {
   languages: ['fr', 'de', 'it', 'en'],
   translationsURLs: [
     'static/sonar-ui/assets/i18n/${lang}.json',
+    '/api/translations/${lang}.json'
   ]
 };
